@@ -1,0 +1,25 @@
+%h1 Import
+
+-#%h2 Deckbox
+-#%form{action: '/collection/import/deckbox'}
+  -#= csrf.form_tag
+
+  -#%input{type: 'file'}
+  -#%input{type: 'submit', value: 'Import'}
+
+%h2 MTG Manager
+%form{action: '/collection/import/mtgmanager',
+      enctype: 'multipart/form-data',
+      method: 'post'}
+  = csrf.form_tag
+
+  .form-group
+    %label{for: 'import-title'} Title
+    %input#import-title.form-control{type: 'text', name: 'import[title]'}
+
+  .form-group
+    %label{for: 'import-file'} File
+    %input#import-file.form-control-file{type: 'file', name: 'import[file]'}
+
+  .form-group
+    %input.btn.btn-primary{type: 'submit', value: 'Import'}

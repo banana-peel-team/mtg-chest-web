@@ -1,0 +1,20 @@
+%h1 Imports
+
+%a.btn.btn-secondary{href: '/collection/import'} New
+
+%table.table
+  %tr
+    %th Title
+    %th Date
+    %th Actions
+  - imports.each do |import|
+    %tr
+      %td
+        %a{href: "/collection/imports/#{import[:id]}"}= import[:title]
+      %td= import[:created_at]
+      %td
+        %form{action: "/collection/imports/#{import[:id]}", method: 'post'}
+          = csrf.form_tag
+          %input{type: 'hidden', name: '_method', value: 'delete'}
+          %input{type: 'submit', value: 'Delete'}
+

@@ -1,0 +1,12 @@
+en:
+  home:
+    title: Home
+  login:
+    title: Signin
+    exit: Logout
+    errors:
+      username: Invalid username/password
+    form:
+      username: Username
+      password: Password
+      submit: Signin

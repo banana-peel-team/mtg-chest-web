@@ -1,0 +1,12 @@
+%h1= edition[:name]
+
+%table
+  %tr
+    %th Name
+    %th P/T
+  - printings.each do |printing|
+    %tr
+      %td= printing[:name]
+      %td
+        - if printing[:power]
+          = "#{printing[:power]}/#{printing[:toughness]}"

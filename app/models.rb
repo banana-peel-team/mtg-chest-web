@@ -1,0 +1,6 @@
+require_relative 'models/user'
+require_relative 'models/card'
+require_relative 'models/edition'
+require_relative 'models/printing'
+require_relative 'models/user_printing'
+require_relative 'models/import'

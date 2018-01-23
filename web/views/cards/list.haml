@@ -1,0 +1,9 @@
+%h1 Cards listing
+
+%h2= title
+
+%ul
+  - cards.each do |card|
+    %li
+      = card[:count]
+      = card[:name]

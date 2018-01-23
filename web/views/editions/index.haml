@@ -1,0 +1,12 @@
+%h1 Editions
+
+%table
+  %tr
+    %th Name
+    %th Code
+  - editions.each do |edition|
+    %tr
+      %td
+        %a{href: "/editions/#{edition[:code]}"}
+          = edition[:name]
+      %td= edition[:code]

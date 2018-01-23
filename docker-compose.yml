@@ -1,0 +1,35 @@
+version: '3.0'
+services:
+  web:
+    image: ruby:2.4.1
+    command: bundle exec shotgun -p 3000 -o 0.0.0.0
+    working_dir: "/app"
+    volumes:
+      - .:/app
+      - gems:/gems
+    env_file:
+      - .env
+    environment:
+      BUNDLE_PATH: "/gems"
+      DATABASE_URL: "postgres://user:pass@db:5432/db"
+    ports:
+      - "3001:3000"
+    depends_on:
+      - db
+    networks:
+      - database
+  db:
+    image: postgres
+    environment:
+      POSTGRES_USER: "user"
+      POSTGRES_PASSWORD: "pass"
+      POSTGRES_DB: "db"
+    networks:
+      - database
+    volumes:
+      - db-data:/var/lib/postgresql/data
+volumes:
+  gems:
+  db-data:
+networks:
+  database:
