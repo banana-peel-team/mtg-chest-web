@@ -1,11 +1,16 @@
-%h1 Editions
+%nav{'aria-label': 'breadcrumb'}
+  %ol.breadcrumb
+    %li.breadcrumb-item.active{'aria-current': 'Page'} Editions
 
-%table
+%table.table.table-hover
   %tr
+    %th Icon
     %th Name
     %th Code
   - editions.each do |edition|
     %tr
+      %td
+        %i{class: "ss ss-#{edition[:code].downcase}"}
       %td
         %a{href: "/editions/#{edition[:code]}"}
           = edition[:name]

@@ -1,0 +1,27 @@
+.mtgCard
+  .card
+    .card-header
+      %span
+        = printing[:name]
+      %span.float-right.mana-cost
+        = mtg_icons(printing[:mana_cost])
+    .card-body
+      .type
+        = printing[:type]
+
+      .description
+        = mtg_icons(printing[:text])
+
+    - if printing[:power]
+      .card-footer.text-right
+        .power
+          = "#{printing[:power]}/#{printing[:toughness]}"
+
+
+- if printings.any?
+  %h2 Other Printings
+  %ul
+    - printings.each do |printing|
+      %li
+        %a{href: "/editions/#{printing[:edition_code]}"}
+          = printing[:edition_name]

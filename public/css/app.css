@@ -5,3 +5,42 @@ body {
 
 .actions { margin-bottom: 1rem; }
 .send-questions-form { margin-right: 5px; }
+
+.mtgCard {
+  font-size: 3em;
+}
+
+.mtgTags {
+  font-size: 0.6em;
+}
+
+.mtgTag {
+  border: 1px solid #7373dd;
+  background: #e8ebf7;
+  display: inline-block;
+  border-radius: 0.3em;
+  padding: 0 0.17em;
+}
+
+.mtgTag--wurm,
+.mtgTag--beast {
+  border-color: #28a745;
+  background-color: #b3d2ba;
+}
+
+.mtgTag--warrior {
+  border-color: #cbcdb6;
+  background-color: #f2f3de;
+}
+
+.mtgTag--human,
+.mtgTag--angel,
+.mtgTag--cat {
+  border-color: #cbcdb6;
+  background-color: #f2f3de;
+}
+
+.mtgTag--zombie {
+  border-color: #7e7e89;
+  background-color: #e1e1e1;
+}

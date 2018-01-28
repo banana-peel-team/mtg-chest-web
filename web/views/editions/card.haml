@@ -1,0 +1,9 @@
+%nav{'aria-label': 'breadcrumb'}
+  %ol.breadcrumb
+    %li.breadcrumb-item
+      %a{href: '/editions'} Editions
+    %li.breadcrumb-item
+      %a{href: "/editions/#{edition[:code]}"}= edition[:name]
+    %li.breadcrumb-item.active{'aria-current': 'page'}= card[:name]
+
+= partial('printings/_details', printing: card, printings: [])

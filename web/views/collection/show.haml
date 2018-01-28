@@ -1,3 +1,5 @@
-%h1 Collection
+%nav{'aria-label': 'breadcrumb'}
+  %ol.breadcrumb
+    %li.breadcrumb-item.active{'aria-current': 'page'} Collection
 
-= partial('collection/_cards', printings: printings)
+= partial('printings/_list', with_count: true, printings: printings)

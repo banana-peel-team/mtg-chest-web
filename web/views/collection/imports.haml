@@ -1,6 +1,12 @@
-%h1 Imports
-
-%a.btn.btn-secondary{href: '/collection/import'} New
+.row
+  .col-10
+    %nav{'aria-label': 'breadcrumb'}
+      %ol.breadcrumb
+        %li.breadcrumb-item.active Imports
+  .col
+    %ul.nav.justify-content-end
+      %li
+        %a.nav-link.btn.btn-light{href: '/collection/import'} New
 
 %table.table
   %tr
@@ -11,10 +17,11 @@
     %tr
       %td
         %a{href: "/collection/imports/#{import[:id]}"}= import[:title]
+        = import_cards_count(import)
       %td= import[:created_at]
       %td
         %form{action: "/collection/imports/#{import[:id]}", method: 'post'}
           = csrf.form_tag
           %input{type: 'hidden', name: '_method', value: 'delete'}
-          %input{type: 'submit', value: 'Delete'}
+          %input.btn.btn-danger{type: 'submit', value: 'Delete'}
 

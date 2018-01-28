@@ -1,0 +1,59 @@
+.mtgIcon {
+  background: url(/img/mana.svg) no-repeat;
+  background-size: 1055% auto;
+  background-position-y: 0;
+  line-height: 1em;
+  padding-top: 1em;
+  overflow: hidden;
+  vertical-align: middle;
+  height: 1.03em;
+  width: 1em;
+  display: inline-block;
+}
+
+.mtgIcon--C  { background-position-x: 77.77%; }
+.mtgIcon--T,
+.mtgIcon--C  { background-position-y: 83.33%; }
+.mtgIcon--10,
+.mtgIcon--11,
+.mtgIcon--12,
+.mtgIcon--13,
+.mtgIcon--14,
+.mtgIcon--15,
+.mtgIcon--16,
+.mtgIcon--17,
+.mtgIcon--18,
+.mtgIcon--19 { background-position-y: 16.66%; }
+.mtgIcon--W,
+.mtgIcon--U,
+.mtgIcon--B,
+.mtgIcon--R,
+.mtgIcon--G,
+.mtgIcon--20,
+.mtgIcon--X  { background-position-y: 33.33%; }
+.mtgIcon--0,
+.mtgIcon--10 { background-position-x: 0; }
+.mtgIcon--1,
+.mtgIcon--11,
+.mtgIcon--X  { background-position-x: 11.11%; }
+.mtgIcon--2,
+.mtgIcon--12 { background-position-x: 22.22%; }
+.mtgIcon--3,
+.mtgIcon--13 { background-position-x: 33.33%; }
+.mtgIcon--W,
+.mtgIcon--4,
+.mtgIcon--14 { background-position-x: 44.44%; }
+.mtgIcon--U,
+.mtgIcon--5,
+.mtgIcon--15 { background-position-x: 55.55%; }
+.mtgIcon--B,
+.mtgIcon--6,
+.mtgIcon--16 { background-position-x: 66.66%; }
+.mtgIcon--R,
+.mtgIcon--7,
+.mtgIcon--17 { background-position-x: 77.77%; }
+.mtgIcon--G,
+.mtgIcon--8,
+.mtgIcon--18 { background-position-x: 88.88%; }
+.mtgIcon--9,
+.mtgIcon--19 { background-position-x: 99.99%; }

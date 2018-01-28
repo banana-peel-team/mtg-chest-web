@@ -1,7 +1,17 @@
-%h1 Import
+.row
+  .col-7
+    %nav{'aria-label': 'breadcrumb'}
+      %ol.breadcrumb
+        %li.breadcrumb-item
+          %a{href: '/collection/imports'} Imports
+        %li.breadcrumb-item.active{'aria-current': 'page'}= import[:title]
+  .col
+    %ul.nav.justify-content-end
+      %li.nav-item.mr-1
+        %a.nav-link.btn.btn-light{href: "/collection/imports/#{import[:id]}/list"}
+          Card list
+      %li.nav-item
+        %a.nav-link.btn.btn-light{href: "/collection/imports/#{import[:id]}/deckbox"}
+          Export to deckbox
 
-%ul
-  %a{href: "/collection/imports/#{import[:id]}/list"}
-    Card list
-
-= partial('collection/_cards', printings: printings)
+= partial('printings/_list', with_count: true, printings: printings)

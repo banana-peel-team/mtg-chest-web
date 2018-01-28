@@ -1,3 +1,9 @@
 require './app/application'
 
-Services::Editions::ImportAll.perform('AllSets-x.json')
+if ARGV.size.zero?
+  STDERR.puts "Filename not given."
+end
+
+ARGV.each do |file|
+  Services::Editions::ImportAll.perform(file)
+end

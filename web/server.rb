@@ -17,13 +17,14 @@ I18n.locale = :en
 
 require_relative 'helpers/login_helper'
 require_relative 'helpers/common_helper'
+require_relative 'helpers/mtg_helper'
 
 Cuba.plugin(Helpers::LoginHelper)
 Cuba.plugin(Helpers::CommonHelper)
+Cuba.plugin(Helpers::MTGHelper)
 
 require './app/application'
 require_relative 'routes/sessions'
-require_relative 'routes/cards'
 require_relative 'routes/editions'
 require_relative 'routes/collection'
 
@@ -44,7 +45,6 @@ Cuba.define do
     end
   end
 
-  on('cards') { run(Routes::Cards) }
   on('sessions') { run(Routes::Sessions) }
   on('editions') { run(Routes::Editions) }
   on('collection') { run(Routes::Collection) }

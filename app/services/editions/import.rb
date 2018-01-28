@@ -2,32 +2,16 @@ module Services
   module Editions
     module Import
       def self.perform(set)
-        create_edition(set)
-
-        set_code = set['code']
+        edition = create_edition(set)
 
         set['cards'].each do |data|
           card = import_card(data)
-          printing = Printing.where(
-            edition_code: set_code,
-            card_id: card[:id],
-          ).empty?
 
-          return unless printing
-
-          Printing.create(
-            edition_code: set_code,
-            card_id: card[:id],
-            number: data['number']
-          )
+          create_printing(card[:id], edition[:code], data)
         end
       end
 
-      private_class_method
       def self.create_edition(set)
-        return unless Edition.where(code: set['code']).empty?
-
-        puts " Creating edition: #{set['code']} ..."
         Edition.create(
           code: set['code'],
           name: set['name'],
@@ -39,40 +23,68 @@ module Services
           online_only: set['onlineOnly'] == true
         )
       end
+      private_class_method :create_edition
 
-      def self.import_card(card)
-        existing = Card.where(name: card['name']).select(:id).first
-        return existing if existing
+      def self.create_printing(card_id, set_code, data)
+        Printing.create(
+          card_id: card_id,
+          edition_code: set_code,
+          multiverse_id: data['multiverseid'],
+          rarity: data['rarity'],
+          number: data['number'],
+          image_name: data['imageName'],
+          watermark: data['watermark'],
+          mci_number: data['mciNumber'],
+          flavor: data['flavor'],
+          artist: data['artist']
+        )
+      rescue Exception => e
+        puts " * Error creating printing for #{data['name']} on set #{set_code}"
 
-        Card.create(
-          layout: card['layout'],
-          name: card['name'],
-          names: string_array(card['names']),
-          mana_cost: card['manaCost'],
-          converted_mana_cost: card['cmc'],
-          colors: string_array(card['colors']),
-          color_identity: string_array(card['colorIdentity']),
-          type: card['type'],
-          supertypes: string_array(card['supertypes']),
-          types: string_array(card['types']),
-          subtypes: string_array(card['subtypes']),
-          rarity: card['rarity'],
-          text: card['text'],
-          flavor: card['flavor'],
-          artist: card['artist'],
-          power: card['power'],
-          toughness: card['toughness'],
-          loyalty: card['loyalty'],
-          image_name: card['imageName'],
-          watermark: card['watermark'],
-          mci_number: card['mciNumber']
+        raise e
+      end
+      private_class_method :create_printing
+
+      def self.import_card(data)
+        card = Card.where(name: data['name']).select(:id).first
+        card ||= Card.create(
+          layout: data['layout'],
+          name: data['name'],
+          names: data['names'],
+          mana_cost: data['manaCost'],
+          converted_mana_cost: data['cmc'],
+          colors: colors_array(data['colors']),
+          color_identity: string_array(data['colorIdentity']),
+          type: data['type'],
+          supertypes: string_array(data['supertypes']),
+          types: string_array(data['types']),
+          subtypes: string_array(data['subtypes']),
+          text: data['text'],
+          power: data['power'],
+          toughness: data['toughness'],
+          loyalty: data['loyalty'],
         )
       end
+      private_class_method :import_card
 
-      private_class_method
-      def self.string_array(value)
-        Sequel.pg_array(value, :varchar) if value
+      def self.colors_array(colors)
+        return unless colors
+        colors = colors.map do |color|
+          next 'U' if color == 'Blue'
+
+          color[0]
+        end
+
+        string_array(colors)
       end
+      private_class_method :colors_array
+
+      def self.string_array(value)
+        return unless value
+
+        Sequel.pg_array(value, :varchar)
+      end
+      private_class_method :string_array
     end
   end
 end

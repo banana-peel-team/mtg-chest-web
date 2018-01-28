@@ -6,7 +6,6 @@ Sequel.migration do
       column(:name, String, null: false)
       column(:gatherer_code, String, null: false)
       column(:mci_code, String, null: false)
-      #column(:border, String, null: false)
       column(:type, String, null: false)
       column(:block, String, null: false)
       column(:online_only, String, null: false)
@@ -27,36 +26,32 @@ Sequel.migration do
       column(:color_identity, 'varchar[]', null: true)
       column(:type, String, null: false)
       column(:supertypes, 'varchar[]', null: true)
-      column(:types, 'varchar[]', null: false)
+      column(:types, 'varchar[]', null: true)
       column(:subtypes, 'varchar[]', null: true)
-      column(:rarity, String, null: false)
-      column(:text, String, null: true)
-      column(:flavor, String, null: true)
-      column(:artist, String, null: true)
       column(:power, String, null: true)
       column(:toughness, String, null: true)
       column(:loyalty, Integer, null: true)
-      #column(:multiverse_id, Integer, null: true)
-      #column(:variations, 'integer[]', null: true)
-      column(:image_name, String, null: false)
-      column(:watermark, String, null: true)
-      #column(:border, String, null: false)
-      #column(:timeshifted, FalseClass, null: false)
-      #column(:reserved, FalseClass, null: false)
-      #column(:release_date, String, null: true)
-      #column(:starter, FalseClass, null: false)
-      column(:mci_number, String, null: true)
+      column(:text, String, null: true)
 
       index(:name)
     end
 
     create_table(:printings) do
+      primary_key(:id)
+
       foreign_key(:edition_code, :editions, type: String, null: false)
       foreign_key(:card_id, :cards, null: false)
 
+      column(:multiverse_id, 'bigint', null: true)
+      column(:image_name, String, null: false)
+      column(:watermark, String, null: true)
+      column(:artist, String, null: true)
       column(:number, String, null: true)
+      column(:rarity, String, null: false)
+      column(:mci_number, String, null: true)
+      column(:flavor, String, null: true)
 
-      primary_key([:edition_code, :card_id])
+      index(:multiverse_id, uniqe: true)
     end
   end
 end

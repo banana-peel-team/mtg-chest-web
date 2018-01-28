@@ -96,4 +96,8 @@ rspec() {
   on-test run bundle exec rspec $@
 }
 
+console() {
+  run bundle exec rack-console $@
+}
+
 $@

@@ -1,0 +1,33 @@
+%table.table.table-striped.table-sm.table-hover
+  %thead
+    %tr
+      - if with_count
+        %th Count
+      %th Name
+      %th Tags
+      %th Cost
+      %th Identity
+      %th P/T
+  %tbody
+    - printings.each do |printing|
+      %tr
+        - if with_count
+          %td= printing[:count]
+        %td
+          %i{class: "ss ss-#{printing[:edition_code].downcase}",
+              title: printing[:edition_name]}
+          %a{href: "/editions/#{printing[:edition_code]}/cards/#{printing[:card_id]}"}
+            = printing[:name]
+        %td.mtgTags
+          - printing[:types].each do |type|
+            %i{title: type, class: "ms ms-#{type.downcase}"}
+
+          = mtg_tags(printing[:subtypes])
+
+        %td
+          = mtg_icons(printing[:mana_cost])
+        %td
+          = mtg_icons_list(printing[:color_identity])
+        %td
+          - if printing[:power]
+            = "#{printing[:power]}/#{printing[:toughness]}"

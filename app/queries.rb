@@ -1,0 +1,6 @@
+require_relative 'queries/collection_cards'
+require_relative 'queries/import_list'
+require_relative 'queries/import_cards'
+require_relative 'queries/import_printings'
+require_relative 'queries/edition_printings'
+require_relative 'queries/editions'

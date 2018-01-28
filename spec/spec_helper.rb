@@ -2,7 +2,7 @@ require 'byebug'
 require 'fabrication'
 
 require './app/application'
-require_relative 'support/helpers'
+require_relative 'helpers'
 
 
 RSpec.configure do |config|

@@ -1,25 +1,43 @@
-%h1 Import
+%nav{'aria-label': 'breadcrumb'}
+  %ol.breadcrumb
+    %li.breadcrumb-item
+      %a{href: '/collection/imports'} Imports
+    %li.breadcrumb-item.active{'aria-current': 'page'} New
 
--#%h2 Deckbox
--#%form{action: '/collection/import/deckbox'}
-  -#= csrf.form_tag
-
-  -#%input{type: 'file'}
-  -#%input{type: 'submit', value: 'Import'}
-
-%h2 MTG Manager
-%form{action: '/collection/import/mtgmanager',
+%form{action: '/collection/import',
       enctype: 'multipart/form-data',
       method: 'post'}
   = csrf.form_tag
-
   .form-group
-    %label{for: 'import-title'} Title
-    %input#import-title.form-control{type: 'text', name: 'import[title]'}
+    %input.form-control.mr-2{type: 'text',
+                              placeholder: 'Title',
+                              name: 'import[title]'}
 
-  .form-group
-    %label{for: 'import-file'} File
-    %input#import-file.form-control-file{type: 'file', name: 'import[file]'}
 
-  .form-group
+  .form-row
+    .col-8
+      .form-check.form-check-inline.mt-3
+        %input.form-check-input#source-deckbox{type: 'radio',
+                                              name: 'import[source]',
+                                              value: 'deckbox'}
+        %label.form-check-label{for: 'source-deckbox'} Deckbox
+
+      .form-check.form-check-inline
+        %input.form-check-input#source-mtg-manager{type: 'radio',
+                                                  name: 'import[source]',
+                                                  value: 'mtg-manager'}
+        %label.form-check-label{for: 'source-mtg-manager'} MTG Manager
+
+      .form-check.form-check-inline
+        %input.form-check-input#source-decked{type: 'radio',
+                                              name: 'import[source]',
+                                              value: 'decked-builder'}
+        %label.form-check-label{for: 'source-decked'} Decked Builder
+
+    .col
+      .custom-file
+        %input#import-file.custom-file-input{type: 'file', name: 'import[file]'}
+        %label.custom-file-label{for: 'import-file'} Choose file
+
+  .form-group.mt-3
     %input.btn.btn-primary{type: 'submit', value: 'Import'}

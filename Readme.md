@@ -58,3 +58,22 @@ Create a user:
 $ heroku run --remote=<remote-name> bundle exec rack-console
 > Services::Users::Create.perform(username: '...', password: '...')
 ```
+
+## Thanks
+
+Nothing of this could have been possible without the following tools:
+
+- [Deckbox](https://deckbox.org/) An awesome place to store your library.
+- [MTG Manager](http://mtgmanager.online/) Scan MTG Cards with your phone.
+- [Decked Builder](http://www.deckedbuilder.com/) This one is also available
+ for Windows!
+- [MTGJson](http://mtgjson.com/) The MTG Database. In json!
+- [Keyrune](https://andrewgioia.github.io/Keyrune/index.html) MTG Set symbols
+ in a font.
+- [Mana Icons](https://andrewgioia.github.io/Mana/icons.html) MTG Mana icons
+ in a font.
+- [These people](https://www.slightlymagic.net/forum/viewtopic.php?f=15&t=4430&sid=a4157beb902583b681496f74398d506e)
+  at slightlymagic.
+
+Mana and cards symbols, names and stuff might be (are) owned by
+ [Wizards of the Coast](http://magicthegathering.com/), so, you know.
