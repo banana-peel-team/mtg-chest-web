@@ -35,17 +35,7 @@ module Services
       private_class_method :edition_code
 
       def self.import_card(import, user, data, cache)
-        #return unless (edition_code = cache[:editions][data['Edition']])
-
-        #return unless (card_id = cache[:cards][data['Name']])
-        #return unless (card_id = card_name_id(data['Name']))
         printing = Printing.where(multiverse_id: data[:multiverse_id]).first
-        #return unless printing_id
-
-        #printing = Printing
-          #.select(:id)
-          #.where(card_id: card_id, edition_code: edition_code)
-          #.first
 
         UserPrinting.create(
           import_id: import[:id],

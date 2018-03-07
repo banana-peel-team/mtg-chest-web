@@ -3,6 +3,8 @@
     .card-header
       %span
         = printing[:name]
+        %a{target: '_blank', href: gatherer_url(printing)}
+          [+]
       %span.float-right.mana-cost
         = mtg_icons(printing[:mana_cost])
     .card-body

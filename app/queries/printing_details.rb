@@ -1,11 +1,13 @@
 module Queries
-  class EditionPrintings
-    def self.for_edition(code)
+  module PrintingDetails
+    def self.for_card_on_edition(card_id, code)
       Printing
         .association_join(:card)
-        .where(edition_code: code)
+        .where(edition_code: code, card_id: card_id)
         .select(
           :edition_code,
+          :multiverse_id,
+          Sequel.qualify(:card, :text),
           Sequel.qualify(:card, :id).as(:card_id),
           Sequel.qualify(:card, :name).as(:name),
           Sequel.qualify(:card, :power).as(:power),
@@ -16,13 +18,7 @@ module Queries
           Sequel.qualify(:card, :color_identity).as(:color_identity),
           Sequel.qualify(:card, :colors).as(:colors),
         )
-        .order(
-          Sequel.qualify(:printings, :number)
-        )
-        .exclude(
-          Sequel.qualify(:card, :type) => 'basic land'
-        )
-        .all
+        .first
     end
   end
 end

@@ -8,36 +8,82 @@
       enctype: 'multipart/form-data',
       method: 'post'}
   = csrf.form_tag
-  .form-group
-    %input.form-control.mr-2{type: 'text',
-                              placeholder: 'Title',
-                              name: 'import[title]'}
+  .card
+    .card-header Import from a file
+    .card-body
+      .form-group
+        %input.form-control{type: 'text',
+                            placeholder: 'Title',
+                            required: true,
+                            name: 'import[title]'}
 
+      .form-row
+        .col-8
+          .form-check.form-check-inline.mt-3
+            %input.form-check-input#source-deckbox{type: 'radio',
+                                                   name: 'import[source]',
+                                                   value: 'deckbox'}
+            %label.form-check-label{for: 'source-deckbox'} Deckbox
 
-  .form-row
-    .col-8
-      .form-check.form-check-inline.mt-3
-        %input.form-check-input#source-deckbox{type: 'radio',
-                                              name: 'import[source]',
-                                              value: 'deckbox'}
-        %label.form-check-label{for: 'source-deckbox'} Deckbox
+          .form-check.form-check-inline
+            %input.form-check-input#source-mtg-manager{type: 'radio',
+                                                       name: 'import[source]',
+                                                       value: 'mtg-manager'}
+            %label.form-check-label{for: 'source-mtg-manager'} MTG Manager
 
-      .form-check.form-check-inline
-        %input.form-check-input#source-mtg-manager{type: 'radio',
+          .form-check.form-check-inline
+            %input.form-check-input#source-decked{type: 'radio',
                                                   name: 'import[source]',
-                                                  value: 'mtg-manager'}
-        %label.form-check-label{for: 'source-mtg-manager'} MTG Manager
+                                                  value: 'decked-builder'}
+            %label.form-check-label{for: 'source-decked'} Decked Builder
 
-      .form-check.form-check-inline
-        %input.form-check-input#source-decked{type: 'radio',
-                                              name: 'import[source]',
-                                              value: 'decked-builder'}
-        %label.form-check-label{for: 'source-decked'} Decked Builder
+        .col
+          .custom-file
+            %input#import-file.custom-file-input{required: true,
+                                                 type: 'file',
+                                                 name: 'import[file]'}
+            %label.custom-file-label{for: 'import-file'} Choose file
 
-    .col
-      .custom-file
-        %input#import-file.custom-file-input{type: 'file', name: 'import[file]'}
-        %label.custom-file-label{for: 'import-file'} Choose file
+      .form-group.mt-3
+        %input.btn.btn-primary{type: 'submit', value: 'Import'}
 
-  .form-group.mt-3
-    %input.btn.btn-primary{type: 'submit', value: 'Import'}
+%form{action: '/collection/import-list',
+      method: 'post'}
+  = csrf.form_tag
+  .card.mt-3
+    .card-header Import from card list
+    .card-body
+
+      .form-group
+        %input.form-control{type: 'text',
+                            placeholder: 'Title',
+                            required: true,
+                            name: 'import[title]'}
+      .form-row.mb-3
+        .col-5
+        .col-2
+          .form-check.form-check-inline
+            %input.form-check-input#import-foil{type: 'checkbox',
+                                                name: 'import[foil]',
+                                                value: '1'}
+            %label.form-check-label{for: 'import-foil'} Foil
+        .col-3
+          %select.form-control{name: 'import[condition]'}
+            %option{value: 'MN'} Mint
+            %option{value: 'NM'} Near Mint
+            %option{value: 'LP'} Lightly Played
+            %option{value: 'MP'} Moderately Played
+            %option{value: 'HP'} Heavily Played
+            %option{value: 'DM'} Damaged
+        .col
+          %input.form-control{type: 'text',
+                              placeholder: 'Set code',
+                              required: true,
+                              name: 'import[set]'}
+      .form-group
+        %textarea.form-control{name: 'import[list]',
+                               placeholder: '1 Swamp',
+                               required: true}
+
+      .form-group.mt-3
+        %input.btn.btn-primary{type: 'submit', value: 'Import'}

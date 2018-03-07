@@ -15,6 +15,11 @@ module Helpers
                title="#{count} cards on this import">#{count}</span>)
     end
 
+    def gatherer_url(printing)
+      "http://gatherer.wizards.com/" +
+        "Pages/Card/Details.aspx?multiverseid=#{printing[:multiverse_id]}"
+    end
+
     def mtg_icon(icon)
       %Q(<i class="mtgIcon mtgIcon--#{icon}">{#{icon}}</i>)
     end

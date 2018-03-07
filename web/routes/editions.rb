@@ -18,10 +18,17 @@ module Routes
 
         on('cards') do
           on(get, ':id') do |card_id|
-            printings = Printing.where(edition_code: code, card_id: card_id).all
-            card = Card.find(id: card_id)
+            printings = [] #Printing
+              #.where(card_id: card_id)
+              #.all
 
-            render('editions/card', card: card, edition: edition, printings: printings)
+            printing = Queries::PrintingDetails.for_card_on_edition(
+              card_id, code
+            )
+
+            render('editions/card', card: printing,
+                                    edition: edition,
+                                    printings: printings)
           end
         end
       end

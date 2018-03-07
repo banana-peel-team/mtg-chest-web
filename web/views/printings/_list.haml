@@ -10,24 +10,51 @@
       %th P/T
   %tbody
     - printings.each do |printing|
-      %tr
-        - if with_count
-          %td= printing[:count]
-        %td
-          %i{class: "ss ss-#{printing[:edition_code].downcase}",
-              title: printing[:edition_name]}
-          %a{href: "/editions/#{printing[:edition_code]}/cards/#{printing[:card_id]}"}
-            = printing[:name]
-        %td.mtgTags
-          - printing[:types].each do |type|
-            %i{title: type, class: "ms ms-#{type.downcase}"}
+      - unless printing[:types].include?('Land')
+        %tr
+          - if with_count
+            %td= printing[:count]
+          %td
+            %i{class: "ss ss-#{printing[:edition_code].downcase}",
+                title: printing[:edition_name]}
+            %a{href: "/editions/#{printing[:edition_code]}/cards/#{printing[:card_id]}"}
+              = printing[:name]
+          %td.mtgTags
+            - printing[:types].each do |type|
+              %i{title: type, class: "ms ms-#{type.downcase}"}
 
-          = mtg_tags(printing[:subtypes])
+            = mtg_tags(printing[:subtypes])
 
-        %td
-          = mtg_icons(printing[:mana_cost])
-        %td
-          = mtg_icons_list(printing[:color_identity])
-        %td
-          - if printing[:power]
-            = "#{printing[:power]}/#{printing[:toughness]}"
+          %td
+            = mtg_icons(printing[:mana_cost])
+          %td
+            = mtg_icons_list(printing[:color_identity])
+          %td
+            - if printing[:power]
+              = "#{printing[:power]}/#{printing[:toughness]}"
+  %thead
+    %tr
+      - if with_count
+        %th Count
+      %th Name
+      %th{colspan: 2} Tags
+      %th{colspan: 2} Identity
+  %tbody
+    - printings.each do |printing|
+      - if printing[:types].include?('Land')
+        %tr
+          - if with_count
+            %td= printing[:count]
+          %td
+            %i{class: "ss ss-#{printing[:edition_code].downcase}",
+                title: printing[:edition_name]}
+            %a{href: "/editions/#{printing[:edition_code]}/cards/#{printing[:card_id]}"}
+              = printing[:name]
+          %td.mtgTags{colspan: 2}
+            - printing[:types].each do |type|
+              %i{title: type, class: "ms ms-#{type.downcase}"}
+
+            = mtg_tags(printing[:subtypes])
+
+          %td{colspan: 2}
+            = mtg_icons_list(printing[:color_identity])

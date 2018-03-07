@@ -46,6 +46,19 @@ module Routes
         end
       end
 
+      on(post, 'import-list', param('import')) do |params|
+        import = Services::Collection::ImportList.perform(
+          current_user,
+          title: params['title'],
+          foil: params['foil'] == '1',
+          condition: params['condition'],
+          edition_code: params['set'],
+          list: params['list'].split(/[\r\n]+/),
+        )
+
+        redirect_to("/collection/imports/#{import[:id]}")
+      end
+
       on('import') do
         on(get, root) do
           render('collection/import')
