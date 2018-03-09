@@ -1,11 +1,3 @@
-%nav{'aria-label': 'breadcrumb'}
-  %ol.breadcrumb
-    %li.breadcrumb-item
-      %a{href: '/collection/imports'} Imports
-    %li.breadcrumb-item
-      %a{href: "/collection/imports/#{import[:id]}"}= import[:title]
-    %li.breadcrumb-item.active{'aria-current': 'page'} Card List
-
 %ul
   - cards.each do |card|
     %li

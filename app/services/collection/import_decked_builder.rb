@@ -23,14 +23,14 @@ module Services
       def self.card_name_id(name)
         card = Card.select(:id).where(name: name).first
 
-        return card[:id] if card
+        card[:id]
       end
       private_class_method :card_name_id
 
       def self.edition_code(name)
         edition = Edition.select(:code).where(name: name).first
 
-        return edition[:code] if edition
+        edition[:code]
       end
       private_class_method :edition_code
 

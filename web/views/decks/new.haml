@@ -1,0 +1,25 @@
+%nav{'aria-label': 'breadcrumb'}
+  %ol.breadcrumb
+    %li.breadcrumb-item
+      %a{href: '/decks'} Decks
+    %li.breadcrumb-item.active New
+
+%form{action: '/decks/import-list',
+      method: 'post'}
+  = csrf.form_tag
+  .card.mt-3
+    .card-header Create from card list
+    .card-body
+
+      .form-group
+        %input.form-control{type: 'text',
+                            placeholder: 'Name',
+                            required: true,
+                            name: 'deck[name]'}
+      .form-group
+        %textarea.form-control{name: 'deck[list]',
+                               placeholder: '1 Swamp',
+                               required: true}
+
+      .form-group.mt-3
+        %input.btn.btn-primary{type: 'submit', value: 'Create'}

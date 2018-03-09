@@ -1,0 +1,27 @@
+.row
+  .col-10
+    %nav{'aria-label': 'breadcrumb'}
+      %ol.breadcrumb
+        %li.breadcrumb-item.active Decks
+  .col
+    %ul.nav.justify-content-end
+      %li
+        %a.nav-link.btn.btn-light{href: '/decks/new'} New
+
+%table.table.table-hover
+  %tr
+    %th Name
+    %th Created
+    %th Actions
+  - decks.each do |deck|
+    %tr
+      %td
+        %a{href: "/decks/#{deck[:id]}"}
+          = deck[:name]
+          = count_badge(deck[:card_count])
+      %td= deck[:created_at]
+      %td
+        %form{action: "/decks/#{deck[:id]}", method: 'post'}
+          = csrf.form_tag
+          %input{type: 'hidden', name: '_method', value: 'delete'}
+          %input.btn.btn-danger{type: 'submit', value: 'Delete'}

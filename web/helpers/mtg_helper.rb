@@ -8,11 +8,9 @@ module Helpers
       'Swamp' => 'B'
     }.freeze
 
-    def import_cards_count(printing)
-      count = printing[:user_printing_count]
-
+    def count_badge(count)
       %Q(<span class="badge badge-primary badge-pill"
-               title="#{count} cards on this import">#{count}</span>)
+               title="#{count} cards">#{count}</span>)
     end
 
     def gatherer_url(printing)

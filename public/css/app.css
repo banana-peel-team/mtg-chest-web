@@ -44,3 +44,8 @@ body {
   border-color: #7e7e89;
   background-color: #e1e1e1;
 }
+
+.mtgTag--goblin {
+  border-color: #cc0000;
+  background-color: #ffd8d8;
+}

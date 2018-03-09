@@ -27,6 +27,7 @@ require './app/application'
 require_relative 'routes/sessions'
 require_relative 'routes/editions'
 require_relative 'routes/collection'
+require_relative 'routes/decks'
 
 Cuba.define do
   on csrf.unsafe? do
@@ -48,6 +49,7 @@ Cuba.define do
   on('sessions') { run(Routes::Sessions) }
   on('editions') { run(Routes::Editions) }
   on('collection') { run(Routes::Collection) }
+  on('decks') { run(Routes::Decks) }
 
   on('home') do
     render('home')

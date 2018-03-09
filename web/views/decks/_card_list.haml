@@ -1,0 +1,50 @@
+%table.table.table-striped.table-sm.table-hover
+  %thead
+    %tr
+      %th Count
+      %th Name
+      %th Tags
+      %th Cost
+      %th Identity
+      %th P/T
+  %tbody
+    - cards.each do |card|
+      - unless card[:types].include?('Land')
+        %tr
+          %td= card[:count]
+          %td
+            = card[:name]
+          %td.mtgTags
+            - card[:types].each do |type|
+              %i{title: type, class: "ms ms-#{type.downcase}"}
+
+            = mtg_tags(card[:subtypes])
+
+          %td
+            = mtg_icons(card[:mana_cost])
+          %td
+            = mtg_icons_list(card[:color_identity])
+          %td
+            - if card[:power]
+              = "#{card[:power]}/#{card[:toughness]}"
+  %thead
+    %tr
+      %th Count
+      %th Name
+      %th{colspan: 2} Tags
+      %th{colspan: 2} Identity
+  %tbody
+    - cards.each do |card|
+      - if card[:types].include?('Land')
+        %tr
+          %td= card[:count]
+          %td
+            = card[:name]
+          %td.mtgTags{colspan: 2}
+            - card[:types].each do |type|
+              %i{title: type, class: "ms ms-#{type.downcase}"}
+
+            = mtg_tags(card[:subtypes])
+
+          %td{colspan: 2}
+            = mtg_icons_list(card[:color_identity])
