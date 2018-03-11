@@ -1,5 +1,9 @@
 Fabricator(:user) do
   username { sequence(:username) { |i| "user-#{i}" } }
-  encrypted_password 'test'
-  salt 'test'
+
+  transient password: 'test'
+  salt { BCrypt::Engine.generate_salt }
+  encrypted_password do |attrs|
+    BCrypt::Engine.hash_secret(attrs[:password], attrs[:salt])
+  end
 end

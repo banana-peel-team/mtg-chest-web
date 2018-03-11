@@ -3,33 +3,38 @@ require 'cuba/safe'
 require 'cuba/render'
 require 'i18n'
 
-Cuba.use(Rack::Session::Cookie, secret: ENV['RACK_SESSION_SECRET'])
-Cuba.use(Rack::MethodOverride)
-Cuba.plugin(Cuba::Safe)
-Cuba.plugin(Cuba::Render)
-
-Cuba.settings[:render][:template_engine] = 'haml'
-Cuba.settings[:render][:views] = './web/views'
-Cuba.settings[:render][:layout] = 'layout'
-
-I18n.load_path = [['./web/locales/en.yml']]
-I18n.locale = :en
+require './app/application'
 
 require_relative 'helpers/login_helper'
 require_relative 'helpers/common_helper'
 require_relative 'helpers/mtg_helper'
 
-Cuba.plugin(Helpers::LoginHelper)
-Cuba.plugin(Helpers::CommonHelper)
-Cuba.plugin(Helpers::MTGHelper)
+I18n.load_path = [['./web/locales/en.yml']]
+I18n.locale = :en
 
-require './app/application'
+module Web
+  class Server < Cuba
+    use(Rack::Session::Cookie, secret: ENV['RACK_SESSION_SECRET'])
+    use(Rack::MethodOverride)
+    plugin(Cuba::Render)
+    plugin(Cuba::Safe)
+
+    settings[:render][:template_engine] = 'haml'
+    settings[:render][:views] = './web/views'
+    settings[:render][:layout] = 'layout'
+
+    plugin(Web::Helpers::LoginHelper)
+    plugin(Web::Helpers::CommonHelper)
+    plugin(Web::Helpers::MTGHelper)
+  end
+end
+
 require_relative 'routes/sessions'
 require_relative 'routes/editions'
 require_relative 'routes/collection'
 require_relative 'routes/decks'
 
-Cuba.define do
+Web::Server.define do
   on csrf.unsafe? do
     csrf.reset!
 
@@ -46,10 +51,10 @@ Cuba.define do
     end
   end
 
-  on('sessions') { run(Routes::Sessions) }
-  on('editions') { run(Routes::Editions) }
-  on('collection') { run(Routes::Collection) }
-  on('decks') { run(Routes::Decks) }
+  on('sessions') { run(Web::Routes::Sessions) }
+  on('editions') { run(Web::Routes::Editions) }
+  on('collection') { run(Web::Routes::Collection) }
+  on('decks') { run(Web::Routes::Decks) }
 
   on('home') do
     render('home')

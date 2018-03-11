@@ -1,3 +1,3 @@
-require './web/server'
+require './http'
 
 run Cuba

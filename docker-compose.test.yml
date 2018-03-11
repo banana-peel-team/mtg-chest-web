@@ -4,3 +4,4 @@ services:
     environment:
       RACK_ENV: "test"
       DATABASE_URL: "postgres://user:pass@db:5432/db-test"
+      JWT_SECRET: secret

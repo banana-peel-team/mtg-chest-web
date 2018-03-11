@@ -1,83 +1,85 @@
-module Routes
-  class Collection < Cuba
-    define do
-      on(get, root) do
-        printings = Queries::CollectionCards.for_user(current_user)
-
-        render('collection/show', printings: printings)
-      end
-
-      on('imports') do
+module Web
+  module Routes
+    class Collection < Web::Server
+      define do
         on(get, root) do
-          imports = Queries::ImportList.for_user(current_user)
+          printings = Queries::CollectionCards.for_user(current_user)
 
-          render('collection/imports', imports: imports)
+          render('collection/show', printings: printings)
         end
 
-        on(':id') do |id|
-          import = Import.first(id: id)
+        on('imports') do
+          on(get, root) do
+            imports = Queries::ImportList.for_user(current_user)
 
-          on(delete, root) do
-            Services::Collection::DeleteImport.perform(import)
-            redirect_to('/collection/imports')
+            render('collection/imports', imports: imports)
           end
 
-          on(get, root) do |id|
-            printings = Queries::ImportPrintings.for_import(import)
+          on(':id') do |id|
+            import = Import.first(id: id)
 
-            render('collection/show_import', import: import,
-                                             printings: printings)
-          end
+            on(delete, root) do
+              Services::Collection::DeleteImport.perform(import)
+              redirect_to('/collection/imports')
+            end
 
-          on('list') do
-            cards = Queries::ImportCards.for_import(import)
+            on(get, root) do |id|
+              printings = Queries::ImportPrintings.for_import(import)
 
-            render('cards/list', cards: cards, import: import)
-          end
+              render('collection/show_import', import: import,
+                                              printings: printings)
+            end
 
-          on('deckbox') do
-            printings = Queries::ImportPrintings.for_import(import)
+            on('list') do
+              cards = Queries::ImportCards.for_import(import)
 
-            export = Services::Collection::ExportDeckbox.perform(printings)
-            csv = Services::CSV::Export.perform(export)
+              render('cards/list', cards: cards, import: import)
+            end
 
-            send_as_file("#{import.safe_title}.csv", csv.string)
+            on('deckbox') do
+              printings = Queries::ImportPrintings.for_import(import)
+
+              export = Services::Collection::ExportDeckbox.perform(printings)
+              csv = Services::CSV::Export.perform(export)
+
+              send_as_file("#{import.safe_title}.csv", csv.string)
+            end
           end
         end
-      end
 
-      on(post, 'import-list', param('import')) do |params|
-        import = Services::Collection::ImportList.perform(
-          current_user,
-          title: params['title'],
-          foil: params['foil'] == '1',
-          condition: params['condition'],
-          edition_code: params['set'],
-          list: params['list'].split(/[\r\n]+/),
-        )
-
-        redirect_to("/collection/imports/#{import[:id]}")
-      end
-
-      on('import') do
-        on(get, root) do
-          render('collection/import')
-        end
-
-        on(post, param('import')) do |params|
-          unless params['file']
-            # TODO: Error handling.
-            redirect_to('/collection/import')
-          end
-
-          import = Services::Collection::Import.perform(
+        on(post, 'import-list', param('import')) do |params|
+          import = Services::Collection::ImportList.perform(
             current_user,
-            source: params['source'],
             title: params['title'],
-            file: params['file'][:tempfile],
+            foil: params['foil'] == '1',
+            condition: params['condition'],
+            edition_code: params['set'],
+            list: params['list'].split(/[\r\n]+/),
           )
 
           redirect_to("/collection/imports/#{import[:id]}")
+        end
+
+        on('import') do
+          on(get, root) do
+            render('collection/import')
+          end
+
+          on(post, param('import')) do |params|
+            unless params['file']
+              # TODO: Error handling.
+              redirect_to('/collection/import')
+            end
+
+            import = Services::Collection::Import.perform(
+              current_user,
+              source: params['source'],
+              title: params['title'],
+              file: params['file'][:tempfile],
+            )
+
+            redirect_to("/collection/imports/#{import[:id]}")
+          end
         end
       end
     end
