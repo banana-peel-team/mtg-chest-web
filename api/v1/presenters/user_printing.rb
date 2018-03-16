@@ -8,6 +8,7 @@ module API
 
         def self.single(printing)
           {
+            count: printing[:count],
             name: printing[:name],
             edition_name: printing[:edition_name],
           }
