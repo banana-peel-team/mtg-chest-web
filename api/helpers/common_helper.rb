@@ -8,6 +8,18 @@ module API
         end
       end
 
+      def json_body
+        @json_body ||= begin
+          body = req.body.read
+
+          if body.empty?
+            {}
+          else
+            JSON.parse(body)
+          end
+        end
+      end
+
       def json(hash)
         res.headers['Content-Type'] = 'application/json'
         res.write(JSON.generate(hash))

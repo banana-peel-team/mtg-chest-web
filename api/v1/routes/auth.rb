@@ -4,16 +4,14 @@ module API
       class Auth < API::Server
         define do
           on(post, root) do
-            params = req.params
-
             user = Services::Users::Signin.perform(
-              params['username'], params['password']
+              json_body['username'], json_body['password']
             ) or unauthorized!('Invalid credentials')
 
             secret = settings[:jwt_secret]
 
             token = JWT.encode(user, secret, 'HS256')
-            res.headers['HTTP_AUTHORIZATION'] = token
+            res.headers['AUTHORIZATION'] = "Bearer #{token}"
 
             json(user)
           end

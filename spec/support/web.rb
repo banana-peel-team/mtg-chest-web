@@ -21,6 +21,12 @@ module Support
       )
     end
 
+    def post_json(path, body, headers = {})
+      headers = headers.merge('Content-Type' => 'application/json')
+
+      post(path, JSON.generate(body), headers)
+    end
+
     def json_response
       JSON.parse(last_response.body)
     end

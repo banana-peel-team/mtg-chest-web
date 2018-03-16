@@ -10,7 +10,7 @@ module API
 
         on('status') do
           on(get, root) do
-            res.write('OK')
+            res.write('{"status":"ok","version":"1.0"}')
           end
         end
       end

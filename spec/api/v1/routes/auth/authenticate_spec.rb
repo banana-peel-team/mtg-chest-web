@@ -4,7 +4,7 @@ RSpec.describe API::V1::Routes::Auth do
   let(:params) {}
 
   subject(:request) do
-    post('/api/v1/auth', params)
+    post_json('api/v1/auth', params)
   end
 
   context 'with invalid credentials' do
@@ -36,13 +36,15 @@ RSpec.describe API::V1::Routes::Auth do
     it 'includes authorization header' do
       request
 
-      expect(last_response.headers).to include('HTTP_AUTHORIZATION')
+      expect(last_response.headers).to include('AUTHORIZATION')
     end
 
     it 'produces a validable token' do
       request
-      token = last_response.headers['HTTP_AUTHORIZATION']
+      token = last_response.headers['AUTHORIZATION']
+      token = token.gsub(/^Bearer /, '')
 
+      puts token
       expect {
         JWT.decode(token, jwt_secret, true)
       }.to_not raise_error
