@@ -13,7 +13,7 @@ module Web
           )
 
           if user
-            session[:user_id] = user.id
+            session[:user_id] = user[:id]
 
             redirect_to('/home')
           else

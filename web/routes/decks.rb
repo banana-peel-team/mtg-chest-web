@@ -4,7 +4,7 @@ module Web
       define do
         on(root) do
           on(get) do
-            decks = Queries::Decks.list
+            decks = Queries::Decks.for_user(current_user)
 
             render('decks/index', decks: decks)
           end
@@ -35,13 +35,13 @@ module Web
           end
 
           on(get, root) do
-            cards = Queries::DeckCards.for_deck(deck[:id])
+            cards = Queries::DeckCards.for_deck(current_user, deck[:id])
 
             render('decks/show', deck: deck, cards: cards)
           end
 
           on(get, 'list') do
-            cards = Queries::DeckCards.for_deck(deck[:id])
+            cards = Queries::DeckCards.for_deck(current_user, deck[:id])
 
             render('cards/list', cards: cards)
           end
