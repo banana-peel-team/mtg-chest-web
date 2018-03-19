@@ -23,7 +23,7 @@ module Services
           {
             'Condition' => CONDITIONS[printing[:condition]],
             'Language' => 'English',
-            'Count' => printing[:count],
+            'Count' => 1,
             'Name' => name(printing),
             'Edition' => edition(printing),
             'Foil' => printing[:foil] ? 'foil' : nil

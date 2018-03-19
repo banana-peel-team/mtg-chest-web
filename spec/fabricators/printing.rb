@@ -1,6 +1,7 @@
 Fabricator(:printing) do
   edition
   card
+
   multiverse_id { sequence(:multiverse_id) }
   image_name 'test'
   watermark nil

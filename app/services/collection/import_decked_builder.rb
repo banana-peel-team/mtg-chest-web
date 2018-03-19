@@ -3,12 +3,12 @@ require 'csv'
 module Services
   module Collection
     module ImportDeckedBuilder
-      def self.perform(import, user, file)
+      def self.perform(import, user, io)
         cache = {
           editions: Hash.new { |h, k| h[k] = edition_code(k) },
         }
 
-        File.readlines(file).each do |line|
+        io.readlines.each do |line|
           next unless (line =~ %r(^///)) == 0
 
           match = /mvid:(\d+)\sqty:(\d+)/.match(line)
@@ -37,15 +37,15 @@ module Services
       def self.import_card(import, user, data, cache)
         printing = Printing.where(multiverse_id: data[:multiverse_id]).first
 
-        UserPrinting.create(
+        UserPrinting.create_many(
+          data[:count],
           import_id: import[:id],
           printing_id: printing[:id],
           user_id: user[:id],
           foil: false, # TODO
-          count: data[:count],
           added_date: Time.now.utc,
           # TODO: We don't receive this from decked
-          condition: 'Near Mint'
+          condition: UserPrinting::CONDITION_NM,
         )
       end
       private_class_method :import_card

@@ -11,8 +11,8 @@ module Services
         UserPrinting::CONDITION_DM
       ].freeze
 
-      def self.perform(import, user, file)
-        ::CSV.read(file, headers: true).map do |row|
+      def self.perform(import, user, io)
+        ::CSV.new(io, headers: true).read.map do |row|
           import_card(import, user, row)
         end
       end
@@ -26,12 +26,12 @@ module Services
 
         condition = CONDITIONS[data['Condition'].to_i] if data['Condition']
 
-        UserPrinting.create(
+        UserPrinting.create_many(
+          data['Quantity'].to_i,
           import_id: import[:id],
           printing_id: printing[:id],
           user_id: user[:id],
           foil: data['Foil'] == '1',
-          count: data['Quantity'],
           added_date: data['PurchaseDate'],
           condition: condition
         )

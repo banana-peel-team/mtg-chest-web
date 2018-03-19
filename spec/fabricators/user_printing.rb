@@ -3,7 +3,6 @@ Fabricator(:user_printing) do
   import
   printing
 
-  count 1
   foil false
   added_date { Time.now.utc }
   condition 'NM'

@@ -14,8 +14,8 @@ module Services
             add_card(deck, line)
           end
 
-          sum = deck.deck_cards_dataset.sum(:card_count)
-          deck.update(card_count: sum)
+          count = deck.deck_cards_dataset.count
+          deck.update(card_count: count)
 
           deck
         end
@@ -24,12 +24,11 @@ module Services
       def self.add_card(deck, line)
         count, name = line.split(' ', 2)
         card = Card.where(name: name).first
-
-        DeckCard.create(
+        DeckCard.create_many(
+          count.to_i,
           deck_id: deck[:id],
           card_id: card[:id],
-          card_count: count,
-          added_at: Time.now.utc
+          added_at: Time.now.utc,
         )
       end
       private_class_method :add_card

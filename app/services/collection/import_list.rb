@@ -15,8 +15,8 @@ module Services
             import_card(import, user, line, attrs)
           end
 
-          sum = import.user_printings_dataset.sum(:count)
-          import.update(user_printing_count: sum)
+          count = import.user_printings_dataset.count
+          import.update(user_printing_count: count)
 
           import
         end
@@ -30,12 +30,12 @@ module Services
           Sequel.qualify(:printings, :edition_code) => params[:edition_code]
         ).select(Sequel.qualify(:printings, :id)).first
 
-        UserPrinting.create(
+        UserPrinting.create_many(
+          count.to_i,
           import_id: import[:id],
           printing_id: printing[:id],
           user_id: user[:id],
           foil: params[:foil],
-          count: count,
           added_date: Time.now.utc,
           condition: params[:condition],
         )

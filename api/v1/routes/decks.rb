@@ -14,7 +14,7 @@ module API
               deck_cards = Queries::DeckCards.for_deck(current_user, id)
 
               json(
-                cards: API::V1::Presenters::UserPrinting.list(deck_cards)
+                cards: API::V1::Presenters::DeckCard.list(deck_cards)
               )
             end
           end

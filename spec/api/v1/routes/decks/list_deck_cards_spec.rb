@@ -1,10 +1,11 @@
 require 'web_helper'
 
-RSpec.describe API::V1::Routes::Collection do
+RSpec.describe API::V1::Routes::Decks do
   let(:headers) {}
+  let(:deck) { Fabricate(:deck) }
 
   subject(:request) do
-    get('/api/v1/collection', {}, headers)
+    get("/api/v1/decks/#{deck.id}", {}, headers)
   end
 
   it_behaves_like 'a secure api endpoint'
@@ -13,10 +14,11 @@ RSpec.describe API::V1::Routes::Collection do
     let(:user) { Fabricate(:user) }
     let(:headers) { jwt_header(user) }
 
-    context 'having two cards imported' do
+    context 'having a deck with 2 cards' do
+      let(:deck) { Fabricate(:deck, user: user) }
+
       before do
-        Fabricate(:user_printing, user: user)
-        Fabricate(:user_printing, user: user)
+        Fabricate.times(2, :deck_card, deck: deck)
       end
 
       it 'includes two cards' do
@@ -25,7 +27,7 @@ RSpec.describe API::V1::Routes::Collection do
         expect(json_response['cards'].count).to eq(2)
       end
 
-      it_behaves_like "a user_printing" do
+      it_behaves_like "a deck_card" do
         before { request }
 
         subject { json_response['cards'].first }

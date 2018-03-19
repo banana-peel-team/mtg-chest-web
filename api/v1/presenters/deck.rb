@@ -8,8 +8,8 @@ module API
 
         def self.single(deck)
           {
-            id: deck[:id],
-            name: deck[:name],
+            deck_id: deck[:id],
+            deck_name: deck[:name],
           }
         end
       end

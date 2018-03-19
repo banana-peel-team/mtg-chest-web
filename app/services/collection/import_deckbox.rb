@@ -3,12 +3,13 @@ require 'csv'
 module Services
   module Collection
     module ImportDeckbox
-      def self.perform(import, user, file)
+      def self.perform(import, user, io)
         cache = {
           editions: Hash.new { |h, k| h[k] = edition_code(k) },
         }
 
-        ::CSV.read(file, headers: true, encoding: 'utf-8').map do |row|
+        csv = ::CSV.new(io, headers: true, encoding: 'utf-8')
+        csv.read.map do |row|
           import_card(import, user, row, cache)
         end
       end
@@ -36,13 +37,14 @@ module Services
           .where(card_id: card_id, edition_code: edition_code)
           .first
 
-        UserPrinting.create(
+        UserPrinting.create_many(
+          data['Count'].to_i,
           import_id: import[:id],
           printing_id: printing[:id],
           user_id: user[:id],
           foil: data['Foil'] == 'foil',
-          count: data['Count'],
           added_date: Time.now.utc,
+          # TODO: Map correct values
           condition: data['Condition'] || 'Near Mint'
         )
       end

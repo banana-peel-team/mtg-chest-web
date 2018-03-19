@@ -9,4 +9,9 @@ class UserPrinting < Sequel::Model
   many_to_one :printing
   many_to_one :import
   many_to_one :user
+
+  def self.create_many(count, attrs)
+    printings = count.times.map { attrs }
+    multi_insert(printings)
+  end
 end

@@ -44,7 +44,6 @@ RSpec.describe API::V1::Routes::Auth do
       token = last_response.headers['AUTHORIZATION']
       token = token.gsub(/^Bearer /, '')
 
-      puts token
       expect {
         JWT.decode(token, jwt_secret, true)
       }.to_not raise_error
@@ -54,14 +53,12 @@ RSpec.describe API::V1::Routes::Auth do
       }.to raise_error(JWT::VerificationError)
     end
 
-    context 'response body' do
+    it_behaves_like 'a user' do
       subject do
         request
 
-        last_response.body
+        json_response['user']
       end
-
-      it { is_expected.to include('id', 'username') }
     end
   end
 end

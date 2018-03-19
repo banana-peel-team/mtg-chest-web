@@ -13,7 +13,7 @@ module API
             token = JWT.encode(user, secret, 'HS256')
             res.headers['AUTHORIZATION'] = "Bearer #{token}"
 
-            json(user)
+            json(user: API::V1::Presenters::User.single(user))
           end
         end
       end
