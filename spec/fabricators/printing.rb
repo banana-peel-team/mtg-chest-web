@@ -4,10 +4,10 @@ Fabricator(:printing) do
 
   multiverse_id { sequence(:multiverse_id) }
   image_name 'test'
-  watermark nil
-  artist nil
-  number nil
+  watermark "none"
+  artist "Artist"
+  number "123a"
   rarity 'common'
-  mci_number nil
-  flavor nil
+  mci_number 123
+  flavor "Flavor"
 end

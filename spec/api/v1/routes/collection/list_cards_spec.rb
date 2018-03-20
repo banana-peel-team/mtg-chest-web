@@ -13,22 +13,24 @@ RSpec.describe API::V1::Routes::Collection do
     let(:user) { Fabricate(:user) }
     let(:headers) { jwt_header(user) }
 
-    context 'having two cards imported' do
+    context 'having two copies of two cards imported' do
       before do
-        Fabricate(:user_printing, user: user)
-        Fabricate(:user_printing, user: user)
+        printing1 = Fabricate(:printing)
+        printing2 = Fabricate(:printing)
+
+        Fabricate(:user_printing, printing: printing1, user: user)
+        Fabricate(:user_printing, printing: printing2,user: user)
       end
 
-      it 'includes two cards' do
-        request
+      before { request }
+      subject(:cards) { json_response['cards'] }
 
+      it 'includes two cards' do
         expect(json_response['cards'].count).to eq(2)
       end
 
-      it_behaves_like "a user_printing" do
-        before { request }
-
-        subject { json_response['cards'].first }
+      it_behaves_like "a CollectionCard" do
+        subject { cards.first }
       end
     end
   end

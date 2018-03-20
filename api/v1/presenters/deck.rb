@@ -10,6 +10,8 @@ module API
           {
             deck_id: deck[:id],
             deck_name: deck[:name],
+            card_count: deck[:card_count],
+            deck_date: deck[:created_at],
           }
         end
       end

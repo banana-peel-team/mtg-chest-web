@@ -18,7 +18,7 @@
             %i{class: "ss ss-#{printing[:edition_code].downcase}",
                 title: printing[:edition_name]}
             %a{href: "/editions/#{printing[:edition_code]}/cards/#{printing[:card_id]}"}
-              = printing[:name]
+              = printing[:card_name]
           %td.mtgTags
             - printing[:types].each do |type|
               %i{title: type, class: "ms ms-#{type.downcase}"}
@@ -49,7 +49,7 @@
             %i{class: "ss ss-#{printing[:edition_code].downcase}",
                 title: printing[:edition_name]}
             %a{href: "/editions/#{printing[:edition_code]}/cards/#{printing[:card_id]}"}
-              = printing[:name]
+              = printing[:card_name]
           %td.mtgTags{colspan: 2}
             - printing[:types].each do |type|
               %i{title: type, class: "ms ms-#{type.downcase}"}

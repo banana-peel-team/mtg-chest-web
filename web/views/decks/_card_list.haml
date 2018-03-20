@@ -13,7 +13,7 @@
         %tr
           %td= card[:count]
           %td
-            = card[:name]
+            = card[:card_name]
           %td.mtgTags
             - card[:types].each do |type|
               %i{title: type, class: "ms ms-#{type.downcase}"}
@@ -39,7 +39,7 @@
         %tr
           %td= card[:count]
           %td
-            = card[:name]
+            = card[:card_name]
           %td.mtgTags{colspan: 2}
             - card[:types].each do |type|
               %i{title: type, class: "ms ms-#{type.downcase}"}

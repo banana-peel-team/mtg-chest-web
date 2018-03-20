@@ -1,4 +1,4 @@
-RSpec.shared_examples "a user" do |data|
+RSpec.shared_examples "a User" do |data|
   it { is_expected.to include('user_id' => Integer) }
   it { is_expected.to include('username' => String) }
 

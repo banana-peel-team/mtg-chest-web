@@ -23,24 +23,21 @@ RSpec.describe API::V1::Routes::Auth do
     let(:password) { 'test-password' }
     let(:user) { Fabricate(:user, password: password) }
 
+    before { request }
+
     let(:params) do
       { username: user.username, password: password }
     end
 
     it 'returns ok'  do
-      request
-
       expect(last_response.status).to eq(200)
     end
 
     it 'includes authorization header' do
-      request
-
       expect(last_response.headers).to include('AUTHORIZATION')
     end
 
     it 'produces a validable token' do
-      request
       token = last_response.headers['AUTHORIZATION']
       token = token.gsub(/^Bearer /, '')
 
@@ -53,12 +50,8 @@ RSpec.describe API::V1::Routes::Auth do
       }.to raise_error(JWT::VerificationError)
     end
 
-    it_behaves_like 'a user' do
-      subject do
-        request
-
-        json_response['user']
-      end
+    it_behaves_like 'a User' do
+      subject { json_response['user'] }
     end
   end
 end

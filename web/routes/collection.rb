@@ -3,7 +3,7 @@ module Web
     class Collection < Web::Server
       define do
         on(get, root) do
-          printings = Queries::CollectionCards.for_user(current_user)
+          printings = Queries::CollectionCards.full_for_user(current_user)
 
           render('collection/show', printings: printings)
         end
@@ -27,7 +27,7 @@ module Web
               printings = Queries::ImportPrintings.for_import(import)
 
               render('collection/show_import', import: import,
-                                              printings: printings)
+                                               printings: printings)
             end
 
             on('list') do

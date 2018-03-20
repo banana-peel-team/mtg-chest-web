@@ -3,10 +3,12 @@ module API
     module Presenters
       module DeckCard
         def self.list(cards)
-          cards.map { |card| single(card) }
+          cards.map do |card|
+            API::V1::Presenters::CollectionCard.single(card)
+          end
         end
 
-        def self.single(card)
+        def self.details(card)
           {
             deck_card_id: card[:deck_card_id],
             card_name: card[:card_name],

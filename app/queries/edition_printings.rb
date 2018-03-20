@@ -2,12 +2,13 @@ module Queries
   class EditionPrintings
     def self.for_edition(code)
       Printing
-        .association_join(:card)
+        .association_join(:card, :edition)
         .where(edition_code: code)
         .select(
-          :edition_code,
+          Sequel.qualify(:edition, :code).as(:edition_code),
+          Sequel.qualify(:edition, :name).as(:edition_name),
           Sequel.qualify(:card, :id).as(:card_id),
-          Sequel.qualify(:card, :name).as(:name),
+          Sequel.qualify(:card, :name).as(:card_name),
           Sequel.qualify(:card, :power).as(:power),
           Sequel.qualify(:card, :mana_cost),
           Sequel.qualify(:card, :toughness).as(:toughness),

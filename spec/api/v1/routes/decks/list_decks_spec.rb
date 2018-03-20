@@ -19,15 +19,13 @@ RSpec.describe API::V1::Routes::Decks do
         Fabricate(:deck, user: user)
       end
 
-      it 'includes two decks' do
-        request
+      before { request }
 
+      it 'includes two decks' do
         expect(json_response['decks'].count).to eq(2)
       end
 
-      it_behaves_like "a deck" do
-        before { request }
-
+      it_behaves_like "a Deck" do
         subject { json_response['decks'].first }
       end
     end
