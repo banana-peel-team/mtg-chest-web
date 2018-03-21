@@ -4,9 +4,7 @@
       %a{href: '/decks'} Decks
     %li.breadcrumb-item.active New
 
-%form{action: '/decks/import-list',
-      method: 'post'}
-  = csrf.form_tag
+- form(action: '/decks/import-list') do
   .card.mt-3
     .card-header Create from card list
     .card-body

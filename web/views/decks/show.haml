@@ -11,4 +11,4 @@
         %a.nav-link.btn.btn-light{href: "/decks/#{deck[:id]}/list"}
           Card list
 
-= partial('decks/_card_list', with_count: true, cards: cards)
+= partial('decks/_card_list', with_count: true, deck: deck, cards: cards)

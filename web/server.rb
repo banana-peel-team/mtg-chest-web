@@ -2,12 +2,14 @@ require 'cuba'
 require 'cuba/safe'
 require 'cuba/render'
 require 'i18n'
+require 'haml/helpers'
 
 require './app/application'
 
 require_relative 'helpers/login_helper'
 require_relative 'helpers/common_helper'
 require_relative 'helpers/mtg_helper'
+require_relative 'helpers/views_helper'
 
 I18n.load_path = [['./web/locales/en.yml']]
 I18n.locale = :en
@@ -23,9 +25,11 @@ module Web
     settings[:render][:views] = './web/views'
     settings[:render][:layout] = 'layout'
 
+    plugin(::Haml::Helpers)
     plugin(Web::Helpers::LoginHelper)
     plugin(Web::Helpers::CommonHelper)
     plugin(Web::Helpers::MTGHelper)
+    plugin(Web::Helpers::ViewsHelper)
   end
 end
 

@@ -1,4 +1,4 @@
-%table.table.table-striped.table-sm.table-hover
+%table.table.table-striped.table-sm.table-hover.mt-5
   %thead
     %tr
       %th Count
@@ -14,6 +14,8 @@
           %td= card[:count]
           %td
             = card[:card_name]
+            %a{href: "/decks/#{deck[:id]}/cards/#{card[:card_id]}"}
+              %i.fas.fa-exchange-alt{title: 'Similar to this'}
           %td.mtgTags
             - card[:types].each do |type|
               %i{title: type, class: "ms ms-#{type.downcase}"}

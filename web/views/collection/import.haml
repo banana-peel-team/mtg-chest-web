@@ -4,10 +4,7 @@
       %a{href: '/collection/imports'} Imports
     %li.breadcrumb-item.active{'aria-current': 'page'} New
 
-%form{action: '/collection/import',
-      enctype: 'multipart/form-data',
-      method: 'post'}
-  = csrf.form_tag
+- form(action: '/collection/import', enctype: 'multipart/form-data') do
   .card
     .card-header Import from a file
     .card-body
@@ -47,9 +44,7 @@
       .form-group.mt-3
         %input.btn.btn-primary{type: 'submit', value: 'Import'}
 
-%form{action: '/collection/import-list',
-      method: 'post'}
-  = csrf.form_tag
+- form(action: '/collection/import-list') do
   .card.mt-3
     .card-header Import from card list
     .card-body

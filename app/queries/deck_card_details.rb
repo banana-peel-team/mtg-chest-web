@@ -1,10 +1,9 @@
 module Queries
   module DeckCardDetails
-    def self.for_deck_card(deck_id, deck_card_id)
+    def self.for_deck_card(deck_card_id)
       DeckCard
         .association_join(:deck, :card)
         .where(
-          deck_id: deck_id,
           Sequel.qualify(:deck_cards, :id) => deck_card_id,
         )
         .order(Sequel.asc(Sequel.qualify(:card, :name)))

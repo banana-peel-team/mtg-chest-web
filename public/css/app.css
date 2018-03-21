@@ -7,7 +7,7 @@ body {
 .send-questions-form { margin-right: 5px; }
 
 .mtgCard {
-  font-size: 3em;
+  font-size: 1em;
 }
 
 .mtgTags {
@@ -20,6 +20,10 @@ body {
   display: inline-block;
   border-radius: 0.3em;
   padding: 0 0.17em;
+}
+
+.mtgCard-type {
+  font-weight: bold;
 }
 
 .mtgTag--wurm,

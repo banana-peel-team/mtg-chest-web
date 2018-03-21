@@ -45,6 +45,19 @@ module Web
 
             render('cards/list', cards: cards)
           end
+
+          on('cards') do
+            on(get, ':card_id') do |card_id|
+              card = Queries::Cards.card(card_id)
+
+              cards = Queries::DeckCards.alternatives(
+                current_user, deck[:id], card
+              )
+
+              render('decks/card', deck: deck, card: card,
+                     alternatives: cards)
+            end
+          end
         end
       end
     end

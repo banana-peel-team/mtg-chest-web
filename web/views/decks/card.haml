@@ -1,0 +1,15 @@
+%nav{'aria-label': 'breadcrumb'}
+  %ol.breadcrumb
+    %li.breadcrumb-item
+      %a{href: '/decks'} Decks
+    %li.breadcrumb-item
+      %a{href: "/decks/#{deck[:id]}"}
+        = deck[:name]
+    %li.breadcrumb-item.active= card[:card_name]
+
+= partial('printings/_details', printing: card, printings: [])
+
+%h2.mt-5 Similar cards for this deck
+
+= partial('decks/_card_list', with_count: true, deck: deck,
+          cards: alternatives)

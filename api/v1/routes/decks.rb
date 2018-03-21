@@ -19,10 +19,10 @@ module API
               )
             end
 
-            on('cards') do
-              on(':id') do |id|
+            on('cards/:card_id') do |card_id|
+              on(get, root) do
                 deck_card = Queries::DeckCardDetails.for_deck_card(
-                  deck_id, id
+                  deck_card_id
                 )
 
                 not_found! unless deck_card
@@ -30,6 +30,15 @@ module API
                 json(
                   details: API::V1::Presenters::DeckCard.details(deck_card)
                 )
+              end
+
+              on(get, 'alternatives') do
+                card = Card.find(id: card_id)
+                cards = Queries::DeckCards.alternatives(
+                  current_user, deck_id, card
+                )
+
+                json(cards: API::V1::Presenters::DeckCard.list(cards))
               end
             end
           end

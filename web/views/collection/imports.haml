@@ -17,10 +17,8 @@
     %tr
       %td
         %a{href: "/collection/imports/#{import[:id]}"}= import[:title]
-        = count_badge(import[:user_printing_count])
+        - count_badge(import[:user_printing_count])
       %td= import[:created_at]
       %td
-        %form{action: "/collection/imports/#{import[:id]}", method: 'post'}
-          = csrf.form_tag
-          %input{type: 'hidden', name: '_method', value: 'delete'}
-          %input.btn.btn-danger{type: 'submit', value: 'Delete'}
+        - delete_form(action: "/collection/imports/#{import[:id]}") do
+          - delete_button

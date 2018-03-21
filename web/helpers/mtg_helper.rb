@@ -9,14 +9,16 @@ module Web
         'Swamp' => 'B'
       }.freeze
 
-      def count_badge(count)
-        %Q(<span class="badge badge-primary badge-pill"
-                title="#{count} cards">#{count}</span>)
-      end
-
       def gatherer_url(printing)
         "http://gatherer.wizards.com/" +
           "Pages/Card/Details.aspx?multiverseid=#{printing[:multiverse_id]}"
+      end
+
+      def gatherer_link(printing)
+        return unless printing[:multiverse_id]
+        haml_tag(:a, target: '_blank', href: gatherer_url(printing)) do
+          haml_icon('share-square')
+        end
       end
 
       def mtg_icon(icon)

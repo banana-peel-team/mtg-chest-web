@@ -14,4 +14,4 @@
         %a.nav-link.btn.btn-light{href: "/collection/imports/#{import[:id]}/deckbox"}
           Export to deckbox
 
-= partial('printings/_list', with_count: true, printings: printings)
+= list_printings(printings)
