@@ -43,7 +43,7 @@ Web::Server.define do
     csrf.reset!
 
     res.status = 403
-    res.write('Not authorized')
+    res.write('Cannot validate post request.')
     halt(res.finish)
   end
 

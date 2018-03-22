@@ -10,7 +10,7 @@ module API
   class Server < Cuba
     use(Rack::JWT::Auth, secret: ENV['JWT_SECRET'],
                          options: { algorithm: 'HS256' },
-                         exclude: ['/v1/status', '/v1/auth'])
+                         exclude: ['/v1/status', '/v1/auth', '/v1/cards'])
     plugin(API::Helpers::CommonHelper)
   end
 end

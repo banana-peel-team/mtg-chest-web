@@ -23,12 +23,12 @@ module Services
             user_printing_count: 0
           )
 
-          File.open(attrs[:file], 'r') do |io|
+          File.open(attrs[:file], 'rb') do |io|
             service.perform(import, user, io)
           end
 
-          sum = import.user_printings_dataset.sum(:count)
-          import.update(user_printing_count: sum)
+          count = import.user_printings_dataset.count
+          import.update(user_printing_count: count)
 
           import
         end

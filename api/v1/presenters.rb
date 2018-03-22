@@ -1,6 +1,7 @@
 require_relative 'presenters/user'
 require_relative 'presenters/collection'
 require_relative 'presenters/collection_card'
+require_relative 'presenters/collection_card_details'
 require_relative 'presenters/deck'
 require_relative 'presenters/deck_card'
 require_relative 'presenters/card'

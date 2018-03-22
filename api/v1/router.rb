@@ -1,6 +1,7 @@
 require_relative 'routes/auth'
 require_relative 'routes/collection'
 require_relative 'routes/decks'
+require_relative 'routes/cards'
 
 module API
   module V1
@@ -8,6 +9,7 @@ module API
       define do
         on('collection') { run(API::V1::Routes::Collection) }
         on('decks') { run(API::V1::Routes::Decks) }
+        on('cards') { run(API::V1::Routes::Cards) }
         on('auth') { run(API::V1::Routes::Auth) }
 
         on('status') do

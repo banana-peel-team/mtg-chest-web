@@ -22,13 +22,15 @@ module API
             on('cards/:card_id') do |card_id|
               on(get, root) do
                 deck_card = Queries::DeckCardDetails.for_deck_card(
-                  deck_card_id
+                  deck_id, card_id
                 )
 
                 not_found! unless deck_card
 
                 json(
-                  details: API::V1::Presenters::DeckCard.details(deck_card)
+                  details: API::V1::Presenters::CollectionCardDetails.single(
+                    deck_card
+                  )
                 )
               end
 

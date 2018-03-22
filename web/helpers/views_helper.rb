@@ -9,7 +9,7 @@ module Web
         opts = {method: 'post'}.merge(opts)
 
         haml_tag(:form, opts) do
-          csrf.form_tag if opts[:method] != 'get'
+          haml_concat(csrf.form_tag) if opts[:method] != 'get'
 
           yield
         end
