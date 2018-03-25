@@ -42,6 +42,7 @@ module Queries
         .order(Sequel.asc(Sequel.qualify(:card, :name)))
         .group_and_count(
           Sequel.qualify(:card, :id).as(:card_id),
+          Sequel.qualify(:card, :scores).as(:card_scores),
           Sequel.qualify(:card, :name).as(:card_name),
           Sequel.qualify(:card, :converted_mana_cost).as(:converted_mana_cost),
           Sequel.qualify(:card, :toughness).as(:toughness),

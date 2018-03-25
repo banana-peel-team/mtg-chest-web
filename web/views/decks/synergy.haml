@@ -9,7 +9,10 @@
 
 = partial('printings/_details', printing: card, printings: [])
 
-%h2.mt-5 Similar cards for this deck
+%h2.mt-5 Similar cards on your collection
 
-= partial('decks/_card_list', with_count: true, deck: deck,
-          cards: alternatives)
+= partial('decks/_card_list',
+  with_count: true,
+  deck: deck,
+  deck_databases: deck_databases,
+  cards: cards)

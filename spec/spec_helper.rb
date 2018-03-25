@@ -1,9 +1,9 @@
 require 'byebug'
 require 'fabrication'
+require 'logger'
 
 require './app/application'
 require_relative 'helpers'
-
 
 RSpec.configure do |config|
   config.include Support::Helpers
@@ -24,6 +24,7 @@ RSpec.configure do |config|
 
   if config.files_to_run.one?
     config.default_formatter = 'doc'
+    DB.logger = Logger.new(STDERR)
   end
 
   config.shared_context_metadata_behavior = :apply_to_host_groups

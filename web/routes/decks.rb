@@ -36,8 +36,9 @@ module Web
 
           on(get, root) do
             cards = Queries::DeckCards.for_deck(current_user, deck[:id])
+            dbs = DeckDatabase.select(:key, :name, :max_score).all
 
-            render('decks/show', deck: deck, cards: cards)
+            render('decks/show', deck: deck, cards: cards, deck_databases: dbs)
           end
 
           on(get, 'list') do
@@ -47,15 +48,36 @@ module Web
           end
 
           on('cards') do
-            on(get, ':card_id') do |card_id|
-              card = Queries::Cards.card(card_id)
+            on(':card_id') do |card_id|
+              on(get, 'alternatives') do
+                card = Queries::Cards.card(card_id)
 
-              cards = Queries::DeckCards.alternatives(
-                current_user, deck[:id], card
-              )
+                cards = Queries::DeckCards.alternatives(
+                  current_user, deck[:id], card
+                )
+                dbs = DeckDatabase.select(:key, :name, :max_score).all
 
-              render('decks/card', deck: deck, card: card,
-                     alternatives: cards)
+                render('decks/alternatives',
+                      deck: deck,
+                      card: card,
+                      alternatives: cards,
+                      deck_databases: dbs)
+              end
+
+              on(get, 'synergy') do
+                card = Queries::Cards.card(card_id)
+
+                cards = Queries::DeckCards.synergy(
+                  current_user, deck[:id], card
+                )
+                dbs = DeckDatabase.select(:key, :name, :max_score).all
+
+                render('decks/synergy',
+                      deck: deck,
+                      card: card,
+                      cards: cards,
+                      deck_databases: dbs)
+              end
             end
           end
         end

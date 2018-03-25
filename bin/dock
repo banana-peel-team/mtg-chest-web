@@ -8,7 +8,7 @@ COMPOSE_SERVICE='web'
 SERVER_PORT='3000'
 
 run() {
-  docker-compose $COMPOSE_ARGS run $RUN_ARGS $COMPOSE_SERVICE $@
+  docker-compose $COMPOSE_ARGS run $RUN_ARGS $COMPOSE_SERVICE "$@"
 }
 
 on-test() {
@@ -88,8 +88,19 @@ setup() {
 
 ## Shortcuts
 
-migrate-test() {
-  on-test migrate $@
+reset-db() {
+  migrate -M 0
+  migrate
+}
+
+undo-migration() {
+  PREVIOUS=$(ls -1t db/migrations | tail -n +2 | head -1 | cut -f1 -d_)
+  migrate -M $PREVIOUS
+}
+
+redo-migration() {
+  undo-migration
+  migrate
 }
 
 rspec() {
@@ -100,4 +111,8 @@ console() {
   run bundle exec rack-console $@
 }
 
-$@
+COMMAND="$1"
+
+shift
+
+$COMMAND "$@"

@@ -3,6 +3,7 @@
     %tr
       - if with_count
         %th Count
+      %th Score
       %th Name
       %th Tags
       %th Cost
@@ -14,6 +15,7 @@
         %tr
           - if with_count
             %td= printing[:count]
+          %td= printing[:card_scores]
           %td
             %i{class: "ss ss-#{printing[:edition_code].downcase}",
                 title: printing[:edition_name]}
@@ -36,7 +38,7 @@
     %tr
       - if with_count
         %th Count
-      %th Name
+      %th{colspan: 2} Name
       %th{colspan: 2} Tags
       %th{colspan: 2} Identity
   %tbody
@@ -45,7 +47,7 @@
         %tr
           - if with_count
             %td= printing[:count]
-          %td
+          %td{colspan: 2}
             %i{class: "ss ss-#{printing[:edition_code].downcase}",
                 title: printing[:edition_name]}
             %a{href: "/editions/#{printing[:edition_code]}/cards/#{printing[:card_id]}"}

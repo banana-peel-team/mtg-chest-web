@@ -5,6 +5,28 @@ module Web
         haml_tag('i.fas', class: "fa-#{name}")
       end
 
+      def card_score(dbs, card)
+        dbs.each do |db|
+          haml_tag(:span, card[:card_scores][db[:key]], title: db[:name])
+        end
+      end
+
+      def alternatives_link(deck, card)
+        path = "/decks/#{deck[:id]}/cards/#{card[:card_id]}/alternatives"
+
+        haml_tag(:a, href: path) do
+          haml_tag('i.fas.fa-exchange-alt', title: 'Alternatives')
+        end
+      end
+
+      def synergy_deck_link(deck, card)
+        path = "/decks/#{deck[:id]}/cards/#{card[:card_id]}/synergy"
+
+        haml_tag(:a, href: path) do
+          haml_tag('i.fas.fa-trophy', title: 'Cards that work well with this')
+        end
+      end
+
       def form(opts)
         opts = {method: 'post'}.merge(opts)
 

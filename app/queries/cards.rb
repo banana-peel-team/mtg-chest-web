@@ -23,21 +23,23 @@ module Queries
         .first
     end
 
-    def self.collection_cards(dataset)
+    # FIXME: card_alias workaround, look for something else
+    def self.collection_cards(dataset, card_alias = :card)
       dataset
-        .order(Sequel.asc(Sequel.qualify(:card, :name)))
+        .order(Sequel.asc(Sequel.qualify(card_alias, :name)))
         .group_and_count(
-          Sequel.qualify(:card, :id).as(:card_id),
-          Sequel.qualify(:card, :name).as(:card_name),
-          Sequel.qualify(:card, :converted_mana_cost).as(:converted_mana_cost),
-          Sequel.qualify(:card, :toughness).as(:toughness),
-          Sequel.qualify(:card, :power).as(:power),
-          Sequel.qualify(:card, :loyalty).as(:loyalty),
-          Sequel.qualify(:card, :mana_cost).as(:mana_cost),
-          Sequel.qualify(:card, :color_identity).as(:color_identity),
-          Sequel.qualify(:card, :types).as(:types),
-          Sequel.qualify(:card, :subtypes).as(:subtypes),
-          Sequel.qualify(:card, :supertypes).as(:supertypes),
+          Sequel.qualify(card_alias, :id).as(:card_id),
+          Sequel.qualify(card_alias, :name).as(:card_name),
+          Sequel.qualify(card_alias, :converted_mana_cost).as(:converted_mana_cost),
+          Sequel.qualify(card_alias, :toughness).as(:toughness),
+          Sequel.qualify(card_alias, :power).as(:power),
+          Sequel.qualify(card_alias, :loyalty).as(:loyalty),
+          Sequel.qualify(card_alias, :mana_cost).as(:mana_cost),
+          Sequel.qualify(card_alias, :color_identity).as(:color_identity),
+          Sequel.qualify(card_alias, :types).as(:types),
+          Sequel.qualify(card_alias, :subtypes).as(:subtypes),
+          Sequel.qualify(card_alias, :supertypes).as(:supertypes),
+          Sequel.qualify(card_alias, :scores).as(:card_scores),
         )
         .all
     end

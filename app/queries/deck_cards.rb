@@ -9,14 +9,23 @@ module Queries
     end
 
     def self.alternatives(user, deck_id, card)
+      cards = Sequel[:card]
+
       deck_cards = DeckCard.where(deck_id: deck_id)
+      cards_in_decks = DeckCard
+        .association_join(:deck)
+        .where(user_id: user[:id])
+
       ds = user.user_printings_dataset
         .association_join(printing: :card)
         .where(
-          Sequel.qualify(:card, :color_identity) => card[:color_identity],
+          cards[:color_identity] => card[:color_identity],
         )
         .exclude(
-          Sequel.qualify(:card, :id) => deck_cards.select(:card_id),
+          cards[:id] => deck_cards.select(:card_id),
+        )
+        .exclude(
+          cards[:id] => cards_in_decks.select(:card_id),
         )
 
       if card.subtypes
@@ -32,6 +41,32 @@ module Queries
       end
 
       Queries::Cards.collection_cards(ds)
+    end
+
+    def self.synergy(user, deck_id, card)
+      cards = Sequel[:cards]
+
+      deck_cards = DeckCard.where(deck_id: deck_id)
+      cards_in_decks = DeckCard
+        .association_join(:deck)
+        .where(user_id: user[:id])
+
+      ds = Card
+        .first(id: card[:card_id])
+        .related_cards_dataset
+        .association_join(printings: :user_printings)
+        .exclude(
+          cards[:id] => deck_cards.select(:card_id),
+        )
+        .exclude(
+          cards[:id] => cards_in_decks.select(:card_id),
+        )
+        .where(
+          Sequel[:user_printings][:user_id] => user[:id],
+          cards[:color_identity] => card[:color_identity],
+        )
+
+      Queries::Cards.collection_cards(ds, :cards)
     end
   end
 end
