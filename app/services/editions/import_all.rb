@@ -7,8 +7,8 @@ module Services
         'UST'
       ].freeze
 
-      def self.perform(filename)
-        obj = parse_json_file(filename)
+      def self.perform(stream)
+        obj = Yajl::Parser.parse(stream)
 
         if obj.key?('cards')
           import_set(obj)
@@ -61,13 +61,6 @@ module Services
         end
       end
       private_class_method :import_sets
-
-      def self.parse_json_file(filename)
-        stream = File.new(filename, 'r')
-
-        Yajl::Parser.parse(stream)
-      end
-      private_class_method :parse_json_file
     end
   end
 end
