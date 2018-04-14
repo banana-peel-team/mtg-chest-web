@@ -10,6 +10,12 @@ module Services
         file = attrs.delete(:file)
         attrs[:cards_ids] = get_cards_ids(file)
 
+        if attrs[:cards_ids].empty?
+          STDERR.puts(" ** Skipping deck with no cards: " +
+                      "#{attrs[:event_id]}/#{attrs[:deck_id]}")
+          return
+        end
+
         Services::SystemDecks::Create.perform(
           deck_db,
           attrs

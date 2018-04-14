@@ -67,6 +67,7 @@ module Services
         ds = CardRelation.dataset
 
         combination = combinations.shift
+
         combination.sort!
         ds = CardRelation.where { |ds|
           ((ds.card_1_id =~ combination[0]) & (ds.card_2_id =~ combination[1]))

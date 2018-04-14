@@ -2,10 +2,13 @@ module Web
   module Routes
     class Collection < Web::Server
       define do
+        require_login!
+
         on(get, root) do
           printings = Queries::CollectionCards.full_for_user(current_user)
+          dbs = DeckDatabase.select(:key, :name, :max_score).all
 
-          render('collection/show', printings: printings)
+          render('collection/show', printings: printings, rated_decks: dbs)
         end
 
         on('imports') do
@@ -20,14 +23,17 @@ module Web
 
             on(delete, root) do
               Services::Collection::DeleteImport.perform(import)
+
               redirect_to('/collection/imports')
             end
 
             on(get, root) do |id|
               printings = Queries::ImportPrintings.for_import(import)
+              dbs = DeckDatabase.select(:key, :name, :max_score).all
 
               render('collection/show_import', import: import,
-                                               printings: printings)
+                                               printings: printings,
+                                               rated_decks: dbs)
             end
 
             on('list') do

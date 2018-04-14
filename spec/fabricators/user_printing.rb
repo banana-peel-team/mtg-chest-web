@@ -1,6 +1,7 @@
 Fabricator(:user_printing) do
   user
-  import
+  # TODO:
+  import { |attrs| Fabricate(:import, user: attrs[:user]) }
   printing
 
   foil false

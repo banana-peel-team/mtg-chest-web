@@ -3,6 +3,7 @@ body {
   padding-top: 4.5rem;
 }
 
+.alt-text { display: none; }
 .actions { margin-bottom: 1rem; }
 .send-questions-form { margin-right: 5px; }
 

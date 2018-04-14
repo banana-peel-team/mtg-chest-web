@@ -39,12 +39,15 @@ require_relative 'routes/collection'
 require_relative 'routes/decks'
 
 Web::Server.define do
-  on csrf.unsafe? do
-    csrf.reset!
+  # TODO:?
+  if ENV['RACK_ENV'] != 'test'
+    on csrf.unsafe? do
+      csrf.reset!
 
-    res.status = 403
-    res.write('Cannot validate post request.')
-    halt(res.finish)
+      res.status = 403
+      res.write('Cannot validate post request.')
+      halt(res.finish)
+    end
   end
 
   on(root) do

@@ -11,3 +11,11 @@ Fabricator(:printing) do
   mci_number 123
   flavor "Flavor"
 end
+
+Fabricator(:creature_printing, from: :printing) do
+  card { Fabricate(:creature_card) }
+end
+
+Fabricator(:basic_land_printing, from: :printing) do
+  card { Fabricate(:basic_land_card) }
+end

@@ -1,24 +1,22 @@
 %table.table.table-striped.table-sm.table-hover.mt-5
   %thead
     %tr
-      %th Count
       %th Score
       %th Name
       %th Tags
       %th Cost
       %th Identity
       %th P/T
+      %th Actions
   %tbody
     - cards.each do |card|
       - unless card[:types].include?('Land')
         %tr
-          %td= card[:count]
           %td
-            - card_score(deck_databases, card)
+            - card_score(rated_decks, card)
           %td
             = card[:card_name]
-            - alternatives_link(deck, card)
-            - synergy_deck_link(deck, card)
+            - count_badge(card[:count])
           %td.mtgTags
             - card[:types].each do |type|
               %i{title: type, class: "ms ms-#{type.downcase}"}
@@ -32,24 +30,25 @@
           %td
             - if card[:power]
               = "#{card[:power]}/#{card[:toughness]}"
+          %td
+            - alternatives_link(deck, card)
+            - synergy_deck_link(deck, card)
   %thead
     %tr
-      %th Count
       %th Score
       %th Name
       %th{colspan: 2} Tags
       %th{colspan: 2} Identity
+      %th Actions
   %tbody
     - cards.each do |card|
       - if card[:types].include?('Land')
         %tr
-          %td= card[:count]
           %td
-            - card_score(deck_databases, card)
+            - card_score(rated_decks, card)
           %td
             = card[:card_name]
-            - alternatives_link(deck, card)
-            - synergy_deck_link(deck, card)
+            - count_badge(card[:count])
           %td.mtgTags{colspan: 2}
             - card[:types].each do |type|
               %i{title: type, class: "ms ms-#{type.downcase}"}
@@ -58,3 +57,7 @@
 
           %td{colspan: 2}
             = mtg_icons_list(card[:color_identity])
+
+          %td
+            - alternatives_link(deck, card)
+            - synergy_deck_link(deck, card)

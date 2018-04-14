@@ -5,7 +5,6 @@ module Queries
         import.user_printings_dataset
           .association_join(printing: :card)
       )
-      .all
     end
   end
 end

@@ -5,6 +5,7 @@ require_relative 'support/definitions/collection_card'
 require_relative 'support/definitions/user'
 require_relative 'support/definitions/card'
 require_relative 'support/examples/secure_api_endpoint'
+require_relative 'support/examples/restricted_route'
 
 require 'rack/test'
 require './http'

@@ -14,10 +14,7 @@ gem 'bcrypt', '~> 3.1'
 gem 'rack-console', '~> 1.3'
 gem 'yajl-ruby', '~> 1.3'
 gem 'rack-jwt', '~> 0.3'
-
-group :development do
-  gem 'shotgun', '~> 0.9'
-end
+gem 'shotgun', '~> 0.9'
 
 group :development, :test do
   gem 'byebug', '~> 9.0'

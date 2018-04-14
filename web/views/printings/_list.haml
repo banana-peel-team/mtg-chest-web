@@ -1,8 +1,6 @@
 %table.table.table-striped.table-sm.table-hover
   %thead
     %tr
-      - if with_count
-        %th Count
       %th Score
       %th Name
       %th Tags
@@ -13,14 +11,15 @@
     - printings.each do |printing|
       - unless printing[:types].include?('Land')
         %tr
-          - if with_count
-            %td= printing[:count]
-          %td= printing[:card_scores]
+          %td
+            - card_score(rated_decks, printing)
           %td
             %i{class: "ss ss-#{printing[:edition_code].downcase}",
                 title: printing[:edition_name]}
             %a{href: "/editions/#{printing[:edition_code]}/cards/#{printing[:card_id]}"}
               = printing[:card_name]
+            - if with_count
+              - count_badge(printing[:count])
           %td.mtgTags
             - printing[:types].each do |type|
               %i{title: type, class: "ms ms-#{type.downcase}"}
@@ -36,22 +35,22 @@
               = "#{printing[:power]}/#{printing[:toughness]}"
   %thead
     %tr
-      - if with_count
-        %th Count
-      %th{colspan: 2} Name
+      %th
+      %th{colspan: 1} Name
       %th{colspan: 2} Tags
       %th{colspan: 2} Identity
   %tbody
     - printings.each do |printing|
       - if printing[:types].include?('Land')
         %tr
-          - if with_count
-            %td= printing[:count]
-          %td{colspan: 2}
+          %td
+          %td{colspan: 1}
             %i{class: "ss ss-#{printing[:edition_code].downcase}",
                 title: printing[:edition_name]}
             %a{href: "/editions/#{printing[:edition_code]}/cards/#{printing[:card_id]}"}
               = printing[:card_name]
+            - if with_count
+              - count_badge(printing[:count])
           %td.mtgTags{colspan: 2}
             - printing[:types].each do |type|
               %i{title: type, class: "ms ms-#{type.downcase}"}

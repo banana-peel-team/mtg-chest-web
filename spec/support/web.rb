@@ -4,8 +4,8 @@ module Support
       Cuba
     end
 
-    def auth(user, options = {})
-      options.merge()
+    def auth(user, headers = {})
+      headers.merge("rack.session" => { user_id: user.id })
     end
 
     def jwt_secret

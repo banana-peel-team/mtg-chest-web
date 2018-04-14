@@ -2,6 +2,8 @@ module Web
   module Routes
     class Decks < Web::Server
       define do
+        require_login!
+
         on(root) do
           on(get) do
             decks = Queries::Decks.for_user(current_user)
@@ -38,7 +40,7 @@ module Web
             cards = Queries::DeckCards.for_deck(current_user, deck[:id])
             dbs = DeckDatabase.select(:key, :name, :max_score).all
 
-            render('decks/show', deck: deck, cards: cards, deck_databases: dbs)
+            render('decks/show', deck: deck, cards: cards, rated_decks: dbs)
           end
 
           on(get, 'list') do
@@ -51,6 +53,7 @@ module Web
             on(':card_id') do |card_id|
               on(get, 'alternatives') do
                 card = Queries::Cards.card(card_id)
+                not_found! unless card
 
                 cards = Queries::DeckCards.alternatives(
                   current_user, deck[:id], card
@@ -61,11 +64,12 @@ module Web
                       deck: deck,
                       card: card,
                       alternatives: cards,
-                      deck_databases: dbs)
+                      rated_decks: dbs)
               end
 
               on(get, 'synergy') do
                 card = Queries::Cards.card(card_id)
+                not_found! unless card
 
                 cards = Queries::DeckCards.synergy(
                   current_user, deck[:id], card
@@ -76,7 +80,7 @@ module Web
                       deck: deck,
                       card: card,
                       cards: cards,
-                      deck_databases: dbs)
+                      rated_decks: dbs)
               end
             end
           end

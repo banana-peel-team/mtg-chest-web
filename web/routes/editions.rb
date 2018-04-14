@@ -13,8 +13,11 @@ module Web
 
           on(get, root) do
             printings = Queries::EditionPrintings.for_edition(code)
+            dbs = DeckDatabase.select(:key, :name, :max_score).all
 
-            render('editions/show', printings: printings, edition: edition)
+            render('editions/show', printings: printings,
+                                    edition: edition,
+                                    rated_decks: dbs)
           end
 
           on('cards') do

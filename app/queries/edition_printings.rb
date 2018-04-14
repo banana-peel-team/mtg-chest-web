@@ -16,6 +16,7 @@ module Queries
           Sequel.qualify(:card, :subtypes).as(:subtypes),
           Sequel.qualify(:card, :color_identity).as(:color_identity),
           Sequel.qualify(:card, :colors).as(:colors),
+          Sequel.qualify(:card, :scores).as(:card_scores),
         )
         .order(
           Sequel.qualify(:printings, :number)

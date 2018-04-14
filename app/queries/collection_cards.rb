@@ -21,6 +21,7 @@ module Queries
           Sequel.qualify(:card, :supertypes).as(:supertypes),
           Sequel.qualify(:card, :text).as(:text),
           Sequel.qualify(:card, :layout).as(:layout),
+          Sequel.qualify(:card, :scores).as(:card_scores),
           Sequel.qualify(:printing, :multiverse_id).as(:multiverse_id),
           Sequel.qualify(:printing, :flavor).as(:flavor),
           Sequel.qualify(:printing, :number).as(:number),

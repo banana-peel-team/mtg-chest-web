@@ -19,7 +19,7 @@
       %td
         %a{href: "/decks/#{deck[:id]}"}
           = deck[:name]
-          - count_badge(deck[:card_count])
+        - count_badge(deck[:card_count])
       %td= deck[:created_at]
       %td
         - delete_form(action: "/decks/#{deck[:id]}") do

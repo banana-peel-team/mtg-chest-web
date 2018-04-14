@@ -15,7 +15,9 @@ module Web
         path = "/decks/#{deck[:id]}/cards/#{card[:card_id]}/alternatives"
 
         haml_tag(:a, href: path) do
-          haml_tag('i.fas.fa-exchange-alt', title: 'Alternatives')
+          haml_tag('i.fas.fa-exchange-alt', title: 'Alternatives') do
+            haml_tag('span.alt-text', 'alternatives')
+          end
         end
       end
 
@@ -23,7 +25,10 @@ module Web
         path = "/decks/#{deck[:id]}/cards/#{card[:card_id]}/synergy"
 
         haml_tag(:a, href: path) do
-          haml_tag('i.fas.fa-trophy', title: 'Cards that work well with this')
+          haml_tag('i.fas.fa-trophy',
+                   title: 'Cards that work well with this') do
+            haml_tag('span.alt-text', 'synergy')
+          end
         end
       end
 
@@ -38,7 +43,8 @@ module Web
       end
 
       def delete_button
-        haml_tag('button.btn.btn-sm.btn-outline-danger', type: 'submit') do
+        opts = { type: 'submit', value: 'Delete' }
+        haml_tag('button.btn.btn-sm.btn-outline-danger', opts) do
           haml_icon('trash-alt')
         end
       end
@@ -54,13 +60,17 @@ module Web
       end
 
       def count_badge(count)
+        return if count == 1
+
         element = 'span.badge.badge-primary.badge-pill'
 
         haml_tag(element, count, title: "#{count} cards")
       end
 
-      def list_printings(printings)
-        partial('printings/_list', with_count: true, printings: printings)
+      def list_printings(printings, rated_decks)
+        partial('printings/_list', with_count: true,
+                                   printings: printings,
+                                   rated_decks: rated_decks)
       end
     end
   end
