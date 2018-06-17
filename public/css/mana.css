@@ -11,6 +11,23 @@
   display: inline-block;
 }
 
+.mtgIcon--half {
+  margin: -2px;
+  overflow: hidden;
+  width: 0.5em;
+  display: inline-block;
+}
+
+.mtgIcon--b .mtgIcon {
+  margin-left: -0.5em;
+}
+
+.mtgIcon--a {
+}
+
+.mtgIcon--b {
+}
+
 .mtgIcon--C  { background-position-x: 77.77%; }
 .mtgIcon--T,
 .mtgIcon--C  { background-position-y: 83.33%; }

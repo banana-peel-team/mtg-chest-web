@@ -19,9 +19,33 @@ module Web
         halt(res.finish)
       end
 
+      def redirect_back(fallback)
+        path =
+          if (back = req.env['HTTP_REFERER']) && !back.empty?
+            back
+          else
+            fallback
+          end
+
+        redirect_to(path)
+      end
+
       def error!(status:)
         res.status = status
 
+        halt(res.finish)
+      end
+
+      def render_view(klass, options)
+        res['Content-Type'] = 'text/html'
+        view = klass.new(
+          options.merge(
+            current_user: current_user,
+            csrf_token: csrf.token
+          )
+        )
+        res.write(view.render)
+        res.status = 200
         halt(res.finish)
       end
 

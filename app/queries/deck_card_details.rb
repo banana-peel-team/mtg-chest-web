@@ -25,7 +25,6 @@ module Queries
           Sequel.qualify(:card, :text).as(:text),
           Sequel.qualify(:card, :layout).as(:layout),
         )
-        .first
     end
   end
 end

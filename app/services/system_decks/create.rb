@@ -1,7 +1,9 @@
 module Services
   module SystemDecks
     module Create
-      def self.perform(deck_db, attrs)
+      extend self
+
+      def perform(deck_db, attrs)
         DB.transaction do
           deck = Deck.create(
             name: attrs[:deck_title],
@@ -22,14 +24,15 @@ module Services
 
           deck.update(card_count: deck.deck_cards.count)
           update_scores(deck_db, deck)
-
           update_relations(attrs[:cards_ids])
 
           deck
         end
       end
 
-      def self.update_scores(deck_db, deck)
+      private
+
+      def update_scores(deck_db, deck)
         scores = Sequel.pg_jsonb_op(:scores)
 
         cards_ids =
@@ -37,7 +40,7 @@ module Services
             .association_join(:card)
             .where(deck_id: deck[:id])
             .not_basic_lands
-            .select_map(:card_id).uniq
+            .select_map(:card_id)
 
         score_for_db = scores.get_text(deck_db[:key])
 
@@ -53,22 +56,22 @@ module Services
 
         deck_db.update(max_score: Card.max(score_for_db))
       end
-      private_class_method :update_scores
 
-      def self.update_relations(cards_ids)
+      def update_relations(cards_ids_)
         cards_ids = Card
-          .where(id: cards_ids)
+          .where(id: cards_ids_)
           .not_basic_lands
+          .order(:id)
           .select_map(:id)
 
-        all_combinations = cards_ids.uniq.combination(2).to_a
+        all_combinations = cards_ids.combination(2).to_a
         combinations = all_combinations.dup
 
         ds = CardRelation.dataset
 
         combination = combinations.shift
-
         combination.sort!
+
         ds = CardRelation.where { |ds|
           ((ds.card_1_id =~ combination[0]) & (ds.card_2_id =~ combination[1]))
         }
@@ -97,19 +100,24 @@ module Services
         end
         CardRelation.multi_insert(records)
       end
-      private_class_method :update_relations
 
-      def self.create_cards(deck, cards_ids)
+      def create_cards(deck, cards_ids)
         cards = cards_ids.map do |card_id|
           {
             deck_id: deck[:id],
             card_id: card_id,
-            added_at: Time.now.utc
+            added_at: Time.now.utc,
+            slot: 'deck',
           }
         end
+
+        unless cards.all?
+          STDERR.puts "There are missing cards for deck: #{deck}."
+          STDERR.puts " ...Failing."
+        end
+
         DeckCard.multi_insert(cards)
       end
-      private_class_method :create_cards
     end
   end
 end

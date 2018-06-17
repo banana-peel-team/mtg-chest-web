@@ -4,7 +4,7 @@ module API
       class Decks < API::Server
         define do
           on(get, root) do
-            decks = Queries::Decks.for_user(current_user)
+            decks = Queries::Decks.for_user(current_user).all
 
             json(decks: API::V1::Presenters::Deck.list(decks))
           end
@@ -12,7 +12,8 @@ module API
           on(':id') do |deck_id|
             on(get, root) do
               deck_cards = Queries::DeckCards
-                .for_deck(current_user, deck_id)
+                .for_deck(deck_id)
+                .all
 
               json(
                 cards: API::V1::Presenters::DeckCard.list(deck_cards)
@@ -21,9 +22,9 @@ module API
 
             on('cards/:card_id') do |card_id|
               on(get, root) do
-                deck_card = Queries::DeckCardDetails.for_deck_card(
-                  deck_id, card_id
-                )
+                deck_card = Queries::DeckCardDetails
+                  .for_deck_card(deck_id, card_id)
+                  .first
 
                 not_found! unless deck_card
 
@@ -36,9 +37,9 @@ module API
 
               on(get, 'alternatives') do
                 card = Card.find(id: card_id)
-                cards = Queries::DeckCards.alternatives(
-                  current_user, deck_id, card
-                )
+                cards = Queries::DeckCards
+                  .alternatives(current_user, deck_id, card)
+                  .all
 
                 json(cards: API::V1::Presenters::DeckCard.list(cards))
               end

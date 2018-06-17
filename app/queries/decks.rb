@@ -4,7 +4,6 @@ module Queries
       Deck
         .where(user_id: user[:id])
         .order(Sequel.desc(:created_at))
-        .all
     end
   end
 end

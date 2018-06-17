@@ -2,11 +2,15 @@ module Web
   module Helpers
     module MTGHelper
       TAG_ICONS = {
-        'Island' => 'U',
-        'Forest' => 'G',
-        'Mountain' => 'R',
-        'Plains' => 'W',
-        'Swamp' => 'B'
+        'Island' => 'u',
+        'Forest' => 'g',
+        'Mountain' => 'r',
+        'Plains' => 'w',
+        'Swamp' => 'b',
+      }.freeze
+
+      ICON_MAP = {
+        't' => 'tap',
       }.freeze
 
       def gatherer_url(printing)
@@ -21,20 +25,40 @@ module Web
         end
       end
 
+      def card_text(card)
+        return unless card[:card_text]
+
+        text = mtg_icons(card[:card_text])
+        text = text.gsub("\n", "<br />")
+
+        %Q(<div class="mtgText">#{text}</div>)
+      end
+
       def mtg_icon(icon)
-        %Q(<i class="mtgIcon mtgIcon--#{icon}">{#{icon}}</i>)
+        icon = ICON_MAP.fetch(icon, icon)
+
+        %Q(<i class="ms ms-cost ms-#{icon}"></i>)
+      end
+
+      def mtg_double_icon(icona, iconb)
+        icon = "#{icona}#{iconb}"
+
+        %Q(<i class="ms ms-cost ms-split ms-#{icon}"></i>)
       end
 
       def mtg_icons(text)
         return unless text
 
-        text.gsub(/{(\w+)}/) { mtg_icon($1) }
+        text = text.gsub(/{(\w+)}/) { mtg_icon($1.downcase) }
+        text.gsub(/{(\w+)\/(\w+)}/) do
+          mtg_double_icon($1.downcase, $2.downcase)
+        end
       end
 
       def mtg_icons_list(icons)
         return unless icons
 
-        icons.map { |icon| mtg_icon(icon) }.join('')
+        icons.map { |icon| mtg_icon(icon.downcase) }.join('')
       end
 
       def mtg_tags(tags)

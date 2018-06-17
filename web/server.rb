@@ -1,42 +1,35 @@
 require 'cuba'
 require 'cuba/safe'
-require 'cuba/render'
-require 'i18n'
-require 'haml/helpers'
 
 require './app/application'
 
 require_relative 'helpers/login_helper'
 require_relative 'helpers/common_helper'
 require_relative 'helpers/mtg_helper'
-require_relative 'helpers/views_helper'
-
-I18n.load_path = [['./web/locales/en.yml']]
-I18n.locale = :en
 
 module Web
   class Server < Cuba
     use(Rack::Session::Cookie, secret: ENV['RACK_SESSION_SECRET'])
     use(Rack::MethodOverride)
-    plugin(Cuba::Render)
     plugin(Cuba::Safe)
 
-    settings[:render][:template_engine] = 'haml'
-    settings[:render][:views] = './web/views'
-    settings[:render][:layout] = 'layout'
-
-    plugin(::Haml::Helpers)
     plugin(Web::Helpers::LoginHelper)
     plugin(Web::Helpers::CommonHelper)
     plugin(Web::Helpers::MTGHelper)
-    plugin(Web::Helpers::ViewsHelper)
   end
 end
+
+require_relative 'views/helpers'
+require_relative 'views/html'
+require_relative 'views/html_form'
+require_relative 'views/layout'
 
 require_relative 'routes/sessions'
 require_relative 'routes/editions'
 require_relative 'routes/collection'
 require_relative 'routes/decks'
+require_relative 'routes/deck_cards'
+require_relative 'routes/home'
 
 Web::Server.define do
   # TODO:?
@@ -62,10 +55,8 @@ Web::Server.define do
   on('editions') { run(Web::Routes::Editions) }
   on('collection') { run(Web::Routes::Collection) }
   on('decks') { run(Web::Routes::Decks) }
-
-  on('home') do
-    render('home')
-  end
+  on('deck-cards') { run(Web::Routes::DeckCards) }
+  on('home') { run(Web::Routes::Home) }
 
   run(Rack::File.new('./public'))
 end

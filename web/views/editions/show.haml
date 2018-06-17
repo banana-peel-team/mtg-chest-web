@@ -1,9 +1,0 @@
-%nav{'aria-label': 'breadcrumb'}
-  %ol.breadcrumb
-    %li.breadcrumb-item
-      %a{href: '/editions'} Editions
-    %li.breadcrumb-item.active{'aria-current': 'Page'}= edition[:name]
-
-= partial('printings/_list', with_count: false,
-                             printings: printings,
-                             rated_decks: rated_decks)

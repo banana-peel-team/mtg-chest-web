@@ -1,6 +1,7 @@
 class DeckCard < Sequel::Model
   many_to_one :card
   many_to_one :deck
+  many_to_one :user_printing
 
   dataset_module do
     # TODO: reuse Card.not_basic_lands?

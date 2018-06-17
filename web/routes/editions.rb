@@ -1,39 +1,29 @@
+require_relative 'presenters/import_cards'
+require_relative 'presenters/edition_cards'
+
+require_relative '../views/editions/list'
+require_relative '../views/editions/show'
+require_relative '../views/imports/show'
+
 module Web
   module Routes
     class Editions < Web::Server
       define do
         on(get, root) do
-          editions = Queries::Editions.list
+          editions = Queries::Editions.list.all
 
-          render('editions/index', editions: editions)
+          render_view(Web::Views::Editions::List, {
+            editions: editions,
+          })
         end
 
         on(':code') do |code|
           edition = Edition.where(code: code).first
 
           on(get, root) do
-            printings = Queries::EditionPrintings.for_edition(code)
-            dbs = DeckDatabase.select(:key, :name, :max_score).all
+            presenter = Presenters::EditionCards.new(edition, current_user)
 
-            render('editions/show', printings: printings,
-                                    edition: edition,
-                                    rated_decks: dbs)
-          end
-
-          on('cards') do
-            on(get, ':id') do |card_id|
-              printings = [] #Printing
-                #.where(card_id: card_id)
-                #.all
-
-              printing = Queries::PrintingDetails.for_card_on_edition(
-                card_id, code
-              )
-
-              render('editions/card', card: printing,
-                                      edition: edition,
-                                      printings: printings)
-            end
+            render_view(Views::Editions::Show, presenter: presenter)
           end
         end
       end

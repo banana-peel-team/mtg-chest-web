@@ -5,7 +5,7 @@ module API
         define do
           on(':card_id') do |card_id|
             on(get, root) do
-              card = Queries::Cards.card(card_id)
+              card = Queries::Cards.card(card_id).first
 
               not_found! unless card
 

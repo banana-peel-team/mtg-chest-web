@@ -7,8 +7,17 @@ body {
 .actions { margin-bottom: 1rem; }
 .send-questions-form { margin-right: 5px; }
 
+button.icon-stack {
+  font-size: 0.75em;
+}
+
 .mtgCard {
   font-size: 1em;
+}
+
+td .mtgText {
+  font-size: 0.6em;
+  max-width: 44em;
 }
 
 .mtgTags {

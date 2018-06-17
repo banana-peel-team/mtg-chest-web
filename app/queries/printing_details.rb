@@ -19,7 +19,6 @@ module Queries
           Sequel.qualify(:card, :color_identity).as(:color_identity),
           Sequel.qualify(:card, :colors).as(:colors),
         )
-        .first
     end
   end
 end

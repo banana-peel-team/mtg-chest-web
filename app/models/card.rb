@@ -1,7 +1,7 @@
 class Card < Sequel::Model
   MIN_RELATION_STRENGTH = 10
 
-  one_to_many :printings
+  one_to_many :printings, graph_alias_base: :printing
 
   # Relations to cards where related_id < card_id
   one_to_many :relations_to_left, class: :CardRelation, key: :card_2_id
@@ -44,6 +44,10 @@ class Card < Sequel::Model
         'Basic' => Sequel.pg_array(:supertypes).any,
         'Land' => Sequel.pg_array(:types).any,
       )
+    end
+
+    def same_identity(card)
+      where(color_identity: card[:color_identity])
     end
   end
 end

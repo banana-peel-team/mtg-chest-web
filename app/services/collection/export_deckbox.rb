@@ -21,7 +21,7 @@ module Services
       def self.perform(printings)
         printings.map do |printing|
           {
-            'Condition' => CONDITIONS[printing[:condition]],
+            'Condition' => CONDITIONS.fetch(printing[:condition], 'Near Mint'),
             'Language' => 'English',
             'Count' => 1,
             'Name' => name(printing),
@@ -41,7 +41,7 @@ module Services
           return printing[:names].join(' // ')
         end
 
-        printing[:name]
+        printing[:card_name]
       end
       private_class_method :name
     end

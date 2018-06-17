@@ -9,7 +9,7 @@ RSpec.describe do
 
     describe '/decks/:id/cards/:card-id/synergy' do
       let(:deck) { Fabricate(:deck) }
-      let(:deck_card) { Fabricate(:deck_card) }
+      let(:deck_card) { Fabricate(:deck_card, deck: deck) }
       let(:path) do
         "/decks/#{deck.id}/cards/#{deck_card.card_id}/synergy"
       end

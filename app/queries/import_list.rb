@@ -1,7 +1,7 @@
 module Queries
   module ImportList
     def self.for_user(user)
-      user.imports
+      user.imports_dataset
     end
   end
 end

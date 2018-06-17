@@ -1,6 +1,20 @@
 module Services
   module Decks
     module FromList
+      def self.add_cards(deck, attrs)
+        DB.transaction do
+          slot = attrs[:scratchpad] ? 'scratchpad' : 'deck'
+
+          attrs[:list].each do |line|
+            add_card(deck, line, slot)
+          end
+
+          if slot == 'deck'
+            deck.update_card_count
+          end
+        end
+      end
+
       def self.create(user, attrs)
         DB.transaction do
           deck = Deck.create(
@@ -11,17 +25,16 @@ module Services
           )
 
           attrs[:list].each do |line|
-            add_card(deck, line)
+            add_card(deck, line, 'deck')
           end
 
-          count = deck.deck_cards_dataset.count
-          deck.update(card_count: count)
+          deck.update_card_count
 
           deck
         end
       end
 
-      def self.add_card(deck, line)
+      def self.add_card(deck, line, slot)
         count, name = line.split(' ', 2)
         card = Card.where(name: name).first
         DeckCard.create_many(
@@ -29,6 +42,7 @@ module Services
           deck_id: deck[:id],
           card_id: card[:id],
           added_at: Time.now.utc,
+          slot: slot,
         )
       end
       private_class_method :add_card

@@ -16,21 +16,16 @@ services:
       - "3000:3000"
     depends_on:
       - db
-    networks:
-      - database
   db:
     image: postgres
     environment:
       POSTGRES_USER: "user"
       POSTGRES_PASSWORD: "pass"
       POSTGRES_DB: "db"
-      AWS_SDK_CONFIG_OPT_OUT: "1"
-    networks:
-      - database
+    #ports:
+      #- 5432:5432
     volumes:
       - db-data:/var/lib/postgresql/data
 volumes:
   gems:
   db-data:
-networks:
-  database:

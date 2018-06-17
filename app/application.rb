@@ -5,6 +5,7 @@ require 'sequel'
 DB = Sequel.connect(ENV.fetch('DATABASE_URL'))
 DB.extension(:pg_array)
 DB.extension(:pg_json)
+DB.extension(:pg_enum)
 Sequel.extension(:pg_array_ops)
 Sequel.extension(:pg_json_ops)
 

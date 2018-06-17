@@ -1,3 +1,12 @@
+require_relative 'presenters/show_collection'
+require_relative 'presenters/imports_list'
+require_relative 'presenters/import_card_list'
+
+require_relative '../views/collection/show'
+require_relative '../views/imports/list'
+require_relative '../views/imports/card_list'
+require_relative '../views/imports/new'
+
 module Web
   module Routes
     class Collection < Web::Server
@@ -5,17 +14,19 @@ module Web
         require_login!
 
         on(get, root) do
-          printings = Queries::CollectionCards.full_for_user(current_user)
-          dbs = DeckDatabase.select(:key, :name, :max_score).all
+          presenter = Presenters::ShowCollection.new(
+            current_user,
+            params: req.params
+          )
 
-          render('collection/show', printings: printings, rated_decks: dbs)
+          render_view(Views::Collection::Show, presenter: presenter)
         end
 
         on('imports') do
           on(get, root) do
-            imports = Queries::ImportList.for_user(current_user)
+            presenter = Presenters::ImportsList.new(current_user)
 
-            render('collection/imports', imports: imports)
+            render_view(Views::Imports::List, presenter: presenter)
           end
 
           on(':id') do |id|
@@ -28,22 +39,18 @@ module Web
             end
 
             on(get, root) do |id|
-              printings = Queries::ImportPrintings.for_import(import)
-              dbs = DeckDatabase.select(:key, :name, :max_score).all
+              presenter = Presenters::ImportCards.new(import)
 
-              render('collection/show_import', import: import,
-                                               printings: printings,
-                                               rated_decks: dbs)
+              render_view(Views::Imports::Show, presenter: presenter)
             end
 
             on('list') do
-              cards = Queries::ImportCards.for_import(import)
-
-              render('cards/list', cards: cards, import: import)
+              presenter = Presenters::ImportCardList.new(import)
+              render_view(Views::Imports::CardList, presenter: presenter)
             end
 
             on('deckbox') do
-              printings = Queries::ImportPrintings.for_import(import)
+              printings = Queries::ImportPrintings.for_import(import).all
 
               export = Services::Collection::ExportDeckbox.perform(printings)
               csv = Services::CSV::Export.perform(export)
@@ -68,7 +75,7 @@ module Web
 
         on('import') do
           on(get, root) do
-            render('collection/import')
+            render_view(Views::Imports::New, {})
           end
 
           on(post, param('import')) do |params|

@@ -3,7 +3,8 @@ module Queries
     def self.for_import(import)
       Queries::Cards.collection_cards(
         import.user_printings_dataset
-          .association_join(printing: :card)
+          .from_self(alias: :user_printing)
+          .association_join(printing: [:edition, :card])
       )
     end
   end
