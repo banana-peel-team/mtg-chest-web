@@ -1,7 +1,9 @@
 module Services
   module Decks
     module FromList
-      def self.add_cards(deck, attrs)
+      extend self
+
+      def add_cards(deck, attrs)
         DB.transaction do
           slot = attrs[:scratchpad] ? 'scratchpad' : 'deck'
 
@@ -15,7 +17,7 @@ module Services
         end
       end
 
-      def self.create(user, attrs)
+      def create(user, attrs)
         DB.transaction do
           deck = Deck.create(
             user_id: user[:id],
@@ -34,7 +36,9 @@ module Services
         end
       end
 
-      def self.add_card(deck, line, slot)
+      private
+
+      def add_card(deck, line, slot)
         count, name = line.split(' ', 2)
         card = Card.where(name: name).first
         DeckCard.create_many(
@@ -45,7 +49,6 @@ module Services
           slot: slot,
         )
       end
-      private_class_method :add_card
     end
   end
 end

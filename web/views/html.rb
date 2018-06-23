@@ -133,8 +133,31 @@ module Web
         tag('div', class: 'form-group', &block)
       end
 
-      def icon(name)
-        append_html(%Q(<i class="fas fa-#{name}"></i>))
+      def icon(name, attrs = {})
+        cls = "fas fa-#{name}"
+        cls << ' icon-danger' if attrs[:style] == 'danger'
+
+        tag('i', class: cls)
+      end
+
+      def icon_button(name, title, attrs = {})
+        attrs = attrs.dup
+        cls = 'form-control btn btn-sm'
+
+        case attrs.delete(:style)
+        when 'danger'
+          cls << ' btn-outline-danger'
+        end
+
+        attrs.merge!(
+          class: cls,
+          type: 'submit',
+          title: title,
+        )
+
+        tag('button', attrs) do
+          icon(name)
+        end
       end
 
       def icon_link(path, name, alt)
@@ -145,15 +168,7 @@ module Web
       end
 
       def delete_button
-        opts = {
-          type: 'submit',
-          value: 'Delete',
-          class: 'btn btn-sm btn-outline-danger',
-        }
-
-        tag('button', opts) do
-          icon('trash-alt')
-        end
+        icon_button('trash-alt', 'Delete', style: 'danger')
       end
 
       def breadcrumb_item(content = false, &block)

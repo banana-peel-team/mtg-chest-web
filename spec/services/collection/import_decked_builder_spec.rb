@@ -27,16 +27,23 @@ RSpec.describe Services::Collection::ImportDeckedBuilder do
          "3 Plains"].join("\n")
       end
 
-      it 'does not create an Import' do
-        expect {
-          perform
-        }.to_not change(Import, :count)
-      end
-
-      it 'creates 6 UserPrinting' do
-        expect {
-          perform
-        }.to change(UserPrinting, :count).by(6)
+      it 'returns correct data' do
+        expect(perform).to match_array(
+          [
+            hash_including(
+              count: 3,
+              multiverse_id: printing1.multiverse_id,
+              foil: false,
+              condition: 'NM',
+            ),
+            hash_including(
+              count: 3,
+              multiverse_id: printing2.multiverse_id,
+              foil: false,
+              condition: 'NM',
+            )
+          ]
+        )
       end
     end
   end

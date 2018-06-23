@@ -43,7 +43,10 @@ module Queries
           .where(slot: 'deck')
           .where(removed_at: nil),
           false
-      ).select_append(Sequel[:deck_card][:id].as(:deck_card_id))
+      ).select_append(
+        Sequel[:deck_card][:id].as(:deck_card_id),
+        Sequel[:deck_card][:is_flagged],
+      )
     end
 
     def self.for_link(deck)

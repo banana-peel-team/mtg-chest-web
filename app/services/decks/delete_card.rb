@@ -1,7 +1,9 @@
 module Services
   module Decks
     module DeleteCard
-      def self.delete_deck_card(deck_card)
+      extend self
+
+      def delete_deck_card(deck_card)
         DB.transaction do
           deck_card.update(removed_at: Time.now.utc)
 

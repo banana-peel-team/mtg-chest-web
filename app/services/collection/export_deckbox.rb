@@ -14,11 +14,14 @@ module Services
         'Magic: The Gathering—Conspiracy' => 'Conspiracy'
       }.freeze
 
+      extend self
+
       #
       # Deckbox columns:
-      # Count,Name,Edition,Card Number,Condition,Language,Foil,Signed,Artist Proof,Altered Art,Misprint,Promo,Textless,My Price
+      # Count,Name,Edition,Card Number,Condition,Language,Foil,Signed,
+      # Artist Proof,Altered Art,Misprint,Promo,Textless,My Price
       #
-      def self.perform(printings)
+      def perform(printings)
         printings.map do |printing|
           {
             'Condition' => CONDITIONS.fetch(printing[:condition], 'Near Mint'),
@@ -31,19 +34,19 @@ module Services
         end
       end
 
-      def self.edition(printing)
+      private
+
+      def edition(printing)
         SETS_MAP.fetch(printing[:edition_name], printing[:edition_name])
       end
-      private_class_method :edition
 
-      def self.name(printing)
+      def name(printing)
         if printing[:layout] == 'aftermath'
           return printing[:names].join(' // ')
         end
 
         printing[:card_name]
       end
-      private_class_method :name
     end
   end
 end

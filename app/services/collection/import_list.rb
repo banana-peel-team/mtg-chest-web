@@ -1,7 +1,10 @@
 module Services
   module Collection
     module ImportList
-      def self.perform(user, attrs)
+      extend self
+
+      # TODO: integrate with Collection::Import
+      def perform(user, attrs)
         # TODO: Error handling
         DB.transaction do
           import = ::Import.create(
@@ -22,7 +25,9 @@ module Services
         end
       end
 
-      def self.import_card(import, user, line, params)
+      private
+
+      def import_card(import, user, line, params)
         count, name = line.split(' ', 2)
 
         printing = Printing.association_join(:card).where(
@@ -40,7 +45,6 @@ module Services
           condition: params[:condition],
         )
       end
-      private_class_method :import_card
     end
   end
 end

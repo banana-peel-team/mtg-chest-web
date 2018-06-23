@@ -105,6 +105,7 @@ module Web
             Helpers.printing_symbol(html, card)
 
             html.append_html(card[:card_name])
+
             Helpers.count_badge(html, card[:count])
             Helpers.card_text(html, card)
           end
@@ -116,12 +117,8 @@ module Web
           html.icon_link(
             base + "/alternatives", 'exchange-alt', 'Alternatives'
           )
-
           html.append_html(' ')
-
-          html.icon_link(
-            base + "/synergy", 'trophy', 'Synergy'
-          )
+          html.icon_link(base + "/synergy", 'trophy', 'Synergy')
         end
 
         def delete_card(html, card)
@@ -150,13 +147,15 @@ module Web
             html.tag('div', class: 'col-8') do
               html.breadcrumb do
                 html.breadcrumb_item do
-                  html.tag('a', 'Decks', href: '/decks')
+                  html.link('/decks', 'Decks')
                 end
+
                 html.breadcrumb_item(@presenter.deck[:name])
 
                 html.breadcrumb_item do
-                  deck_path = "/decks/#{@presenter.deck[:id]}/find-cards"
-                  html.tag('a', 'Find cards', href: deck_path)
+                  html.link(
+                    "/decks/#{@presenter.deck[:id]}/find-cards", 'Find cards'
+                  )
                 end
               end
             end
@@ -165,16 +164,16 @@ module Web
               html.tag('ul', class: 'nav justify-content-end') do
                 html.tag('li', class: 'nav-item mr-3') do
                   path = "/decks/#{@presenter.deck[:id]}/list"
-                  html.tag('a', class: 'nav-link btn btn-light', href: path) do
-                    html.append_html('Card list')
-                  end
+                  html.link(path, 'Card list', {
+                    class: 'nav-link btn btn-light',
+                  })
                 end
 
                 html.tag('li', class: 'nav-item mr-3') do
                   path = "/decks/#{@presenter.deck[:id]}/edit"
-                  html.tag('a', class: 'nav-link btn btn-light', href: path) do
-                    html.append_html('Edit cards')
-                  end
+                  html.link(path, 'Edit cards', {
+                    class: 'nav-link btn btn-light',
+                  })
                 end
               end
             end

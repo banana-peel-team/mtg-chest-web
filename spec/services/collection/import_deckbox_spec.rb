@@ -26,16 +26,25 @@ RSpec.describe Services::Collection::ImportDeckbox do
          "3 Plains"].join("\n")
       end
 
-      it 'does not create an Import' do
-        expect {
-          perform
-        }.to_not change(Import, :count)
-      end
-
-      it 'creates 6 UserPrinting' do
-        expect {
-          perform
-        }.to change(UserPrinting, :count).by(6)
+      it 'returns correct data' do
+        expect(perform).to match_array(
+          [
+            hash_including(
+              count: 3,
+              name: 'Mountain',
+              edition: printing1.edition_code,
+              foil: false,
+              condition: 'Near Mint', # FIXME: Should be NM
+            ),
+            hash_including(
+              count: 3,
+              name: 'Plains',
+              edition: printing2.edition_code,
+              foil: false,
+              condition: 'Near Mint', # FIXME: Should be NM
+            )
+          ]
+        )
       end
     end
   end

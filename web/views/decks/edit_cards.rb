@@ -23,21 +23,37 @@ module Web
           end
         end
 
+        def card_name_cell(html, card)
+          html.tag('td') do
+            Helpers.printing_symbol(html, card)
+
+            html.append_html(card[:card_name])
+
+            if card[:is_flagged]
+              html.append_html(' ')
+              html.icon('flag', style: 'danger')
+            end
+
+            Helpers.count_badge(html, card[:count])
+            Helpers.card_text(html, card)
+          end
+        end
+
         def actions(html, card)
+          unless card[:is_flagged]
+            path = "/deck-cards/#{card[:deck_card_id]}/flag"
+
+            html.form(action: path, class: 'form-inline') do
+              html.input_hidden('card_id', card[:card_id])
+              html.icon_button('flag', 'Flag for removal')
+            end
+          end
+
           if card[:user_printing_id]
             path = "/deck-cards/#{card[:deck_card_id]}/unlink"
 
             html.delete_form(action: path, class: 'form-inline') do
-              button_attrs = {
-                class: 'form-control btn',
-                type: 'submit',
-                name: 'slot',
-              }
-
-              html.tag('button',
-                      button_attrs.merge(value: 'deck', title: 'Deck')) do
-                html.icon('unlink')
-              end
+              html.icon_button('unlink', 'Unlink')
             end
           end
 
@@ -46,23 +62,10 @@ module Web
 
         def scratchpad_actions(html, card)
           add_card_to_deck(html, @presenter.deck, card) do
-            button_attrs = {
-              class: 'form-control btn',
-              type: 'submit',
-              name: 'slot',
-            }
-
-            html.tag('button',
-                     button_attrs.merge(value: 'deck', title: 'Deck')) do
-              html.icon('plus')
-            end
+            html.icon_button('plus', 'Deck', name: 'slot', value: 'deck')
           end
 
-          path = "/decks/#{@presenter.deck[:id]}/cards/#{card[:deck_card_id]}"
-
-          html.delete_form(action: path, class: 'form-inline') do
-            html.delete_button
-          end
+          delete_card(html, card)
         end
 
         def breadcrumb(html)
