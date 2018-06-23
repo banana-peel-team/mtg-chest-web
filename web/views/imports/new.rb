@@ -22,16 +22,18 @@ module Web
         end
 
         def body(html)
-          html.tag('h2', 'Import cards')
+          html.box do
+            html.box_title('Import cards')
 
-          form = HtmlForm.new(html: html, namespace: 'import')
+            form = html.form(namespace: 'import')
 
-          html.simple_card('Import from a file') do
-            from_file(form)
-          end
+            html.simple_card('Import from a file') do
+              from_file(form)
+            end
 
-          html.simple_card('Import from card list') do
-            from_card_list(form)
+            html.simple_card('Import from card list') do
+              from_card_list(form)
+            end
           end
         end
 
@@ -40,15 +42,12 @@ module Web
             form.input('text', :title, label: 'Title', required: true)
 
             form.row do
-              form.tag('div', class: 'col-5')
-              form.tag('div', class: 'col-2') do
-                form.checkbox(:foil, {
-                  label: 'Foil',
-                  inline: true,
-                })
+              form.html.tag('div', class: 'col-5')
+              form.html.tag('div', class: 'col-2') do
+                form.checkbox(:foil, label: 'Foil', inline: true)
               end
 
-              form.tag('div', class: 'col-3') do
+              form.html.tag('div', class: 'col-3') do
                 form.select(:condition, {
                   'MN' => 'Mint',
                   'NM' => 'Near Mint',
@@ -59,13 +58,13 @@ module Web
                 })
               end
 
-              form.tag('div', class: 'col') do
+              form.html.tag('div', class: 'col') do
                 form.input('text', :set, label: 'Set code', required: true)
               end
             end
 
             form.group do
-              form.textarea(:list, label: '1 Swamp', required: true)
+              form.textarea(:list, placeholder: '1 Swamp', required: true)
             end
 
             form.submit('Import')
@@ -80,7 +79,7 @@ module Web
             form.input('text', :title, label: 'Title', required: true)
 
             form.row do
-              form.tag('div', class: 'col-8') do
+              form.html.tag('div', class: 'col-8') do
                 form.radiobox(:source, {
                   label: 'Deckbox',
                   inline: true,
@@ -103,7 +102,7 @@ module Web
                 })
               end
 
-              form.tag('div', class: 'col') do
+              form.html.tag('div', class: 'col') do
                 form.file(:file, required: true)
               end
             end

@@ -63,7 +63,7 @@ module Web
       end
 
       def body(html, &block)
-        html.tag('body', lang: 'en') do
+        html.tag('body', class: 'bg-light', lang: 'en') do
           if current_user
             navigation(html)
 

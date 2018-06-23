@@ -35,52 +35,43 @@ module Web
         end
 
         def body(html)
-          html.tag('h2') do
-            html.append_text(@presenter.import[:title])
-            Helpers.count_badge(html, @presenter.import[:user_printing_count])
-          end
+          html.box do
+            html.box_title do
+              html.append_text(@presenter.import[:title])
+              html.mtg.count_badge(@presenter.import[:user_printing_count])
+            end
 
-          cards_list(html, @presenter.printings)
+            cards_list(html, @presenter.printings)
+          end
         end
 
         def cards_list(html, cards, &block)
-          cls = 'table table-striped table-sm table-hover mt-5'
-          html.tag('table', class: cls) do
+          html.striped_table do
             html.append_html(TABLE_HEADER)
 
             html.tag('tbody') do
               cards.each do |card|
                 html.tag('tr') do
                   html.tag('td') do
-                    Helpers.card_score(html, @presenter.rated_decks, card)
+                    html.mtg.card_score(@presenter.rated_decks, card)
                   end
 
                   html.tag('td') do
-                    Helpers.printing_symbol(html, card)
-
-                    html.append_text(card[:card_name])
-                    Helpers.count_badge(html, card[:count])
-                    Helpers.card_text(html, card)
+                    html.mtg.printing_name_with_info(card)
+                    html.mtg.card_text(card)
                   end
 
                   html.tag('td', class: 'mtgTags') do
-                    card[:types].each do |type|
-                      html.tag('i', title: type,
-                                    class: "ms ms-#{type.downcase}")
-                      html.append_html(' ')
-                    end
-
-                    Helpers.mtg_tags(html, card[:subtypes])
+                    html.mtg.mtg_icons(card[:types])
+                    html.mtg.tags(card[:subtypes])
                   end
 
                   html.tag('td') do
-                    html.append_html(Helpers.mtg_icons(card[:mana_cost]))
+                    html.mtg.card_cost(card)
                   end
 
                   html.tag('td') do
-                    html.append_html(
-                      Helpers.mtg_icons_list(card[:color_identity])
-                    )
+                    html.mtg.icons_list(card[:color_identity])
                   end
 
                   if card[:power]

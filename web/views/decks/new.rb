@@ -22,41 +22,22 @@ module Web
         end
 
         def body(html)
-          html.tag('h2', 'Create deck')
+          html.box do
+            html.box_title('Create deck')
 
-          html.form(action: '/decks/import-list') do
-            html.tag('div', class: 'card mt-3') do
-              html.tag('div', 'Create from card list', class: 'card-header')
-              html.tag('div', class: 'card-body') do
-                html.tag('div', class: 'form-group') do
-                  html.stag(
-                    'input',
-                    class: 'form-control',
-                    type: 'text',
-                    placeholder: 'Name',
-                    required: 'required',
-                    name: 'deck[name]'
-                  )
+            form = html.form(action: '/decks/import-list')
+
+            form.render do
+              html.simple_card('Create from card list') do
+                form.group do
+                  form.input('text', :name, label: 'Name', required: true)
                 end
 
-                html.tag('div', class: 'form-group') do
-                  html.tag(
-                    'textarea',
-                    class: 'form-control',
-                    placeholder: '1 Swamp',
-                    required: 'required',
-                    name: 'deck[list]'
-                  )
+                form.group do
+                  form.textarea(:list, required: true, placeholder: '1 Swamp')
                 end
 
-                html.tag('div', class: 'form-group mt-3') do
-                  html.stag(
-                    'input',
-                    class: 'btn btn-primary',
-                    type: 'submit',
-                    value: 'Create'
-                  )
-                end
+                form.submit('Create')
               end
             end
           end
@@ -65,7 +46,7 @@ module Web
         def breadcrumb(html)
           html.breadcrumb do
             html.breadcrumb_item do
-              html.tag('a', 'Decks', href: '/decks')
+              html.link('/decks', 'Decks')
             end
 
             html.breadcrumb_item('New')

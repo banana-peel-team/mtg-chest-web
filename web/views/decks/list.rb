@@ -32,13 +32,14 @@ module Web
         end
 
         def body(html)
-          html.tag('h2', 'Decks')
-          deck_list(html, @presenter.decks)
+          html.box do
+            html.box_title('Decks')
+            deck_list(html, @presenter.decks)
+          end
         end
 
         def deck_list(html, decks, &block)
-          cls = 'table table-striped table-sm table-hover mt-5'
-          html.tag('table', class: cls) do
+          html.striped_table do
             html.append_html(DECK_LIST_HEADER)
 
             html.tag('tbody') do
@@ -46,14 +47,14 @@ module Web
                 html.tag('tr') do
                   html.tag('td') do
                     html.tag('a', deck[:name], href: "/decks/#{deck[:id]}")
-                    Helpers.count_badge(html, deck[:card_count])
+                    html.mtg.count_badge(deck[:card_count])
                   end
 
                   html.tag('td', deck[:created_at].to_s)
 
                   html.tag('td') do
                     html.delete_form(action: "/decks/#{deck[:id]}") do
-                      html.delete_button
+                      html.icons.delete_button
                     end
                   end
                 end
@@ -73,8 +74,8 @@ module Web
             html.tag('div', class: 'col') do
               html.tag('ul', class: 'nav justify-content-end') do
                 html.tag('li') do
-                  html.tag('a', 'Add deck', class: 'nav-link btn btn-light',
-                                            href: '/decks/new')
+                  html.link('/decks/new', 'Add deck',
+                            class: 'nav-link btn btn-light')
                 end
               end
             end

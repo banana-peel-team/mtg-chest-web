@@ -36,50 +36,36 @@ module Web
         end
 
         def body(html)
-          html.tag('h2') do
-            html.append_html('Deck cards')
-            Helpers.count_badge(html, @presenter.deck[:card_count])
+          html.box do
+            html.box_title do
+              html.append_html('Deck cards')
+              html.mtg.count_badge(@presenter.deck[:card_count])
+            end
+
+            cards_list(html, @presenter.cards)
           end
-          cards_list(html, @presenter.cards)
-
-
-          #if count = @presenter.ignored.count > 0
-            #html.tag('h2', 'Ignored')
-            #cards_list(html, @presenter.ignored) do |card|
-              ## TODO
-              ##ignored_actions(html, card)
-            #end
-          #end
         end
 
         def cards_list(html, cards, &block)
-          cls = 'table table-striped table-sm table-hover mt-5'
-          html.tag('table', class: cls) do
+          html.striped_table do
             html.append_html(CARDS_LIST_HEADER)
 
             html.tag('tbody') do
               cards.each do |card|
                 html.tag('tr') do
                   html.tag('td') do
-                    Helpers.card_score(html, @presenter.rated_decks, card)
+                    html.mtg.card_score(@presenter.rated_decks, card)
                   end
                   card_name_cell(html, card)
                   html.tag('td', class: 'mtgTags') do
-                    card[:types].each do |type|
-                      html.tag('i', title: type,
-                                    class: "ms ms-#{type.downcase}")
-                      html.append_html(' ')
-                    end
-
-                    Helpers.mtg_tags(html, card[:subtypes])
+                    html.mtg.mtg_icons(card[:types])
+                    html.mtg.tags(card[:subtypes])
                   end
                   html.tag('td') do
-                    html.append_html(Helpers.mtg_icons(card[:mana_cost]))
+                    html.mtg.card_cost(card)
                   end
                   html.tag('td') do
-                    html.append_html(
-                      Helpers.mtg_icons_list(card[:color_identity])
-                    )
+                    html.mtg.icons_list(card[:color_identity])
                   end
                   if card[:power]
                     html.tag('td', "#{card[:power]}/#{card[:toughness]}")
@@ -102,43 +88,31 @@ module Web
 
         def card_name_cell(html, card)
           html.tag('td') do
-            Helpers.printing_symbol(html, card)
-
-            html.append_html(card[:card_name])
-
-            Helpers.count_badge(html, card[:count])
-            Helpers.card_text(html, card)
+            html.mtg.printing_name_with_info(card)
+            html.mtg.card_text(card)
           end
         end
 
         def actions(html, card)
           base = "/decks/#{@presenter.deck[:id]}/cards/#{card[:card_id]}"
 
-          html.icon_link(
+          html.icons.icon_link(
             base + "/alternatives", 'exchange-alt', 'Alternatives'
           )
           html.append_html(' ')
-          html.icon_link(base + "/synergy", 'trophy', 'Synergy')
-        end
-
-        def delete_card(html, card)
-          path = "/deck-cards/#{card[:deck_card_id]}"
-
-          html.delete_form(action: path, class: 'form-inline') do
-            html.delete_button
-          end
+          html.icons.icon_link(base + "/synergy", 'trophy', 'Synergy')
         end
 
         def add_card_to_deck(html, deck, card, &block)
           path = "/decks/#{@presenter.deck[:id]}/cards"
 
-          html.form(action: path, class: 'form-inline') do
-            html.input_hidden('card_id', card[:card_id])
+          html.form(action: path, class: 'form-inline') do |form|
+            form.input_hidden('card_id', card[:card_id])
             if card[:user_printing_id]
-              html.input_hidden('user_printing_id', card[:user_printing_id])
+              form.input_hidden('user_printing_id', card[:user_printing_id])
             end
 
-            block.call
+            block.call(form)
           end
         end
 

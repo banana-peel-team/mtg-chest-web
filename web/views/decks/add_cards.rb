@@ -24,15 +24,14 @@ module Web
         def body(html)
           html.tag('h2', 'Add cards')
 
-          form = HtmlForm.new(
-            html: html,
+          form = html.form(
             namespace: 'deck',
             action: "/decks/#{@presenter.deck[:id]}/add-cards",
           )
 
           html.simple_card('From card list') do
             form.render do
-              form.tag('div', class: 'col') do
+              html.tag('div', class: 'col') do
                 form.checkbox(:scratchpad, label: 'Scratchpad', inline: true)
               end
 

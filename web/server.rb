@@ -19,9 +19,7 @@ module Web
   end
 end
 
-require_relative 'views/helpers'
 require_relative 'views/html'
-require_relative 'views/html_form'
 require_relative 'views/layout'
 
 require_relative 'routes/sessions'

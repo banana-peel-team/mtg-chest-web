@@ -32,24 +32,25 @@ module Web
         end
 
         def body(html)
-          html.tag('h2', 'Editions')
-          editions_list(html, @editions)
+          html.box do
+            html.box_title('Editions')
+
+            editions_list(html, @editions)
+          end
         end
 
         def editions_list(html, editions, &block)
-          cls = 'table table-striped table-sm table-hover mt-5'
-          html.tag('table', class: cls) do
+          html.striped_table do
             html.append_html(EDITION_LIST_HEADER)
 
             html.tag('tbody') do
               editions.each do |edition|
                 html.tag('tr') do
                   html.tag('td') do
-                    html.tag('i', class: "ss ss-#{edition[:code].downcase}")
+                    html.mtg.edition_icon(edition)
                   end
                   html.tag('td') do
-                    path = "/editions/#{edition[:code]}"
-                    html.tag('a', edition[:name], href: path)
+                    html.link("/editions/#{edition[:code]}", edition[:name])
                   end
                   html.tag('td', edition[:code])
                 end

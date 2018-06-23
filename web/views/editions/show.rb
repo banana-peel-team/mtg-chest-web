@@ -35,12 +35,14 @@ module Web
         end
 
         def body(html)
-          html.tag('h2') do
-            html.append_html(@presenter.edition[:name])
-            Helpers.count_badge(html, @presenter.edition[:card_count])
-          end
+          html.box do
+            html.box_title do
+              html.append_html(@presenter.edition[:name])
+              html.mtg.count_badge(@presenter.edition[:card_count])
+            end
 
-          cards_list(html, @presenter.printings)
+            cards_list(html, @presenter.printings)
+          end
         end
 
         def cards_list(html, cards, &block)
@@ -51,36 +53,27 @@ module Web
               cards.each do |card|
                 html.tag('tr') do
                   html.tag('td') do
-                    Helpers.card_score(html, @presenter.rated_decks, card)
+                    html.mtg.card_score(@presenter.rated_decks, card)
                   end
+
                   html.tag('td') do
-                    Helpers.printing_symbol(html, card)
-
-                    html.append_html(card[:card_name])
-
-                    if card[:collection_count] && card[:collection_count] > 0
-                      Helpers.count_badge(html, card[:collection_count], true)
-                    end
-
-                    Helpers.card_text(html, card)
+                    html.mtg.printing_name_with_info(card)
+                    html.mtg.card_text(card)
                   end
+
                   html.tag('td', class: 'mtgTags') do
-                    card[:types].each do |type|
-                      html.tag('i', title: type,
-                                    class: "ms ms-#{type.downcase}")
-                      html.append_html(' ')
-                    end
+                    html.mtg.mtg_icons(card[:types])
+                    html.mtg.tags(card[:subtypes])
+                  end
 
-                    Helpers.mtg_tags(html, card[:subtypes])
-                  end
                   html.tag('td') do
-                    html.append_html(Helpers.mtg_icons(card[:mana_cost]))
+                    html.mtg.card_cost(card)
                   end
+
                   html.tag('td') do
-                    html.append_html(
-                      Helpers.mtg_icons_list(card[:color_identity])
-                    )
+                    html.mtg.icons_list(card[:color_identity])
                   end
+
                   if card[:power]
                     html.tag('td', "#{card[:power]}/#{card[:toughness]}")
                   else
@@ -95,7 +88,7 @@ module Web
         def breadcrumb(html)
           html.breadcrumb do
             html.breadcrumb_item do
-              html.tag('a', 'Editions', href: '/editions')
+              html.link('/editions', 'Editions')
             end
 
             html.breadcrumb_item(@presenter.edition[:name])

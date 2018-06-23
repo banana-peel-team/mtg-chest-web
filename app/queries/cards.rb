@@ -23,6 +23,7 @@ module Queries
     COLLECTION_FIELDS = [
       Sequel[:printing][:rarity].as(:card_rarity),
       Sequel[:edition][:code].as(:edition_code),
+      Sequel[:user_printing][:foil].as(:is_foil),
       Sequel[:user_printing][:id].as(:user_printing_id)
     ].freeze
 

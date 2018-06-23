@@ -9,7 +9,7 @@ module Web
         end
 
         def cards
-          Queries::ImportCards.for_import(import).all
+          Queries::ImportPrintings.for_import(import).all
         end
       end
     end

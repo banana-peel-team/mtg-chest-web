@@ -32,8 +32,10 @@ module Web
         end
 
         def body(html)
-          html.tag('h2', 'Imports')
-          import_list(html, @presenter.imports)
+          html.box do
+            html.box_title('Imports')
+            import_list(html, @presenter.imports)
+          end
         end
 
         def import_list(html, imports, &block)
@@ -47,14 +49,16 @@ module Web
                     html.link(
                       "/collection/imports/#{import[:id]}", import[:title]
                     )
-                    Helpers.count_badge(html, import[:user_printing_count])
+                    html.mtg.count_badge(import[:user_printing_count])
                   end
 
                   html.tag('td', import[:created_at].to_s)
 
                   html.tag('td') do
-                    html.delete_form(action: "/collection/imports/#{import[:id]}") do
-                      html.delete_button
+                    html.delete_form(
+                      action: "/collection/imports/#{import[:id]}"
+                    ) do
+                      html.icons.delete_button
                     end
                   end
                 end
@@ -74,8 +78,8 @@ module Web
             html.tag('div', class: 'col') do
               html.tag('ul', class: 'nav justify-content-end') do
                 html.tag('li') do
-                  html.tag('a', 'New', class: 'nav-link btn btn-light',
-                                       href: '/collection/import')
+                  html.link('/collection/import', 'New',
+                            class: 'nav-link btn btn-light')
                 end
               end
             end
