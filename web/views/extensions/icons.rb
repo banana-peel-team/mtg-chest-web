@@ -12,6 +12,7 @@ module Web
           def icon(name, attrs = {})
             cls = "fas fa-#{name}"
             cls << ' icon-danger' if attrs[:style] == 'danger'
+            cls << " #{attrs[:class]}" if attrs[:class]
 
             html.tag('i', class: cls)
           end

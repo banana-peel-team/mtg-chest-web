@@ -1,3 +1,5 @@
+require_relative '../views/html'
+
 module Web
   module Helpers
     module CommonHelper
@@ -36,15 +38,23 @@ module Web
         halt(res.finish)
       end
 
-      def render_view(klass, options)
+      def render_view(view, context = {})
         res['Content-Type'] = 'text/html'
-        view = klass.new(
-          options.merge(
+
+        html_opts = {
+          csrf_token: csrf.token,
+          params: req.params,
+        }
+
+        out = Web::Views::Html.render(html_opts) do |html|
+          view.render(html, {
             current_user: current_user,
-            csrf_token: csrf.token
-          )
-        )
-        res.write(view.render)
+            csrf_token: csrf.token,
+            params: req.params,
+          }.merge(context))
+        end
+
+        res.write(out)
         res.status = 200
         halt(res.finish)
       end

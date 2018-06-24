@@ -1,5 +1,6 @@
 require_relative 'presenters/import_cards'
 require_relative 'presenters/edition_cards'
+require_relative 'presenters/editions_list'
 
 require_relative '../views/editions/list'
 require_relative '../views/editions/show'
@@ -10,20 +11,20 @@ module Web
     class Editions < Web::Server
       define do
         on(get, root) do
-          editions = Queries::Editions.list.all
+          presenter = Presenters::EditionsList
 
-          render_view(Web::Views::Editions::List, {
-            editions: editions,
-          })
+          render_view(Web::Views::Editions::List, presenter.context)
         end
 
         on(':code') do |code|
           edition = Edition.where(code: code).first
 
           on(get, root) do
-            presenter = Presenters::EditionCards.new(edition, current_user)
+            presenter = Presenters::EditionCards.new(edition, current_user, {
+              params: req.params,
+            })
 
-            render_view(Views::Editions::Show, presenter: presenter)
+            render_view(Views::Editions::Show, presenter.context)
           end
         end
       end

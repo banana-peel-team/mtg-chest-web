@@ -92,7 +92,6 @@ module Web
             field_id = input_id(name, attrs[:id])
             field_name = input_name(name)
 
-
             html.tag('div', class: 'custom-file') do
               html.stag('input', {
                 id: field_id,
@@ -135,7 +134,7 @@ module Web
 
           # TODO: duplicated code, see +radiobox+
           def checkbox(name, attrs)
-            field_id = input_id(name, attrs[:id])
+            field_id = input_id(name, attrs[:id], attrs[:value])
             field_name = input_name(name)
 
             # TODO: not inline
@@ -147,6 +146,7 @@ module Web
                   class: 'form-check-input',
                   id: field_id,
                   value: attrs[:value],
+                  checked: attrs[:checked],
                 })
 
                 if attrs[:label]
@@ -215,11 +215,11 @@ module Web
             end
           end
 
-          def input_id(name, suffix = nil)
+          def input_id(name, *suffixes)
             id = "#{id_base}-#{name}"
-            id << "-#{suffix}" if suffix
+            id << "-#{suffixes.join('-')}" if suffixes.any?
 
-            id
+            fix_id(id)
           end
 
           def input_name(name)
@@ -255,12 +255,16 @@ module Web
             @form_values ||= @options[:values] || {}
           end
 
+          def fix_id(id)
+            id.gsub(/[\[\]-]+/, '-').chomp('-')
+          end
+
           def id_base
             @id_base ||=
               if @options[:namespace]
-                @options[:namespace].gsub(/[\[\]-]+/, '-').chomp('-')
+                @options[:namespace]
               else
-                ''
+                'form-field'
               end
           end
         end

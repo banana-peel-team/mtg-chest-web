@@ -1,21 +1,35 @@
+require_relative '../components/container'
+
+require_relative 'forms/new'
+
 module Web
   module Views
     module Sessions
-      class New
-        def initialize(attrs)
-          @presenter = attrs[:presenter]
-          @csrf_token = attrs[:csrf_token]
+      New = Layout.new([
+        Components::Container.new([
+          Forms::New.new({
+            name: 'signin',
+            form: :user,
+            errors: :errors,
+            source: :values,
+          }),
+        ]),
+      ])
+
+      class NewA
+        attr_reader :options
+
+        def initialize(options)
+          @options = options.dup
+          @presenter = @options.delete(:presenter)
         end
 
         def render
-          layout = Web::Views::Layout.new(
-            csrf_token: @csrf_token,
-          )
+          layout = Web::Views::Layout.new(options)
 
           layout.render do |html|
             html.tag('div', class: 'container') do
-              form = HtmlForm.new(
-                html: html,
+              form = html.form(
                 namespace: 'signin',
                 errors: @presenter.errors,
                 values: @presenter.values,

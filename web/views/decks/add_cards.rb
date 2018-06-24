@@ -1,70 +1,28 @@
+require_relative '../components/navigation'
+require_relative '../components/card'
+
+require_relative 'navigation/list'
+require_relative 'navigation/show'
+require_relative 'navigation/edit'
+require_relative 'navigation/add_cards'
+require_relative 'forms/add_cards'
+
 module Web
   module Views
     module Decks
-      class AddCards
-        def initialize(attrs)
-          @current_user = attrs[:current_user]
-          @presenter = attrs[:presenter]
-          @csrf_token = attrs[:csrf_token]
-        end
-
-        def render
-          layout = Web::Views::Layout.new(
-            current_user: @current_user,
-            csrf_token: @csrf_token,
-          )
-
-          layout.render do |html|
-            breadcrumb(html)
-
-            body(html)
-          end
-        end
-
-        def body(html)
-          html.tag('h2', 'Add cards')
-
-          form = html.form(
-            namespace: 'deck',
-            action: "/decks/#{@presenter.deck[:id]}/add-cards",
-          )
-
-          html.simple_card('From card list') do
-            form.render do
-              html.tag('div', class: 'col') do
-                form.checkbox(:scratchpad, label: 'Scratchpad', inline: true)
-              end
-
-              form.row do
-                form.textarea(:list, label: '1 Swamp', required: true)
-              end
-
-              form.row do
-                form.submit('Add')
-              end
-            end
-          end
-        end
-
-        def breadcrumb(html)
-          html.breadcrumb do
-            html.breadcrumb_item do
-              html.tag('a', 'Decks', href: '/decks')
-            end
-
-            html.breadcrumb_item do
-              deck_path = "/decks/#{@presenter.deck[:id]}"
-              html.tag('a', @presenter.deck[:name], href: deck_path)
-            end
-            html.breadcrumb_item do
-              deck_path = "/decks/#{@presenter.deck[:id]}/edit"
-              html.tag('a', 'Edit', href: deck_path)
-            end
-
-            html.breadcrumb_item('Add cards')
-          end
-        end
-      end
+      AddCards = Layout.new([
+        Components::Navigation.new([
+          Decks::Navigation::List.new(breadcrumb: true),
+          Decks::Navigation::Show.new(breadcrumb: true, deck: :deck),
+          Decks::Navigation::Edit.new(breadcrumb: true, deck: :deck),
+          Decks::Navigation::AddCards.new(
+            breadcrumb: true, deck: :deck, current: true
+          ),
+        ], breadcrumb: true),
+        Components::Card.new([
+          Forms::AddCards.new(name: 'deck'),
+        ], title: 'Add cards'),
+      ])
     end
   end
 end

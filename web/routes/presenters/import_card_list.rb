@@ -8,6 +8,15 @@ module Web
           @import = import
         end
 
+        def context
+          {
+            cards: cards,
+            import: import,
+          }
+        end
+
+        private
+
         def cards
           Queries::ImportPrintings.for_import(import).all
         end

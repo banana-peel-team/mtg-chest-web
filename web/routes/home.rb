@@ -9,7 +9,7 @@ module Web
         on(get, root) do
           presenter = Presenters::Home.new(current_user)
 
-          render_view(Views::Home, presenter: presenter)
+          render_view(Views::Home, presenter.context)
         end
       end
     end

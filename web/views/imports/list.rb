@@ -1,91 +1,34 @@
+require_relative '../components/table'
+require_relative '../components/table_column'
+require_relative '../components/navigation'
+
+require_relative 'navigation/list'
+require_relative 'navigation/new'
+require_relative 'columns/title'
+require_relative 'forms/delete'
+
 module Web
   module Views
     module Imports
-      class List
-        TABLE_HEADER = Html.render do |html|
-          html.tag('thead') do
-            html.tag('tr') do
-              html.tag('th', 'Title')
-              html.tag('th', 'Created')
-              html.tag('th', 'Actions')
-            end
-          end
-        end.freeze
+      List = Layout.new([
+        Components::Navigation.new([
+          Navigation::List.new(breadcrumb: true, current: true),
+        ], breadcrumb: true),
 
-        def initialize(attrs)
-          @current_user = attrs[:current_user]
-          @presenter = attrs[:presenter]
-          @csrf_token = attrs[:csrf_token]
-        end
+        Components::Box.new([
+          Components::Navigation.new([
+            Navigation::New.new(deck: :deck),
+          ]),
 
-        def render
-          layout = Web::Views::Layout.new(
-            current_user: @current_user,
-            csrf_token: @csrf_token,
-          )
-
-          layout.render do |html|
-            breadcrumb(html)
-
-            body(html)
-          end
-        end
-
-        def body(html)
-          html.box do
-            html.box_title('Imports')
-            import_list(html, @presenter.imports)
-          end
-        end
-
-        def import_list(html, imports, &block)
-          html.striped_table do
-            html.append_html(TABLE_HEADER)
-
-            html.tag('tbody') do
-              imports.each do |import|
-                html.tag('tr') do
-                  html.tag('td') do
-                    html.link(
-                      "/collection/imports/#{import[:id]}", import[:title]
-                    )
-                    html.mtg.count_badge(import[:user_printing_count])
-                  end
-
-                  html.tag('td', import[:created_at].to_s)
-
-                  html.tag('td') do
-                    html.delete_form(
-                      action: "/collection/imports/#{import[:id]}"
-                    ) do
-                      html.icons.delete_button
-                    end
-                  end
-                end
-              end
-            end
-          end
-        end
-
-        def breadcrumb(html)
-          html.tag('div', class: 'row') do
-            html.tag('div', class: 'col-10') do
-              html.breadcrumb do
-                html.breadcrumb_item('Imports')
-              end
-            end
-
-            html.tag('div', class: 'col') do
-              html.tag('ul', class: 'nav justify-content-end') do
-                html.tag('li') do
-                  html.link('/collection/import', 'New',
-                            class: 'nav-link btn btn-light')
-                end
-              end
-            end
-          end
-        end
-      end
+          Components::Table.new([
+            Columns::Title.new('Name'),
+            Components::TableColumn.new('Created', source: :created_at),
+            Components::TableColumn.new('Actions', [
+              Forms::Delete.new(icon: true, inline: true)
+            ])
+          ], source: :imports),
+        ], title: 'Imports'),
+      ])
     end
   end
 end

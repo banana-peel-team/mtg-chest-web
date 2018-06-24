@@ -10,13 +10,24 @@ module Web
             cls << ' disabled' if number.nil?
             cls << ' active' if number == current
 
+            number = nil if number == 1
+
             html.tag('li', class: cls) do
-              html.link("?page=#{number}", text, class: 'page-link')
+              html.link(
+                "?#{page_params(html, number)}", text, class: 'page-link'
+              )
             end
           end
 
+          def page_params(html, page)
+            html.params_url('page' => page)
+          end
+
           # TODO: Improve
-          def render(html, current_page, total_pages)
+          def render(html, dataset)
+            total_pages = dataset[:total_pages]
+            current_page = dataset[:current_page]
+
             return if total_pages < 2 && current_page < 2
 
             if total_pages <= 7

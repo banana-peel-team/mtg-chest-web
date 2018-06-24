@@ -182,11 +182,85 @@ module Queries
 
       if user
         Queries::Cards.collection_cards(ds)
-          .order(:scores).reverse
       else
         Queries::Cards.cards(ds)
-          .order(:scores).reverse
       end
+    end
+
+    def self.sort_null_length(ds, column, dir)
+      sort_str =
+        case dir
+        when 'desc'
+          "LENGTH(#{column}) DESC NULLS LAST, #{column} DESC NULLS LAST"
+        else 'asc'
+          "LENGTH(#{column}) ASC NULLS LAST, #{column} ASC NULLS LAST"
+        end
+
+      ds.order(Sequel.lit(sort_str))
+    end
+
+    def self.sort_null_array_length(ds, column, dir)
+      arr_len = "ARRAY_LENGTH(#{column}, 1)"
+      sort_str =
+        case dir
+        when 'desc'
+          "#{arr_len} DESC NULLS LAST, #{column} DESC NULLS LAST"
+        else 'asc'
+          "#{arr_len} ASC NULLS LAST, #{column} ASC NULLS LAST"
+        end
+
+      ds.order(Sequel.lit(sort_str))
+    end
+
+    def self.sort_nulls(ds, column, dir)
+      sort_str =
+        case dir
+        when 'desc'
+          "#{column} DESC NULLS LAST"
+        else 'asc'
+          "#{column} ASC NULLS LAST"
+        end
+
+      ds.order(Sequel.lit(sort_str))
+    end
+
+    def self.sort_dir(ds, column, dir)
+      case dir
+      when 'desc'
+        ds.order(Sequel.desc(column))
+      else 'asc'
+        ds.order(Sequel.asc(column))
+      end
+    end
+
+    def self.sort(ds, column, dir)
+      case column
+      when 'score'
+        sort_dir(ds, Sequel[:card][:scores], dir)
+      when 'name'
+        sort_dir(ds, Sequel[:card][:name], dir)
+      when 'identity'
+        sort_null_array_length(ds, 'card.color_identity', dir)
+      #when 'tags'
+        #sort_nulls(ds, 'card.tags', dir)
+      when 'power'
+        sort_null_length(ds, 'card.power', dir)
+      when 'toughness'
+        sort_null_length(ds, 'toughness', dir)
+      when 'cmc'
+        sort_nulls(ds, 'converted_mana_cost', dir)
+      else
+        ds
+      end
+    end
+
+    def self.filter_identity(ds, colors)
+      ds
+        .where(
+          Sequel
+            .pg_array(Sequel[:card][:color_identity])
+            .overlaps(Sequel.pg_array(colors, :varchar))
+        )
     end
 
     def self.alternatives(user, deck_id, card)

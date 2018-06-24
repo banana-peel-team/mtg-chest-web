@@ -8,6 +8,15 @@ module Web
           @deck = deck
         end
 
+        def context
+          {
+            cards: cards,
+            deck: deck,
+          }
+        end
+
+        private
+
         def cards
           Queries::DeckCards.for_deck(deck[:id]).all
         end

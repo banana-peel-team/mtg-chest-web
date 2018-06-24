@@ -7,11 +7,9 @@ module Web
     class Sessions < Web::Server
       define do
         on(get, 'new') do
-          presenter = Presenters::Signin.new(
-            errors: {}
-          )
+          presenter = Presenters::Signin.new(errors: {})
 
-          render_view(Views::Sessions::New, presenter: presenter)
+          render_view(Views::Sessions::New, presenter.context)
         end
 
         on(post, root, param('signin')) do |attributes|
@@ -32,7 +30,7 @@ module Web
 
             res.status = 422
 
-            render_view(Views::Sessions::New, presenter: presenter)
+            render_view(Views::Sessions::New, presenter.context)
           end
         end
 

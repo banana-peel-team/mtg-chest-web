@@ -28,7 +28,7 @@ module Web
           on(get) do
             presenter = Routes::Presenters::UserDecks.new(current_user)
 
-            render_view(Web::Views::Decks::List, presenter: presenter)
+            render_view(Web::Views::Decks::List, presenter.context)
           end
         end
 
@@ -58,22 +58,25 @@ module Web
 
           on(get, 'edit') do
             presenter = Routes::Presenters::EditDeckCards.new(
-              current_user, deck
+              current_user, deck,
+              { params: req.params },
             )
 
-            render_view(Web::Views::Decks::EditCards, presenter: presenter)
+            render_view(Web::Views::Decks::EditCards, presenter.context)
           end
 
           on(get, root) do
-            presenter = Routes::Presenters::DeckCards.new(current_user, deck)
+            presenter = Routes::Presenters::DeckCards.new(current_user, deck, {
+              params: req.params,
+            })
 
-            render_view(Web::Views::Decks::Show, presenter: presenter)
+            render_view(Web::Views::Decks::Show, presenter.context)
           end
 
           on(get, 'add-cards') do
             presenter = Routes::Presenters::DeckCards.new(current_user, deck)
 
-            render_view(Web::Views::Decks::AddCards, presenter: presenter)
+            render_view(Web::Views::Decks::AddCards, presenter.context)
           end
 
           on(post, 'add-cards', param('deck')) do |params|
@@ -92,7 +95,7 @@ module Web
               params: req.params
             )
 
-            render_view(Web::Views::Decks::FindCards, presenter: presenter)
+            render_view(Web::Views::Decks::FindCards, presenter.context)
           end
 
           on(get, 'link') do
@@ -102,12 +105,12 @@ module Web
               params: req.params
             )
 
-            render_view(Web::Views::Decks::LinkCards, presenter: presenter)
+            render_view(Web::Views::Decks::LinkCards, presenter.context)
           end
 
           on(get, 'list') do
             presenter = Presenters::DeckCardList.new(deck)
-            render_view(Views::Decks::CardList, presenter: presenter)
+            render_view(Views::Decks::CardList, presenter.context)
           end
 
           on('cards') do
@@ -138,7 +141,7 @@ module Web
                 )
 
                 render_view(
-                  Web::Views::Decks::Alternatives, presenter: presenter
+                  Web::Views::Decks::Alternatives, presenter.context
                 )
               end
 
@@ -147,7 +150,7 @@ module Web
                   current_user, deck, card
                 )
 
-                render_view(Web::Views::Decks::Synergy, presenter: presenter)
+                render_view(Web::Views::Decks::Synergy, presenter.context)
               end
             end
           end
