@@ -8,8 +8,19 @@ module Web
           @card = card
         end
 
+        def context
+          {
+            cards: { list: cards },
+            card: card,
+            deck: deck,
+            rated_decks: rated_decks,
+          }
+        end
+
+        private
+
         def rated_decks
-          @rated_decks ||= DeckDatabase.select(:key, :name, :max_score).all
+          DeckDatabase.select(:key, :name, :max_score).all
         end
 
         def deck
@@ -21,7 +32,7 @@ module Web
         end
 
         def cards
-          @cards ||= Queries::DeckCards.synergy(
+          Queries::DeckCards.synergy(
             @user, @deck[:id], @card
           ).all
         end

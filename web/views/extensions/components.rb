@@ -33,16 +33,16 @@ module Web
           #stag('input', class: 'btn btn-primary', type: 'submit', value: e(text))
         #end
 
-        def breadcrumb_item(content = false, &block)
-          cls = 'breadcrumb-item'
+        def navigation_item(content = false, &block)
+          cls = 'navigation-item'
           cls << ' active' if content
 
           tag('li', content, class: cls, &block)
         end
 
-        def breadcrumb(&block)
-          tag('nav', 'aria-label': 'breadcrumb') do
-            tag('ol', class: 'breadcrumb', &block)
+        def navigation(&block)
+          tag('nav', 'aria-label': 'navigation') do
+            tag('ol', class: 'navigation', &block)
           end
         end
 
@@ -53,6 +53,12 @@ module Web
 
         def link(path, content, attrs = {}, &block)
           attrs = {href: path}.merge(attrs)
+          tag('a', content, attrs, &block)
+        end
+
+        def link_current(params, content = nil, attrs = {}, &block)
+          attrs = {href: '?' + params_url(params)}.merge(attrs)
+
           tag('a', content, attrs, &block)
         end
       end

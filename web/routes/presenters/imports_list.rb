@@ -8,6 +8,16 @@ module Web
           @user = user
         end
 
+        def context
+          {
+            imports: {
+              list: imports,
+            }
+          }
+        end
+
+        private
+
         def imports
           Queries::ImportList.for_user(user).all
         end

@@ -1,55 +1,50 @@
-require_relative 'show'
+require_relative '../components/form'
+require_relative '../components/table'
+require_relative '../components/forms/submit'
+require_relative '../components/navigation'
+
+require_relative 'forms/add_card'
+
+require_relative 'suggestions_filter'
+require_relative 'navigation/list'
+require_relative 'navigation/show'
+require_relative 'navigation/find_cards'
+
 module Web
   module Views
     module Decks
-      class FindCards < Web::Views::Decks::Show
-        def body(html)
-          html.box do
-            html.box_title('Suggested cards')
-
-            html.form(method: 'get') do |form|
-              form.checkbox(:all, label: 'Show all', value: '1', inline: true)
-              form.submit('Refresh')
-            end
-
-            cards_list(html, @presenter.paginated)
-          end
-
-          html.box do
-            html.pagination(@presenter.current_page, @presenter.total_pages)
-          end
-        end
-
-        def actions(html, card)
-          add_card_to_deck(html, @presenter.deck, card) do |form|
-            form.button_group do
-              form.button('Add to deck', 'slot', 'deck', {
-                icon: 'plus', style: :light, small: true
-              })
-              form.button('Add to scratchpad', 'slot', 'scratchpad', {
-                icon: 'pencil-alt', style: :light, small: true
-              })
-              form.button('Ignore this card', 'slot', 'ignored', {
-                icon: 'thumbs-down', style: :light, small: true
-              })
-            end
-          end
-        end
-
-        def breadcrumb(html)
-          html.breadcrumb do
-            html.breadcrumb_item do
-              html.link('/decks', 'Decks')
-            end
-            html.breadcrumb_item do
-              html.link(
-                "/decks/#{@presenter.deck[:id]}", @presenter.deck[:name]
-              )
-            end
-            html.breadcrumb_item('Find cards')
-          end
-        end
-      end
+      FindCards = Layout.new([
+        Components::Navigation.new([
+          Decks::Navigation::List.new(breadcrumb: true),
+          Decks::Navigation::Show.new(breadcrumb: true, deck: :deck),
+          Decks::Navigation::Edit.new(breadcrumb: true, deck: :deck),
+          Decks::Navigation::FindCards.new(
+            breadcrumb: true, deck: :deck, current: true
+          ),
+        ], breadcrumb: true),
+        Components::Box.new([
+          Components::Form.new([
+            Decks::SuggestionsFilter.new(
+              name: 'filter',
+              source: :suggestions,
+            ),
+            Components::Forms::Submit.new(label: 'Refresh'),
+          ], method: 'get'),
+          Components::Table.new([
+            Cards::Columns::Score.new('Score', sort: 'score'),
+            DeckCards::Columns::Title.new('Name', sort: 'name'),
+            Cards::Columns::Tags.new('Tags'),
+            Cards::Columns::Cost.new('Cost'),
+            Cards::Columns::Identity.new('Identity', sort: 'identity'),
+            Cards::Columns::CreatureStats.new('P/T', sort: true),
+            Components::TableColumn.new('Actions', [
+              Forms::AddCard.new(
+                icon: true, inline: true, source: :_current_row
+              ),
+            ]),
+          ], source: :suggestions),
+        ], title: 'Find cards for this deck'),
+      ])
     end
   end
 end

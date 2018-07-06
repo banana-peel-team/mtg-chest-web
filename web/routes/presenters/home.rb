@@ -5,6 +5,12 @@ module Web
         def initialize(user)
           @user = user
         end
+
+        def context
+          {
+            user: @user,
+          }
+        end
       end
     end
   end

@@ -1,60 +1,54 @@
+require_relative '../components/row'
+require_relative '../components/navigation'
+require_relative '../components/box'
+require_relative '../components/table'
+require_relative '../components/table_column'
+
+require_relative '../cards/columns/score'
+require_relative '../cards/columns/tags'
+require_relative '../cards/columns/cost'
+require_relative '../cards/columns/identity'
+require_relative '../cards/columns/creature_stats'
+require_relative '../deck_cards/columns/title'
+
 require_relative 'show'
+require_relative 'navigation/list'
+require_relative 'navigation/show'
+require_relative 'navigation/card'
+require_relative 'navigation/synergy'
+require_relative 'forms/add_card'
+
 
 module Web
   module Views
     module Decks
-      class Synergy < Web::Views::Decks::Show
-        def body(html)
-          html.tag('h2', 'Similar cards on your collection')
-
-          cards_list(html, @presenter.cards)
-        end
-
-        def actions(html, card)
-          add_card_to_deck(html, @presenter.deck, card) do
-            button_attrs = {
-              class: 'form-control btn',
-              type: 'submit',
-              name: 'slot',
-            }
-
-            html.tag('button',
-                      button_attrs.merge(value: 'deck',
-                                         title: 'Add to deck')
-                    ) do
-              html.tag('i', class: 'fas fa-plus')
-            end
-            html.tag('button',
-                      button_attrs.merge(value: 'scratchpad',
-                                         title: 'Add to scratchpad')
-                    ) do
-              html.tag('i', class: 'fas fa-pencil-alt')
-            end
-
-            html.tag('button',
-                      button_attrs.merge(value: 'ignored',
-                                         title: 'Ignore this card')
-                    ) do
-
-              html.tag('i', class: 'fas fa-thumbs-down')
-            end
-          end
-        end
-
-        def breadcrumb(html)
-          html.breadcrumb do
-            html.breadcrumb_item do
-              html.tag('a', 'Decks', href: '/decks')
-            end
-            html.breadcrumb_item do
-              deck_path = "/decks/#{@presenter.deck[:id]}"
-              html.tag('a', @presenter.deck[:name], href: deck_path)
-            end
-            html.breadcrumb_item(@presenter.card[:card_name])
-            html.breadcrumb_item('Alternatives')
-          end
-        end
-      end
+      Synergy = Layout.new([
+        Components::Row.new([
+          Components::Navigation.new([
+            Navigation::List.new(breadcrumb: true),
+            Navigation::Show.new(breadcrumb: true, deck: :deck),
+            Navigation::Card.new(breadcrumb: true, card: :card),
+            Navigation::Synergy.new(
+              breadcrumb: true, deck: :deck, current: true
+            ),
+          ], breadcrumb: true),
+        ]),
+        Components::Box.new([
+          Components::Table.new([
+            Cards::Columns::Score.new('Score'),
+            DeckCards::Columns::Title.new('Name', count: false),
+            Cards::Columns::Tags.new('Tags'),
+            Cards::Columns::Cost.new('Cost'),
+            Cards::Columns::Identity.new('Identity'),
+            Cards::Columns::CreatureStats.new('P/T'),
+            Components::TableColumn.new('Actions', [
+              Forms::AddCard.new(
+                icon: true, inline: true, source: :_current_row
+              ),
+            ]),
+          ], source: :cards),
+        ], title: 'Compatible cards on your collection'),
+      ])
     end
   end
 end

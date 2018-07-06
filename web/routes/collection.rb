@@ -19,14 +19,14 @@ module Web
             params: req.params
           )
 
-          render_view(Views::Collection::Show, presenter: presenter)
+          render_view(Views::Collection::Show, presenter.context)
         end
 
         on('imports') do
           on(get, root) do
             presenter = Presenters::ImportsList.new(current_user)
 
-            render_view(Views::Imports::List, presenter: presenter)
+            render_view(Views::Imports::List, presenter.context)
           end
 
           on(':id') do |id|
@@ -39,14 +39,14 @@ module Web
             end
 
             on(get, root) do |id|
-              presenter = Presenters::ImportCards.new(import)
+              presenter = Presenters::ImportCards.new(import, req.params)
 
-              render_view(Views::Imports::Show, presenter: presenter)
+              render_view(Views::Imports::Show, presenter.context)
             end
 
             on('list') do
               presenter = Presenters::ImportCardList.new(import)
-              render_view(Views::Imports::CardList, presenter: presenter)
+              render_view(Views::Imports::CardList, presenter.context)
             end
 
             on('deckbox') do

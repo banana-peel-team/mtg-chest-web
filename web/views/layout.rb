@@ -1,6 +1,10 @@
+require_relative 'component'
+require_relative 'shared/nav_signout'
+
 module Web
   module Views
-    class Layout
+    # TODO: Clean up this mess
+    class Layout < Component
       DEFAULT_HEAD_TAGS = Html.render do |html|
         html.meta(charset: 'utf-8')
         html.meta(
@@ -37,46 +41,33 @@ module Web
         end
       end.freeze
 
-      attr_reader :current_user
+      def render(html, context)
+        current_user = context[:current_user]
 
-      def initialize(attrs)
-        @current_user = attrs[:current_user]
-        @csrf_token = attrs[:csrf_token]
-      end
+        html.html5 do
+          html.tag('head') do
+            html.append_html(DEFAULT_HEAD_TAGS)
 
-      def render(&block)
-        attrs = { csrf_token: @csrf_token }
+            unless current_user
+              html.append_html(stylesheet('/css/login.css'))
+            end
+          end
 
-        Html.render(attrs) do |html|
-          html.html5 do
-            html.tag('head') do
-              html.append_html(DEFAULT_HEAD_TAGS)
+          html.tag('body', class: 'bg-light', lang: 'en') do
+            if current_user
+              navigation(html, context)
 
-              unless current_user
-                html.append_html(stylesheet('/css/login.css'))
+              html.tag('main', class: 'container', role: 'main') do
+                super(html, context)
               end
+            else
+              super(html, context)
             end
-
-            body(html, &block)
           end
         end
       end
 
-      def body(html, &block)
-        html.tag('body', class: 'bg-light', lang: 'en') do
-          if current_user
-            navigation(html)
-
-            html.tag('main', class: 'container', role: 'main') do
-              block.call(html)
-            end
-          else
-            block.call(html)
-          end
-        end
-      end
-
-      def navigation(html)
+      def navigation(html, context)
         cls = 'navbar navbar-expand-md navbar-dark bg-dark fixed-top'
 
         html.tag('nav', class: cls) do
@@ -93,7 +84,8 @@ module Web
             end
           end
 
-          logout_button(html)
+          # TODO:
+          Shared::NavSignout.new.render(html, context)
         end
       end
 
@@ -101,23 +93,6 @@ module Web
         html.tag('li', class: 'nav-item') do
           html.tag('a', class: 'nav-link', href: link) do
             html.append_html(content)
-          end
-        end
-      end
-
-      def logout_button(html)
-        html.tag('div', class: 'align-right') do
-          html.form(action: '/session/delete', class: 'form-inline') do
-            button_attrs = {
-              class: 'form-control btn',
-              type: 'submit',
-              title: 'Sign out',
-              value: 'Sign out',
-            }
-
-            html.tag('button', button_attrs) do
-              html.tag('i', class: 'fas fa-sign-out-alt')
-            end
           end
         end
       end

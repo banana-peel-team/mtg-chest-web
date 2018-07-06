@@ -6,6 +6,17 @@ module Web
           @user = user
         end
 
+        def context
+          {
+            decks: {
+              list: decks,
+              paginated: false,
+            },
+          }
+        end
+
+        private
+
         def decks
           @decks ||= Queries::Decks.for_user(@user).all
         end

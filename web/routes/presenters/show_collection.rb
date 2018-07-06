@@ -1,26 +1,34 @@
-require_relative 'paginated'
+require_relative 'extensions/table'
 
 module Web
   module Routes
     module Presenters
       class ShowCollection
-        include Paginated
-
         attr_reader :user
 
         def initialize(user, options = {})
           @user = user
 
-          super(options)
+          @params = options[:params] || {}
         end
 
-        def rated_decks
-          @rated_decks ||= DeckDatabase.select(:key, :name, :max_score).all
+        def context
+          {
+            printings: Extensions::Table.table(cards, @params, {
+              sort: Queries::DeckCards,
+              paginate: true,
+            }),
+            rated_decks: rated_decks,
+          }
         end
 
         private
 
-        def dataset
+        def rated_decks
+          DeckDatabase.select(:key, :name, :max_score).all
+        end
+
+        def cards
           Queries::CollectionCards.full_for_user(user)
         end
       end

@@ -14,7 +14,10 @@ module Web
       include Web::Views::Extensions::MTG
 
       def initialize(options)
+        @options = options
+
         @csrf_token = options[:csrf_token]
+        @params = options[:params] || {}
         @buffer = ''
       end
 
@@ -28,6 +31,16 @@ module Web
 
       def out
         @buffer
+      end
+
+      def params(override = nil)
+        return @params unless override && override.any?
+
+        @params.merge(override).reject { |k, v| !v }
+      end
+
+      def params_url(override)
+        Rack::Utils.build_nested_query(params(override))
       end
 
       def append_html(content)

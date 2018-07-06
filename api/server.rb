@@ -1,5 +1,6 @@
 require 'cuba'
 require 'rack/jwt'
+require 'rack/cors'
 
 require './app/application'
 
@@ -11,6 +12,13 @@ module API
     use(Rack::JWT::Auth, secret: ENV['JWT_SECRET'],
                          options: { algorithm: 'HS256' },
                          exclude: ['/v1/status', '/v1/auth', '/v1/cards'])
+    use(Rack::Cors) do
+      allow do
+        resource '*', headers: :any, methods: :any
+        origins '*'
+      end
+    end
+
     plugin(API::Helpers::CommonHelper)
   end
 end

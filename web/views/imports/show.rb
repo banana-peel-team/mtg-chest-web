@@ -1,124 +1,49 @@
+require_relative '../components/box'
+require_relative '../components/navigation'
+require_relative '../components/table'
+require_relative '../components/box_title'
+
+require_relative '../cards/columns/score'
+require_relative '../cards/columns/tags'
+require_relative '../cards/columns/cost'
+require_relative '../cards/columns/identity'
+require_relative '../cards/columns/creature_stats'
+require_relative '../deck_cards/columns/title'
+
+require_relative 'navigation/list'
+require_relative 'navigation/show'
+require_relative 'navigation/card_list'
+require_relative 'navigation/export_deckbox'
+
 module Web
   module Views
     module Imports
-      class Show
-        TABLE_HEADER = Html.render do |html|
-          html.tag('thead') do
-            html.tag('tr') do
-              html.tag('th', 'Score')
-              html.tag('th', 'Name')
-              html.tag('th', 'Tags')
-              html.tag('th', 'Cost')
-              html.tag('th', 'Identity')
-              html.tag('th', 'P/T')
-            end
-          end
-        end.freeze
+      Show = Layout.new([
+        Components::Navigation.new([
+          Navigation::List.new(breadcrumb: true),
+          Navigation::Show.new(
+            import: :import, breadcrumb: true, current: true
+          ),
+        ], breadcrumb: true),
 
-        def initialize(attrs)
-          @current_user = attrs[:current_user]
-          @presenter = attrs[:presenter]
-          @csrf_token = attrs[:csrf_token]
-        end
-
-        def render
-          layout = Web::Views::Layout.new(
-            current_user: @current_user,
-            csrf_token: @csrf_token,
-          )
-
-          layout.render do |html|
-            breadcrumb(html)
-
-            body(html)
-          end
-        end
-
-        def body(html)
-          html.box do
-            html.box_title do
-              html.append_text(@presenter.import[:title])
-              html.mtg.count_badge(@presenter.import[:user_printing_count])
-            end
-
-            cards_list(html, @presenter.printings)
-          end
-        end
-
-        def cards_list(html, cards, &block)
-          html.striped_table do
-            html.append_html(TABLE_HEADER)
-
-            html.tag('tbody') do
-              cards.each do |card|
-                html.tag('tr') do
-                  html.tag('td') do
-                    html.mtg.card_score(@presenter.rated_decks, card)
-                  end
-
-                  html.tag('td') do
-                    html.mtg.printing_name_with_info(card)
-                    html.mtg.card_text(card)
-                  end
-
-                  html.tag('td', class: 'mtgTags') do
-                    html.mtg.mtg_icons(card[:types])
-                    html.mtg.tags(card[:subtypes])
-                  end
-
-                  html.tag('td') do
-                    html.mtg.card_cost(card)
-                  end
-
-                  html.tag('td') do
-                    html.mtg.icons_list(card[:color_identity])
-                  end
-
-                  if card[:power]
-                    html.tag('td', "#{card[:power]}/#{card[:toughness]}")
-                  else
-                    html.tag('td')
-                  end
-                end
-              end
-            end
-          end
-        end
-
-        def breadcrumb(html)
-          html.tag('div', class: 'row') do
-            html.tag('div', class: 'col-7') do
-              html.breadcrumb do
-                html.breadcrumb_item do
-                  html.tag('a', 'Imports', href: '/collection/imports')
-                end
-
-                html.breadcrumb_item(@presenter.import[:title])
-              end
-            end
-
-            html.tag('div', class: 'col') do
-              html.tag('ul', class: 'nav justify-content-end') do
-                html.tag('li', class: 'nav-item mr-4') do
-                  path = "/collection/imports/#{@presenter.import[:id]}/list"
-
-                  html.tag('a', class: 'nav-link btn btn-light', href: path) do
-                    html.append_html('Card list')
-                  end
-                end
-                html.tag('li', class: 'nav-item mr-4') do
-                  path =
-                    "/collection/imports/#{@presenter.import[:id]}/deckbox"
-
-                  html.tag('a', class: 'nav-link btn btn-light', href: path) do
-                    html.append_html('Export to deckbox')
-                  end
-                end
-              end
-            end
-          end
-        end
-      end
+        Components::Box.new([
+          Components::BoxTitle.new(
+            source: :import, title: :title, count: :user_printing_count
+          ),
+          Components::Navigation.new([
+            Navigation::CardList.new(import: :import),
+            Navigation::ExportDeckbox.new(import: :import),
+          ]),
+          Components::Table.new([
+            Cards::Columns::Score.new('Score', sort: 'score'),
+            DeckCards::Columns::Title.new('Name', sort: 'name'),
+            Cards::Columns::Tags.new('Tags'),
+            Cards::Columns::Cost.new('Cost', sort: 'cmc'),
+            Cards::Columns::Identity.new('Identity', sort: 'identity'),
+            Cards::Columns::CreatureStats.new('P/T', sort: true),
+          ], source: :printings),
+        ]),
+      ])
     end
   end
 end
