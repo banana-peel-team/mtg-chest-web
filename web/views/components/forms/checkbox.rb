@@ -10,9 +10,7 @@ module Web
 
             name = options[:name]
             value = options[:value] || '1'
-
             checked = context[:checked] || values[options[:source]] == value
-
             field_id = tag_id(name, options[:id], value)
 
             # TODO: not inline
@@ -27,16 +25,20 @@ module Web
                   checked: checked,
                 })
 
-                if options[:label]
-                  html.tag('label', options[:label], {
-                    class: 'form-check-label',
-                    for: field_id
-                  })
-                end
+                input_label(html, field_id)
               end
             else
               raise 'not implemented'
             end
+          end
+
+          private
+
+          def input_label(html, id)
+            label = options[:label]
+            return unless label
+
+            html.tag('label', label, class: 'form-check-label', for: id)
           end
         end
       end

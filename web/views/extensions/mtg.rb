@@ -124,6 +124,10 @@ module Web
             html.tag('i', title: name, class: "mr-1 ms ms-#{name.downcase}")
           end
 
+          def mtg_cost_icon(color)
+            html.append_html(transform_icon(color))
+          end
+
           # TODO: Rename?
           def mtg_icons(list)
             list.each(&method(:mtg_icon))

@@ -2,6 +2,8 @@ require_relative '../component'
 require_relative '../components/forms/checkbox'
 require_relative '../components/form_group'
 
+require_relative 'forms/color_filter'
+
 module Web
   module Views
     module Decks
@@ -9,38 +11,33 @@ module Web
         def build_elements
           [
             Components::Forms::Checkbox.new(
-              label: 'Show all',
+              label: 'Show un-owned',
               inline: true,
               source: :all,
               name: child_name('a'),
             ),
-            Components::Forms::Checkbox.new(
-              label: 'r',
-              inline: true,
+            Forms::ColorFilter.new(
+              color: 'r',
               source: :identity_r,
               name: child_name('i[r]'),
             ),
-            Components::Forms::Checkbox.new(
-              label: 'g',
-              inline: true,
+            Forms::ColorFilter.new(
+              color: 'g',
               source: :identity_g,
               name: child_name('i[g]'),
             ),
-            Components::Forms::Checkbox.new(
-              label: 'b',
-              inline: true,
+            Forms::ColorFilter.new(
+              color: 'b',
               source: :identity_b,
               name: child_name('i[b]'),
             ),
-            Components::Forms::Checkbox.new(
-              label: 'u',
-              inline: true,
+            Forms::ColorFilter.new(
+              color: 'u',
               source: :identity_u,
               name: child_name('i[u]'),
             ),
-            Components::Forms::Checkbox.new(
-              label: 'w',
-              inline: true,
+            Forms::ColorFilter.new(
+              color: 'w',
               source: :identity_w,
               name: child_name('i[w]'),
             ),
