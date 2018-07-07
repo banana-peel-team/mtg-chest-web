@@ -10,7 +10,7 @@ module Web
         def initialize(user, deck, options)
           @user = user
           @deck = deck
-          @params = options[:params] || {}
+          @params = options[:params]
         end
 
         def context
@@ -76,7 +76,7 @@ module Web
               ds = Queries::DeckCards.suggestions(user, @deck[:id])
 
               if filter_identity.any?
-                ds = Queries::DeckCards.filter_identity(
+                ds = Queries::Cards.filter_identity(
                   ds, filter_identity.keys.map(&:upcase)
                 )
               end

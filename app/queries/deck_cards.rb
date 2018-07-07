@@ -187,15 +187,6 @@ module Queries
       end
     end
 
-    def filter_identity(ds, colors)
-      ds
-        .where(
-          Sequel
-            .pg_array(Sequel[:card][:color_identity])
-            .overlaps(Sequel.pg_array(colors, :varchar))
-        )
-    end
-
     def alternatives(user, deck_id, card)
       cards = Sequel[:card]
 

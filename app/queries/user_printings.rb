@@ -72,7 +72,7 @@ module Queries
           Sequel[:card][:types].as(:types),
           Sequel[:card][:subtypes].as(:subtypes),
           Sequel[:card][:supertypes].as(:supertypes),
-          Sequel[:card][:text].as(:text),
+          Sequel[:card][:text].as(:card_text),
           Sequel[:card][:layout].as(:layout),
           Sequel[:printing][:multiverse_id].as(:multiverse_id),
           Sequel[:printing][:flavor].as(:flavor),

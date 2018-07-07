@@ -2,7 +2,7 @@ require_relative '../../components/forms/checkbox'
 
 module Web
   module Views
-    module Decks
+    module Cards
       module Forms
         class ColorFilter < Components::Forms::Checkbox
           def initialize(options)
