@@ -17,7 +17,7 @@ module Web
               sort: Queries::UserPrintings,
               default_sort: 'card_name',
               sort_columns: [
-                'scores',
+                'score',
                 'card_name',
                 'cmc',
                 'identity',

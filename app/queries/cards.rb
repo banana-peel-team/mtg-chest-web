@@ -100,12 +100,14 @@ module Queries
 
     def sort_cost(ds, dir)
       if dir == :asc
-        ds = ds.order(
+        ds = ds.order_append(
+          Sequel.asc(converted_mana_cost: 0),
           Sequel.asc(:converted_mana_cost),
           Sequel.asc(Sequel.function(:length, :mana_cost)),
+          Sequel.desc(:scores),
         )
       else
-        ds = ds.order(
+        ds = ds.order_append(
           Sequel.desc(:converted_mana_cost),
           Sequel.desc(Sequel.function(:length, :mana_cost)),
         )
@@ -114,7 +116,7 @@ module Queries
 
     def sort_identity(ds, dir)
       if dir == :asc
-        ds = ds.order(
+        ds = ds.order_append(
           Sequel.asc(
             Sequel.function(:array_length, :color_identity, 1),
             nulls: :last
@@ -122,7 +124,7 @@ module Queries
           Sequel.asc(:color_identity),
         )
       else
-        ds = ds.order(
+        ds = ds.order_append(
           Sequel.desc(
             Sequel.function(:array_length, :color_identity, 1),
             nulls: :last
