@@ -14,7 +14,7 @@ require_relative '../cards/columns/tags'
 require_relative '../cards/columns/cost'
 require_relative '../cards/columns/identity'
 require_relative '../cards/columns/creature_stats'
-require_relative '../deck_cards/columns/title'
+require_relative '../deck_cards/columns/name'
 require_relative 'forms/edit_deck_card'
 
 module Web
@@ -35,32 +35,32 @@ module Web
             Decks::Navigation::AddCards.new(deck: :deck),
           ]),
           Components::Table.new([
-            Cards::Columns::Score.new('Score', sort: 'score'),
-            DeckCards::Columns::Title.new('Name', sort: 'name'),
-            Cards::Columns::Tags.new('Tags'),
-            Cards::Columns::Cost.new('Cost', sort: 'cmc'),
-            Cards::Columns::Identity.new('Identity', sort: 'identity'),
-            Cards::Columns::CreatureStats.new('P/T', sort: true),
-            Components::TableColumn.new('Actions', [
-              Forms::EditDeckCard.new(
+            Cards::Columns::Score.new(sort: true),
+            DeckCards::Columns::Name.new(sort: true),
+            Cards::Columns::Tags.new,
+            Cards::Columns::Cost.new(sort: true),
+            Cards::Columns::Identity.new(sort: true),
+            Cards::Columns::CreatureStats.new(sort: true),
+            Components::TableColumn.new([
+              Forms::EditDeckCard.new({
                 source: :_current_row, icon: true, inline: true
-              ),
-            ]),
+              }),
+            ], title: 'Actions'),
           ], source: :cards),
         ], title: 'Edit cards'),
         Components::Box.new([
           Components::Table.new([
-            Cards::Columns::Score.new('Score'),
-            DeckCards::Columns::Title.new('Name'),
-            Cards::Columns::Tags.new('Tags'),
-            Cards::Columns::Cost.new('Cost'),
-            Cards::Columns::Identity.new('Identity'),
-            Cards::Columns::CreatureStats.new('P/T'),
-            Components::TableColumn.new('Actions', [
-              Forms::EditDeckCard.new(
+            Cards::Columns::Score.new(sort: true),
+            DeckCards::Columns::Name.new(sort: true),
+            Cards::Columns::Tags.new,
+            Cards::Columns::Cost.new(sort: true),
+            Cards::Columns::Identity.new(sort: true),
+            Cards::Columns::CreatureStats.new(sort: true),
+            Components::TableColumn.new([
+              Forms::EditDeckCard.new({
                 flag: false, source: :_current_row, icon: true, inline: true
-              ),
-            ]),
+              }),
+            ], title: 'Actions'),
           ], source: :scratchpad),
         ], title: 'Scratchpad'),
       ])

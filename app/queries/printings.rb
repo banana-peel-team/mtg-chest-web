@@ -1,6 +1,21 @@
 module Queries
-  class EditionPrintings
-    def self.for_edition(code, user = nil)
+  module Printings
+    extend self
+
+    def sort(ds, column, dir)
+      case column
+      when 'edition_name'
+        Editions.sort_name(ds, dir)
+      when 'edition_date'
+        Editions.sort_date(ds, dir)
+      when 'edition_code'
+        Editions.sort_code(ds, dir)
+      else
+        Cards.sort(ds, column, dir)
+      end
+    end
+
+    def for_edition(code, user = nil)
       dataset = Printing
         .from_self(alias: :printing)
         .association_join(:card, :edition)

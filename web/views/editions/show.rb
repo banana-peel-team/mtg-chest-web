@@ -9,7 +9,7 @@ require_relative '../cards/columns/tags'
 require_relative '../cards/columns/cost'
 require_relative '../cards/columns/identity'
 require_relative '../cards/columns/creature_stats'
-require_relative '../deck_cards/columns/title'
+require_relative '../deck_cards/columns/name'
 require_relative 'navigation/list'
 require_relative 'navigation/show'
 
@@ -26,12 +26,12 @@ module Web
         Components::Box.new([
           Components::BoxTitle.new(source: :edition, title: :name),
           Components::Table.new([
-            Cards::Columns::Score.new('Score', sort: 'score'),
-            DeckCards::Columns::Title.new('Name', sort: 'name'),
-            Cards::Columns::Tags.new('Tags'),
-            Cards::Columns::Cost.new('Cost', sort: 'cmc'),
-            Cards::Columns::Identity.new('Identity', sort: 'identity'),
-            Cards::Columns::CreatureStats.new('P/T', sort: true),
+            Cards::Columns::Score.new(sort: true),
+            DeckCards::Columns::Name.new(sort: true),
+            Cards::Columns::Tags.new,
+            Cards::Columns::Cost.new(sort: true),
+            Cards::Columns::Identity.new(sort: true),
+            Cards::Columns::CreatureStats.new(sort: true),
           ], source: :printings)
         ])
       ])

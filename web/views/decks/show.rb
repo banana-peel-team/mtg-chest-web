@@ -7,7 +7,7 @@ require_relative '../cards/columns/tags'
 require_relative '../components/box'
 require_relative '../components/box_title'
 require_relative '../components/navigation'
-require_relative '../deck_cards/columns/title'
+require_relative '../deck_cards/columns/name'
 require_relative '../components/row'
 
 require_relative 'navigation/find_cards'
@@ -36,13 +36,13 @@ module Web
             Decks::Navigation::Edit.new(deck: :deck),
           ]),
           Components::Table.new([
-            Cards::Columns::Score.new('Score', sort: 'score'),
-            DeckCards::Columns::Title.new('Name', sort: 'name'),
-            Cards::Columns::Tags.new('Tags'),
-            Cards::Columns::Cost.new('Cost', sort: 'cost'),
-            Cards::Columns::Identity.new('Identity', sort: 'identity'),
-            Cards::Columns::CreatureStats.new('P/T', sort: true),
-            Decks::Columns::DeckCardActions.new('Actions'),
+            Cards::Columns::Score.new(sort: true),
+            DeckCards::Columns::Name.new(sort: true),
+            Cards::Columns::Tags.new,
+            Cards::Columns::Cost.new(sort: true),
+            Cards::Columns::Identity.new(sort: true),
+            Cards::Columns::CreatureStats.new(sort: true),
+            Decks::Columns::DeckCardActions.new,
           ], source: :cards),
         ]),
       ])

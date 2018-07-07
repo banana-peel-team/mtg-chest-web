@@ -5,6 +5,8 @@ module Web
     module Decks
       module Columns
         class DeckCardActions < Components::TableColumn
+          title 'Actions'
+
           def render(html, context)
             card = context[:_current_row]
 

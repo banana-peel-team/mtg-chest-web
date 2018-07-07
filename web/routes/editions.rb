@@ -11,9 +11,9 @@ module Web
     class Editions < Web::Server
       define do
         on(get, root) do
-          presenter = Presenters::EditionsList
+          context = Presenters::EditionsList.context(req.params)
 
-          render_view(Web::Views::Editions::List, presenter.context)
+          render_view(Web::Views::Editions::List, context)
         end
 
         on(':code') do |code|

@@ -16,7 +16,17 @@ module Web
         def context
           {
             suggestions: Extensions::Table.table(suggestions, @params, {
-              sort: Queries::DeckCards,
+              sort: Queries::Cards,
+              default_sort: 'score',
+              default_dir: 'desc',
+              sort_columns: [
+                'score',
+                'card_name',
+                'cmc',
+                'identity',
+                'power',
+                'toughness',
+              ],
               paginate: true,
             }).merge({
               filters: {

@@ -8,10 +8,10 @@ module API
 
         def self.single(deck)
           {
-            deck_id: deck[:id],
-            deck_name: deck[:name],
-            card_count: deck[:card_count],
-            deck_date: deck[:created_at],
+            deck_id: deck[:deck_id],
+            deck_name: deck[:deck_name],
+            card_count: deck[:deck_cards],
+            deck_date: deck[:deck_date],
           }
         end
       end

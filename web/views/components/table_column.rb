@@ -4,21 +4,24 @@ module Web
   module Views
     module Components
       class TableColumn < Component
-        def initialize(name, elements = [], options = {})
-          super(elements, options)
+        def self.title(title)
+          options[:title] = title
+        end
 
-          @name = name
+        def self.sort_column(column)
+          options[:sort_column] = column
         end
 
         def header(html, context)
-          if (sort = options[:sort])
+          if options[:sort]
+            sort = options[:sort_column]
             sorting = context[:_current_table][:sorting] || {}
 
             html.tag('th') do
-              sort_link(html, sorting, sort, @name)
+              sort_link(html, sorting, sort, options[:title])
             end
           else
-            html.tag('th', @name)
+            html.tag('th', options[:title])
           end
         end
 
@@ -34,7 +37,7 @@ module Web
 
           case value
           when DateTime, Time
-            html.tag('td', value.strftime('%F %I:%M%P'))
+            html.tag('td', value.strftime(options[:format] || '%F %I:%M%P'))
           else
             if value
               html.tag('td', value)

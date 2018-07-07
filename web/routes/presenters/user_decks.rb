@@ -1,24 +1,32 @@
+require_relative 'extensions/table'
+
 module Web
   module Routes
     module Presenters
       class UserDecks
-        def initialize(user)
+        def initialize(user, options)
           @user = user
+          @params = options[:params]
         end
 
         def context
           {
-            decks: {
-              list: decks,
-              paginated: false,
-            },
+            decks: Extensions::Table.table(decks, @params, {
+              sort: Queries::Decks,
+              default_sort: 'deck_name',
+              sort_columns: [
+                'deck_name',
+                'deck_date',
+              ],
+              paginate: true,
+            }),
           }
         end
 
         private
 
         def decks
-          @decks ||= Queries::Decks.for_user(@user).all
+          Queries::Decks.for_user(@user)
         end
       end
     end

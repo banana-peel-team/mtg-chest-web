@@ -3,6 +3,12 @@ require_relative '../components/table'
 require_relative '../components/forms/submit'
 require_relative '../components/navigation'
 
+require_relative '../deck_cards/columns/name'
+require_relative '../cards/columns/score'
+require_relative '../cards/columns/tags'
+require_relative '../cards/columns/identity'
+require_relative '../cards/columns/creature_stats'
+
 require_relative 'forms/add_card'
 
 require_relative 'suggestions_filter'
@@ -31,17 +37,17 @@ module Web
             Components::Forms::Submit.new(label: 'Refresh'),
           ], method: 'get'),
           Components::Table.new([
-            Cards::Columns::Score.new('Score', sort: 'score'),
-            DeckCards::Columns::Title.new('Name', sort: 'name'),
-            Cards::Columns::Tags.new('Tags'),
-            Cards::Columns::Cost.new('Cost'),
-            Cards::Columns::Identity.new('Identity', sort: 'identity'),
-            Cards::Columns::CreatureStats.new('P/T', sort: true),
-            Components::TableColumn.new('Actions', [
-              Forms::AddCard.new(
+            Cards::Columns::Score.new(sort: true),
+            DeckCards::Columns::Name.new(sort: true),
+            Cards::Columns::Tags.new,
+            Cards::Columns::Cost.new(sort: true),
+            Cards::Columns::Identity.new(sort: true),
+            Cards::Columns::CreatureStats.new(sort: true),
+            Components::TableColumn.new([
+              Forms::AddCard.new({
                 icon: true, inline: true, source: :_current_row
-              ),
-            ]),
+              }),
+            ], title: 'Actions'),
           ], source: :suggestions),
         ], title: 'Find cards for this deck'),
       ])

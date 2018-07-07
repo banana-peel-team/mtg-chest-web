@@ -8,14 +8,10 @@ module Web
           PER_PAGE = 50.0
 
           def table(ds, params, options)
-            sorting = nil
-
-            if (sort = options[:sort])
-              p_sort = params['sort']
-              p_direction = params['dir']
-
-              sorting = { column: p_sort, direction: p_direction }
-              ds = options[:sort].sort(ds, p_sort, p_direction)
+            if (sorting = sorting_hash(params, options))
+              ds = options[:sort].sort(
+                ds.unordered, sorting[:column], sorting[:direction].to_sym
+              )
             end
 
             paginated = options[:paginate]
@@ -23,7 +19,7 @@ module Web
               if paginated
                 paginate(ds, params)
               else
-                ds
+                ds.all
               end
 
             {
@@ -34,6 +30,23 @@ module Web
           end
 
           private
+
+          def sorting_hash(params, options)
+            if (sort = options[:sort])
+              if (p_sort = params['sort']) && valid_sort?(p_sort, options)
+                p_direction = params['dir']
+              else
+                p_sort = options[:default_sort]
+                p_direction = options[:default_dir] || 'asc'
+              end
+
+              { column: p_sort, direction: p_direction }
+            end
+          end
+
+          def valid_sort?(column, options)
+            options[:sort_columns].include?(column)
+          end
 
           def paginate(dataset, params)
             count = dataset.count

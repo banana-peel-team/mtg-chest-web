@@ -6,14 +6,26 @@ module Web
       class EditDeckCards < DeckCards
         def context
           super.merge(
-            scratchpad: { list: scratchpad, count: scratchpad.count },
+            scratchpad: Extensions::Table.table(scratchpad, @params, {
+              sort: Queries::Cards,
+              default_sort: 'card_name',
+              sort_columns: [
+                'score',
+                'card_name',
+                'cmc',
+                'identity',
+                'power',
+                'toughness',
+              ],
+              paginate: true,
+            }),
           )
         end
 
         private
 
         def scratchpad
-          Queries::DeckCards.scratchpad(deck[:id]).all
+          Queries::DeckCards.scratchpad(deck[:id])
         end
 
         def cards

@@ -1,6 +1,25 @@
 module Queries
-  module ImportPrintings
-    def self.for_import(import)
+  module Imports
+    extend self
+
+    def sort_name(ds, dir)
+      if dir == :asc
+        ds.order(Sequel.asc(:import_title))
+      else
+        ds.order(Sequel.desc(:import_title))
+      end
+    end
+
+    def for_user(user)
+      user.imports_dataset.select(
+        Sequel[:imports][:id].as(:import_id),
+        Sequel[:imports][:title].as(:import_title),
+        Sequel[:imports][:created_at],
+        Sequel[:imports][:user_printing_count].as(:import_cards_count),
+      )
+    end
+
+    def for_import(import)
       # TODO: Merge with CollectionCards.full_for_user
       import.user_printings_dataset
         .association_join(printing: [:edition, :card])

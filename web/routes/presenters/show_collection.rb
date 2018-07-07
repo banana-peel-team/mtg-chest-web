@@ -15,7 +15,18 @@ module Web
         def context
           {
             printings: Extensions::Table.table(cards, @params, {
-              sort: Queries::DeckCards,
+              sort: Queries::UserPrintings,
+              default_sort: 'card_name',
+              sort_columns: [
+                'card_name',
+                'cmc',
+                'deck_name',
+                'identity',
+                'import_name',
+                'power',
+                'score',
+                'toughness',
+              ],
               paginate: true,
             }),
             rated_decks: rated_decks,
@@ -29,7 +40,7 @@ module Web
         end
 
         def cards
-          Queries::CollectionCards.full_for_user(user)
+          Queries::UserPrintings.full_for_user(user)
         end
       end
     end

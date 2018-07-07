@@ -16,9 +16,21 @@ module Web
         ], breadcrumb: true),
         Components::Box.new([
           Components::Table.new([
-            Editions::Columns::Icon.new('Icon'),
-            Editions::Columns::Name.new('Name'),
-            Components::TableColumn.new('Code', source: :code),
+            Editions::Columns::Icon.new,
+            Editions::Columns::Name.new(sort: true),
+            Components::TableColumn.new(
+              title: 'Date',
+              source: :edition_date,
+              sort: true,
+              format: '%F',
+              sort_column: 'edition_date',
+            ),
+            Components::TableColumn.new(
+              title: 'Code',
+              source: :edition_code,
+              sort: true,
+              sort_column: 'edition_code',
+            ),
           ], source: :editions)
         ], title: 'Editions'),
       ])

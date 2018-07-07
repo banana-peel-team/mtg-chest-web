@@ -18,7 +18,7 @@ module Web
         private
 
         def cards
-          Queries::ImportPrintings.for_import(import).all
+          Queries::Imports.for_import(import).all
         end
       end
     end

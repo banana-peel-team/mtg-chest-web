@@ -4,7 +4,7 @@ require_relative '../components/navigation'
 require_relative '../components/box'
 require_relative '../components/box_title'
 
-require_relative 'columns/title'
+require_relative 'columns/name'
 require_relative 'forms/delete_deck'
 require_relative 'navigation/list'
 require_relative 'navigation/new'
@@ -21,11 +21,16 @@ module Web
             Decks::Navigation::New.new,
           ]),
           Components::Table.new([
-            Decks::Columns::Title.new('Name'),
-            Components::TableColumn.new('Created', source: :created_at),
-            Components::TableColumn.new('Actions', [
+            Decks::Columns::Name.new(sort: true, count: :deck_cards),
+            Components::TableColumn.new(
+              title: 'Created',
+              source: :deck_date,
+              sort_column: 'deck_date',
+              sort: true,
+            ),
+            Components::TableColumn.new([
               Forms::DeleteDeck.new(icon: true, inline: true),
-            ]),
+            ], title: 'Actions'),
           ], source: :decks),
         ], title: 'Decks'),
       ])

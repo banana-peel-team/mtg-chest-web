@@ -14,7 +14,16 @@ module Web
         def context
           {
             printings: Extensions::Table.table(printings, @params, {
-              sort: Queries::DeckCards,
+              sort: Queries::UserPrintings,
+              default_sort: 'card_name',
+              sort_columns: [
+                'scores',
+                'card_name',
+                'cmc',
+                'identity',
+                'power',
+                'toughness',
+              ],
               paginate: true,
             }),
             import: import,
@@ -29,7 +38,7 @@ module Web
         end
 
         def printings
-          Queries::ImportPrintings.for_import(import)
+          Queries::UserPrintings.for_import(import)
         end
       end
     end

@@ -26,7 +26,9 @@ module Web
 
         on(root) do
           on(get) do
-            presenter = Routes::Presenters::UserDecks.new(current_user)
+            presenter = Routes::Presenters::UserDecks.new(current_user, {
+              params: req.params,
+            })
 
             render_view(Web::Views::Decks::List, presenter.context)
           end
@@ -137,7 +139,8 @@ module Web
 
               on(get, 'alternatives') do
                 presenter = Web::Routes::Presenters::DeckCardAlternatives.new(
-                  current_user, deck, card
+                  current_user, deck, card,
+                  { params: req.params }
                 )
 
                 render_view(
@@ -147,7 +150,8 @@ module Web
 
               on(get, 'synergy') do
                 presenter = Web::Routes::Presenters::DeckCardSynergy.new(
-                  current_user, deck, card
+                  current_user, deck, card,
+                  { params: req.params }
                 )
 
                 render_view(Web::Views::Decks::Synergy, presenter.context)

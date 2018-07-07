@@ -9,7 +9,7 @@ require_relative '../cards/columns/tags'
 require_relative '../cards/columns/cost'
 require_relative '../cards/columns/identity'
 require_relative '../cards/columns/creature_stats'
-require_relative '../deck_cards/columns/title'
+require_relative '../deck_cards/columns/name'
 
 require_relative 'show'
 require_relative 'navigation/list'
@@ -35,17 +35,17 @@ module Web
         ]),
         Components::Box.new([
           Components::Table.new([
-            Cards::Columns::Score.new('Score'),
-            DeckCards::Columns::Title.new('Name', count: false),
-            Cards::Columns::Tags.new('Tags'),
-            Cards::Columns::Cost.new('Cost'),
-            Cards::Columns::Identity.new('Identity'),
-            Cards::Columns::CreatureStats.new('P/T'),
-            Components::TableColumn.new('Actions', [
-              Forms::AddCard.new(
+            Cards::Columns::Score.new(sort: true),
+            DeckCards::Columns::Name.new(sort: true),
+            Cards::Columns::Tags.new,
+            Cards::Columns::Cost.new(sort: true),
+            Cards::Columns::Identity.new(sort: true),
+            Cards::Columns::CreatureStats.new(sort: true),
+            Components::TableColumn.new([
+              Forms::AddCard.new({
                 icon: true, inline: true, source: :_current_row
-              ),
-            ]),
+              }),
+            ], title: 'Actions'),
           ], source: :cards),
         ], title: 'Compatible cards on your collection'),
       ])

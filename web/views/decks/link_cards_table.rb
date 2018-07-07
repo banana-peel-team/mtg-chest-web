@@ -7,6 +7,9 @@ require_relative 'navigation/show'
 require_relative 'navigation/edit'
 require_relative 'navigation/link_cards'
 require_relative '../imports/columns/title'
+require_relative '../deck_cards/columns/name'
+require_relative '../cards/columns/cost'
+require_relative '../cards/columns/creature_stats'
 
 module Web
   module Views
@@ -14,15 +17,15 @@ module Web
       class LinkCardsTable < Component
         Table = Components::Box.new([
           Components::Table.new([
-            DeckCards::Columns::Title.new('Name', sort: 'name'),
-            Cards::Columns::Cost.new('Cost'),
-            Cards::Columns::CreatureStats.new('P/T', sort: true),
-            Imports::Columns::Title.new('Import'),
-            Components::TableColumn.new('Actions', [
-              Forms::LinkCard.new(
+            DeckCards::Columns::Name.new(sort: true),
+            Cards::Columns::Cost.new(sort: true),
+            Cards::Columns::CreatureStats.new(sort: true),
+            Imports::Columns::Title.new(sort: true),
+            Components::TableColumn.new([
+              Forms::LinkCard.new({
                 icon: true, inline: true, source: :_current_row
-              ),
-            ]),
+              }),
+            ], title: 'Actions'),
           ], source: :cards),
         ], title: 'Link to owned cards')
 

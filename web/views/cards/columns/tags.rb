@@ -5,6 +5,9 @@ module Web
     module Cards
       module Columns
         class Tags < Components::TableColumn
+          title 'Tags'
+          sort_column 'tags'
+
           def render(html, context)
             card = context[:_current_row]
 

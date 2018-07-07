@@ -5,6 +5,9 @@ module Web
     module Imports
       module Columns
         class Title < Components::TableColumn
+          title 'Import'
+          sort_column 'import_name'
+
           def render(html, context)
             import = context[:_current_row]
 

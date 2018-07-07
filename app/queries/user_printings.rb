@@ -1,6 +1,22 @@
+require_relative 'imports'
+require_relative 'decks'
+
 module Queries
-  module CollectionCards
-    def self.owned_printings(user, card_id)
+  module UserPrintings
+    extend self
+
+    def sort(ds, column, dir)
+      case column
+      when 'import_name'
+        Imports.sort_name(ds, dir)
+      when 'deck_name'
+        Decks.sort_name(ds, dir)
+      else
+        Cards.sort(ds, column, dir)
+      end
+    end
+
+    def owned_printings(user, card_id)
       user.user_printings_dataset
         .association_join(:import, printing: [:edition, :card])
         .where(Sequel.qualify(:card, :id) => card_id)
@@ -36,7 +52,7 @@ module Queries
         )
     end
 
-    def self.full_for_user(user)
+    def full_for_user(user)
       user.user_printings_dataset
         .association_join(:import, printing: [:edition, :card])
         .association_left_join(deck_cards: :deck)
@@ -71,12 +87,39 @@ module Queries
         )
     end
 
-    def self.for_user(user)
+    def for_user(user)
       Queries::Cards.collection_cards(
         user.user_printings_dataset
           .from_self(alias: :user_printing)
           .association_join(printing: [:edition, :card])
       )
+    end
+    def for_import(import)
+      # TODO: Merge with CollectionCards.full_for_user
+      import.user_printings_dataset
+        .association_join(printing: [:edition, :card])
+        .order(Sequel.asc(Sequel.qualify(:card, :name)))
+        .group_and_count(
+          Sequel[:card][:id].as(:card_id),
+          Sequel[:card][:name].as(:card_name),
+          Sequel[:card][:text].as(:card_text),
+          Sequel[:card][:converted_mana_cost].as(:converted_mana_cost),
+          Sequel[:card][:toughness].as(:toughness),
+          Sequel[:card][:power].as(:power),
+          Sequel[:card][:loyalty].as(:loyalty),
+          Sequel[:card][:mana_cost].as(:mana_cost),
+          Sequel[:card][:color_identity].as(:color_identity),
+          Sequel[:card][:types].as(:types),
+          Sequel[:card][:subtypes].as(:subtypes),
+          Sequel[:card][:supertypes].as(:supertypes),
+          Sequel[:card][:scores].as(:card_scores),
+          Sequel[:printing][:rarity].as(:card_rarity),
+          Sequel[:printing][:number].as(:card_number),
+          Sequel[:printing][:flavor].as(:card_flavor),
+          Sequel[:printing][:multiverse_id].as(:multiverse_id),
+          Sequel[:edition][:code].as(:edition_code),
+          Sequel[:edition][:name].as(:edition_name),
+        )
     end
   end
 end

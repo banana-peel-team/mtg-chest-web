@@ -5,6 +5,9 @@ module Web
     module Cards
       module Columns
         class Score < Components::TableColumn
+          title 'Score'
+          sort_column 'score'
+
           def render(html, context)
             card = context[:_current_row]
 

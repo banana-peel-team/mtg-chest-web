@@ -23,6 +23,10 @@ module Web
         @elements = elements || build_elements
       end
 
+      def self.options
+        @options ||= {}
+      end
+
       def render(html, context)
         return unless elements
         render_elements(html, context)
@@ -31,7 +35,7 @@ module Web
       private
 
       def default_options
-        {}
+        self.class.options
       end
 
       def build_elements

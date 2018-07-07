@@ -5,6 +5,9 @@ module Web
     module Cards
       module Columns
         class Cost < Components::TableColumn
+          title 'Cost'
+          sort_column 'cmc'
+
           def render(html, context)
             card = context[:_current_row]
 

@@ -5,6 +5,9 @@ module Web
     module Cards
       module Columns
         class Identity < Components::TableColumn
+          title 'Identity'
+          sort_column 'identity'
+
           def render(html, context)
             card = context[:_current_row]
 

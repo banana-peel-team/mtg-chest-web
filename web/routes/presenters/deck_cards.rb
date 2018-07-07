@@ -14,7 +14,16 @@ module Web
         def context
           {
             cards: Extensions::Table.table(cards, @params, {
-              sort: Queries::DeckCards,
+              sort: Queries::Cards,
+              default_sort: 'card_name',
+              sort_columns: [
+                'score',
+                'card_name',
+                'cmc',
+                'identity',
+                'power',
+                'toughness',
+              ],
               paginate: false,
             }),
             deck: deck,

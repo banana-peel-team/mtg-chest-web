@@ -16,7 +16,15 @@ module Web
             count: cards.count,
             total_missing: total_missing,
             cards: Extensions::Table.table(cards, @params, {
-              sort: Queries::DeckCards,
+              sort: Queries::Cards,
+              default_sort: 'card_name',
+              sort_columns: [
+                'card_name',
+                'cmc',
+                'power',
+                'toughness',
+                'import_name',
+              ],
               paginate: true,
             }),
             deck: deck,

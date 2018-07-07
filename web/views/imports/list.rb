@@ -21,11 +21,11 @@ module Web
           ]),
 
           Components::Table.new([
-            Columns::Title.new('Name'),
-            Components::TableColumn.new('Created', source: :created_at),
-            Components::TableColumn.new('Actions', [
+            Columns::Title.new,
+            Components::TableColumn.new(title: 'Created', source: :created_at),
+            Components::TableColumn.new([
               Forms::Delete.new(icon: true, inline: true)
-            ])
+            ], title: 'Actions')
           ], source: :imports),
         ], title: 'Imports'),
       ])

@@ -22,7 +22,8 @@ module Web
           end
 
           def edition_icon(edition)
-            html.tag('i', class: "ss ss-fw ss-#{edition[:code].downcase}")
+            cls = "ss ss-fw ss-#{edition[:edition_code].downcase}"
+            html.tag('i', class: cls)
           end
 
           def printing_icon(card)

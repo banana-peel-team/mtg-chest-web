@@ -5,6 +5,8 @@ module Web
     module Editions
       module Columns
         class Icon < Components::TableColumn
+          title 'Set Icon'
+
           def render(html, context)
             edition = context[:_current_row]
             html.tag('td') do
