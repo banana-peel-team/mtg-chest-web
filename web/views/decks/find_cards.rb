@@ -10,8 +10,7 @@ require_relative '../cards/columns/identity'
 require_relative '../cards/columns/creature_stats'
 
 require_relative 'forms/add_card'
-
-require_relative 'suggestions_filter'
+require_relative 'forms/suggestions_filter'
 require_relative 'navigation/list'
 require_relative 'navigation/show'
 require_relative 'navigation/find_cards'
@@ -30,7 +29,7 @@ module Web
         ], breadcrumb: true),
         Components::Box.new([
           Components::Form.new([
-            Decks::SuggestionsFilter.new(
+            Forms::SuggestionsFilter.new(
               name: 'filter',
               source: :suggestions,
             ),

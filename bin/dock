@@ -111,6 +111,10 @@ console() {
   run bundle exec rack-console $@
 }
 
+build() {
+  docker build -t chest -t chest:latest .
+}
+
 COMMAND="$1"
 
 shift
