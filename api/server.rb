@@ -9,24 +9,26 @@ require_relative 'helpers/common_helper'
 
 module API
   class Server < Cuba
+    use(Rack::Cors) do
+      allow do
+        resource('*', {
+          headers: :any,
+          methods: :any,
+          vary: ['Origin', 'Authorization'],
+          expose: 'Authorization',
+        })
+        origins('*')
+      end
+    end
+
     use(Rack::JWT::Auth, secret: ENV['JWT_SECRET'],
                          options: { algorithm: 'HS256' },
                          # TODO: Can we handle this in the routes?
                          exclude: [
                            '/v1/status',
                            '/v1/auth',
-                           '/v1/cards'
+                           '/v1/cards',
                          ])
-    use(Rack::Cors) do
-      allow do
-        resource('*', {
-          headers: :any,
-          methods: [:get, :post, :put, :delete],
-          expose: 'Authorization',
-        })
-        origins '*'
-      end
-    end
 
     plugin(API::Helpers::CommonHelper)
   end
