@@ -81,6 +81,7 @@ module Web
               nav_item(html, '/collection', 'Collection')
               nav_item(html, '/collection/imports', 'Imports')
               nav_item(html, '/decks', 'Decks')
+              nav_item(html, '/find-decks', 'Find Decks')
             end
           end
 

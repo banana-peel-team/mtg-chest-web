@@ -14,11 +14,11 @@ module Web
     module Decks
       List = Layout.new([
         Components::Navigation.new([
-          Decks::Navigation::List.new(breadcrumb: true, current: true),
+          Navigation::List.new(breadcrumb: true, current: true),
         ], breadcrumb: true),
         Components::Box.new([
           Components::Navigation.new([
-            Decks::Navigation::New.new,
+            Navigation::New.new,
           ]),
           Components::Table.new([
             Decks::Columns::Name.new(sort: true, count: :deck_cards),

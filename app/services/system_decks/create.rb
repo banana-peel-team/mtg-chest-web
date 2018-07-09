@@ -38,8 +38,8 @@ module Services
         cards_ids =
           DeckCard
             .association_join(:card)
+            .not_basic_land
             .where(deck_id: deck[:id])
-            .not_basic_lands
             .select_map(:card_id)
 
         score_for_db = scores.get_text(deck_db[:key])

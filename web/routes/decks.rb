@@ -4,8 +4,8 @@ require_relative 'presenters/deck_cards'
 require_relative 'presenters/deck_card_synergy'
 require_relative 'presenters/deck_suggestions'
 require_relative 'presenters/edit_deck_cards'
-require_relative 'presenters/user_decks'
 require_relative 'presenters/link_deck_cards'
+require_relative 'presenters/user_decks'
 
 require_relative '../views/decks/add_cards'
 require_relative '../views/decks/alternatives'
@@ -49,8 +49,18 @@ module Web
           end
         end
 
-        on(':id') do |id|
-          deck = Deck.where(id: id).first
+        on('find') do
+          on(get, root) do
+            presenter = Routes::Presenters::FindDecks.new(current_user, {
+              params: req.params,
+            })
+
+            render_view(Web::Views::Decks::Find, presenter.context)
+          end
+        end
+
+        on('(\d+)') do |id|
+          deck = current_user.decks_dataset.where(id: id).first
           not_found! unless deck
 
           on(delete, root) do
@@ -117,8 +127,6 @@ module Web
 
           on('cards') do
             on(post, param('slot'), root) do |slot, card_id|
-              unauthorized! unless deck[:user_id] == current_user[:id]
-
               card_id = req.params['card_id']
               card_id &&= card_id.to_i
               user_printing_id = req.params['user_printing_id']
@@ -133,7 +141,7 @@ module Web
               redirect_back("/decks/#{deck[:id]}")
             end
 
-            on(':card_id') do |card_id|
+            on('(\d+)') do |card_id|
               card = Card.first(id: card_id)
               not_found! unless card
 

@@ -31,14 +31,14 @@ module Queries
 
     def sort_power(ds, dir)
       if dir == :asc
-        ds = ds.order_append(
+        ds.order_append(
           Sequel.asc(Sequel.function(:length, :power), nulls: :last),
           Sequel.asc(:power, nulls: :last),
           Sequel.asc(Sequel.function(:length, :toughness), nulls: :last),
           Sequel.asc(:toughness, nulls: :last),
         )
       else
-        ds = ds.order_append(
+        ds.order_append(
           Sequel.desc(Sequel.function(:length, :power), nulls: :last),
           Sequel.desc(:power, nulls: :last),
           Sequel.desc(Sequel.function(:length, :toughness), nulls: :last),
@@ -49,14 +49,14 @@ module Queries
 
     def sort_toughness(ds, dir)
       if dir == :asc
-        ds = ds.order_append(
+        ds.order_append(
           Sequel.asc(Sequel.function(:length, :toughness), nulls: :last),
           Sequel.asc(:toughness, nulls: :last),
           Sequel.desc(Sequel.function(:length, :power), nulls: :last),
           Sequel.desc(:power, nulls: :last),
         )
       else
-        ds = ds.order_append(
+        ds.order_append(
           Sequel.desc(Sequel.function(:length, :toughness), nulls: :last),
           Sequel.desc(:toughness, nulls: :last),
           Sequel.desc(Sequel.function(:length, :power), nulls: :last),
@@ -66,7 +66,7 @@ module Queries
     end
 
     def sort_no_creatures(ds)
-      ds = ds.order_append(
+      ds.order_append(
         Sequel.asc(
           Sequel.pg_array(Sequel[:card][:types])
           .overlaps(Sequel.pg_array(['Land'], :varchar))
@@ -92,22 +92,22 @@ module Queries
 
     def sort_name(ds, dir)
       if dir == :asc
-        ds = ds.order_append(Sequel.asc(:card_name))
+        ds.order_append(Sequel.asc(:card_name))
       else
-        ds = ds.order_append(Sequel.desc(:card_name))
+        ds.order_append(Sequel.desc(:card_name))
       end
     end
 
     def sort_cost(ds, dir)
       if dir == :asc
-        ds = ds.order_append(
+        ds.order_append(
           Sequel.asc(converted_mana_cost: 0),
           Sequel.asc(:converted_mana_cost),
           Sequel.asc(Sequel.function(:length, :mana_cost)),
           Sequel.desc(:scores),
         )
       else
-        ds = ds.order_append(
+        ds.order_append(
           Sequel.desc(:converted_mana_cost),
           Sequel.desc(Sequel.function(:length, :mana_cost)),
         )
@@ -116,7 +116,7 @@ module Queries
 
     def sort_identity(ds, dir)
       if dir == :asc
-        ds = ds.order_append(
+        ds.order_append(
           Sequel.asc(
             Sequel.function(:array_length, :color_identity, 1),
             nulls: :last
@@ -124,12 +124,29 @@ module Queries
           Sequel.asc(:color_identity),
         )
       else
-        ds = ds.order_append(
+        ds.order_append(
           Sequel.desc(
             Sequel.function(:array_length, :color_identity, 1),
             nulls: :last
           ),
           Sequel.desc(:color_identity),
+        )
+      end
+    end
+
+    # FIXME: Not working.
+    # TODO: Move to DeckCards
+    def sort_owned(ds, dir)
+      if dir == :asc
+        ds.order_append(
+          Sequel.desc(Sequel[:collection][:count] => 0),
+          #Sequel.desc(Sequel.gte(:count, Sequel[:collection][:count]))
+          Sequel.asc(Sequel.lit('count') >= Sequel[:collection][:count])
+        )
+      else
+        ds.order_append(
+          Sequel.asc(Sequel[:collection][:count] => 0),
+          Sequel.asc(Sequel.lit('count') >= Sequel[:collection][:count])
         )
       end
     end
@@ -154,6 +171,9 @@ module Queries
             sort_toughness(ds, dir), :asc))
       when 'cmc'
         sort_cost(ds, dir)
+      # TODO: Move to DeckCards
+      when 'owned'
+        sort_owned(ds, dir)
       else
         ds
       end
@@ -194,6 +214,17 @@ module Queries
       dataset
         .order(Sequel.asc(Sequel[:card][:name]))
         .group_and_count(*CARD_FIELDS)
+    end
+
+    # TODO: Find a better name.
+    # This will add a flag for cards on collection
+    def cards_with_collection(dataset)
+      dataset
+        .order(Sequel.asc(Sequel[:card][:name]))
+        .group_and_count(
+          *CARD_FIELDS,
+          Sequel[:collection][:count].as(:in_collection)
+        )
     end
 
     def deck_cards(dataset)

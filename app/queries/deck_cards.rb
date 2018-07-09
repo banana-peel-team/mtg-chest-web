@@ -50,7 +50,10 @@ module Queries
     end
 
     def for_link(deck)
-      in_decks = DeckCard.where(user_printing_id: Sequel[:user_printing][:id])
+      in_decks = DeckCard.where(
+        user_printing_id: Sequel[:user_printing][:id],
+        removed_at: nil,
+      )
 
       ds = UserPrinting
         .from_self(alias: :user_printing)
@@ -68,7 +71,6 @@ module Queries
         )
         .exclude(in_decks.exists)
 
-
       Queries::Cards.collection_cards(ds, false)
         .select_append(
           Sequel[:import][:id].as(:import_id),
@@ -77,15 +79,39 @@ module Queries
         .order(Sequel[:card][:name], Sequel[:edition][:code])
     end
 
+    def for_user_on_deck(user, deck_id)
+      in_decks = DeckCard
+        .in_use
+        .where(user_printing_id: Sequel[:user_printings][:id])
+
+      Queries::Cards.cards_with_collection(
+        DeckCard
+          .in_deck
+          .from_self(alias: :deck_card)
+          .association_join(:deck, :card)
+          .left_join(
+            user
+              .user_printings_dataset
+              .association_join(:printing)
+              .exclude(in_decks.exists)
+              .group_and_count(:card_id),
+              { card_id: :card_id},
+              { table_alias: :collection }
+          )
+          .where(
+            deck_id: deck_id,
+          )
+        )
+    end
+
     def for_deck(deck_id)
       Queries::Cards.cards(
         DeckCard
+          .in_deck
           .from_self(alias: :deck_card)
           .association_join(:deck, :card)
           .where(
             deck_id: deck_id,
-            slot: 'deck',
-            removed_at: nil,
           )
       )
     end

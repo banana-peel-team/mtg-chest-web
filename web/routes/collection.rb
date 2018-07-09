@@ -31,6 +31,7 @@ module Web
 
           on(':id') do |id|
             import = Import.first(id: id)
+            unauthorized! unless import[:user_id] == current_user[:id]
 
             on(delete, root) do
               Services::Collection::DeleteImport.perform(import)

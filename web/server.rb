@@ -22,12 +22,13 @@ end
 require_relative 'views/html'
 require_relative 'views/layout'
 
-require_relative 'routes/sessions'
-require_relative 'routes/editions'
 require_relative 'routes/collection'
-require_relative 'routes/decks'
 require_relative 'routes/deck_cards'
+require_relative 'routes/decks'
+require_relative 'routes/editions'
+require_relative 'routes/find_decks'
 require_relative 'routes/home'
+require_relative 'routes/sessions'
 
 Web::Server.define do
   # TODO:?
@@ -53,6 +54,7 @@ Web::Server.define do
   on('editions') { run(Web::Routes::Editions) }
   on('collection') { run(Web::Routes::Collection) }
   on('decks') { run(Web::Routes::Decks) }
+  on('find-decks') { run(Web::Routes::FindDecks) }
   on('deck-cards') { run(Web::Routes::DeckCards) }
   on('home') { run(Web::Routes::Home) }
 

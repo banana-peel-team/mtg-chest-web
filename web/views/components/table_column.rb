@@ -33,11 +33,17 @@ module Web
           end
 
           row = context[:_current_row]
+          unless row
+            raise "Tried to render a table cell outside a table: " +
+             self.inspect
+          end
+
           value = row[options[:source]]
 
           case value
           when DateTime, Time
-            html.tag('td', value.strftime(options[:format] || '%F %I:%M%P'))
+            format = options[:format]
+            html.tag('td', value.strftime(format || '%F %I:%M%P'))
           else
             if value
               html.tag('td', value)

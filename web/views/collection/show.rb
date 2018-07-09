@@ -1,6 +1,8 @@
 require_relative '../components/navigation'
 require_relative '../components/table'
 require_relative '../components/form'
+require_relative '../components/forms/submit'
+require_relative '../components/box'
 
 require_relative '../cards/columns/score'
 require_relative '../cards/columns/tags'

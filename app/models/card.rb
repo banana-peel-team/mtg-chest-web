@@ -38,6 +38,8 @@ class Card < Sequel::Model
       )
   }
 
+  one_to_many :deck_cards
+
   dataset_module do
     def not_basic_lands
       exclude(
