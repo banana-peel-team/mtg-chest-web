@@ -3,10 +3,6 @@ require 'yajl'
 module Services
   module Editions
     module ImportAll
-      UNSUPPORTED_SETS = [
-        'UST'
-      ].freeze
-
       def self.perform(stream)
         obj = Yajl::Parser.parse(stream)
 
@@ -18,7 +14,7 @@ module Services
       end
 
       def self.import_set(set)
-        unless set_supported?(set)
+        unless Edition.supported?(set['code'])
           puts " >> Skipping:  %8s - %s ... (Not supported set)" % [set['code'], set['name']]
 
           return
@@ -37,11 +33,6 @@ module Services
         end
       end
       private_class_method :import_set
-
-      def self.set_supported?(set)
-        !UNSUPPORTED_SETS.include?(set['code'])
-      end
-      private_class_method :set_supported?
 
       def self.set_exists?(set)
         !Edition.where(code: set['code']).empty?

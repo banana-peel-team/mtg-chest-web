@@ -77,7 +77,7 @@ module Services
       end
 
       def card_name_id(name)
-        Card.where(name: name).select_map(:id)
+        Card.where(name: name).select_map(:id).first
       end
     end
   end

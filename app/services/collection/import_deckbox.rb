@@ -1,9 +1,15 @@
 require 'csv'
 
+require_relative '../editions/import_all'
+
 module Services
   module Collection
     module ImportDeckbox
       extend self
+
+      EDITIONS_MAP = {
+        'Conspiracy' => 'Magic: The Gathering—Conspiracy',
+      }.freeze
 
       def perform(import, user, io)
         cache = {
@@ -12,8 +18,10 @@ module Services
 
         csv = ::CSV.new(io, headers: true, encoding: 'UTF-8')
         csv.read.map do |row|
-          card_params(row, cache)
-        end
+          if Edition.supported_name?(row['Edition'])
+            card_params(row, cache)
+          end
+        end.reject(&:nil?)
       end
 
       private
@@ -32,8 +40,12 @@ module Services
           name = $1
         end
 
+        edition_name = data['Edition']
+        edition_name = EDITIONS_MAP.fetch(edition_name, edition_name)
+        edition_code = cache[:editions][edition_name]
+
         {
-          edition: cache[:editions][data['Edition']],
+          edition: edition_code,
           name: name,
           # TODO: Map correct values
           condition: data['Condition'] || 'Near Mint',

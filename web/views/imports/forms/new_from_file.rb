@@ -68,7 +68,7 @@ module Web
           end
 
           def action(context)
-            '/collection/import-list'
+            '/collection/import'
           end
         end
       end

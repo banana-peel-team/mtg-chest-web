@@ -1,3 +1,5 @@
+require 'cgi'
+
 require_relative 'extensions/form'
 require_relative 'extensions/components'
 require_relative 'extensions/icons'
