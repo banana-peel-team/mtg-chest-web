@@ -25,6 +25,13 @@ module Web
         ], breadcrumb: true),
         Components::Box.new([
           Components::BoxTitle.new(source: :edition, title: :name),
+          Components::Form.new([
+            Cards::Forms::IdentityFilter.new(
+              name: 'filter',
+              source: :printings,
+            ),
+            Components::Forms::Submit.new(label: 'Refresh'),
+          ], method: 'get'),
           Components::Table.new([
             Cards::Columns::Score.new(sort: true),
             DeckCards::Columns::Name.new(sort: true),
