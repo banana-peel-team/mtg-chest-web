@@ -22,8 +22,8 @@ module Web
               elsif owned
                 cls << ' badge-warning'
               end
-              html.tag('span', owned.to_s, class: 'ml-1 badge')
               html.tag('span', "#{percent}%", class: cls)
+              html.tag('span', "(#{required - owned} missing)", class: 'ml-1 badge')
             end
           end
         end

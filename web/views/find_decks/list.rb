@@ -11,6 +11,13 @@ module Web
           Navigation::List.new(breadcrumb: true, current: true),
         ], breadcrumb: true),
         Components::Box.new([
+          Components::Form.new([
+            Cards::Forms::IdentityFilter.new(
+              name: 'filter',
+              source: :decks,
+            ),
+            Components::Forms::Submit.new(label: 'Refresh'),
+          ], method: 'get'),
           Components::Table.new([
             Columns::Name.new(sort: true, count: :required_count),
             Columns::OwnedDeckCount.new(

@@ -9,7 +9,7 @@ module Web
         def initialize(user, options = {})
           @user = user
 
-          @params = options[:params] || {}
+          @params = options[:params]
         end
 
         def context

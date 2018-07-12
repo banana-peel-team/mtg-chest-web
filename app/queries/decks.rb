@@ -81,13 +81,12 @@ module Queries
       end
     end
 
-    # FIXME: Not working
     def suggestions(user)
       Deck
         .from_self(alias: :deck)
         .join(Sequel.as(deck_suggestions, :suggestions), deck_id: :id)
-        .association_join(deck_metadata: :deck_database)
-        .select(
+        .association_join(deck_cards: :card, deck_metadata: :deck_database)
+        .select_group(
           Sequel[:deck][:id].as(:deck_id),
           Sequel[:deck][:name].as(:deck_name),
           Sequel[:deck_metadata][:event_format].as(:event_format),
