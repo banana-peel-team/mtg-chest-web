@@ -1,4 +1,4 @@
-require_relative 'field'
+require_relative 'text'
 
 module Web
   module Views

@@ -6,6 +6,8 @@ require_relative 'extensions/icons'
 require_relative 'extensions/pagination'
 require_relative 'extensions/mtg'
 
+require_relative 'components.rb'
+
 module Web
   module Views
     class Html

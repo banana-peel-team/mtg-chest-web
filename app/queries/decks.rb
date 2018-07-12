@@ -36,11 +36,11 @@ module Queries
       if dir == :asc
         ds.order_append(
           Sequel.asc(:event_format),
-        ).order_append { sum(:required) - sum(:owned) }
+        ).order_append { required_count - owned_count }
       else
         ds.order_append(
           Sequel.desc(:event_format),
-        ).order_append { sum(:required) - sum(:owned) }
+        ).order_append { required_count - owned_count }
       end
     end
 
@@ -48,21 +48,19 @@ module Queries
       if dir == :asc
         ds.order_append(
           Sequel.asc(:deck_database_name),
-          Sequel.desc(:count),
-        )
+        ).order_append { required_count - owned_count }
       else
         ds.order_append(
           Sequel.desc(:deck_database_name),
-          Sequel.desc(:count),
-        )
+        ).order_append { required_count - owned_count }
       end
     end
 
     def sort_count(ds, dir)
       if dir == :asc
-        ds.order_append { sum(:required) - sum(:owned) }
+        ds.order_append { required_count - owned_count }
       else
-        ds.order_append { sum(:owned) - sum(:required) }
+        ds.order_append { owned_count - required_count }
       end
     end
 
@@ -85,27 +83,45 @@ module Queries
 
     # FIXME: Not working
     def suggestions(user)
-      in_decks = DeckCard
-        .in_deck
-        .group_and_count(:deck_id, :card_id)
-
-      collection = user
-        .user_printings_dataset
-        .not_in_decks
-        .association_join(:printing)
-        .group_and_count(:user_id, :card_id)
-
-      cards = Deck
+      Deck
         .from_self(alias: :deck)
+        .join(Sequel.as(deck_suggestions, :suggestions), deck_id: :id)
         .association_join(deck_metadata: :deck_database)
         .select(
           Sequel[:deck][:id].as(:deck_id),
           Sequel[:deck][:name].as(:deck_name),
+          Sequel[:deck_metadata][:event_format].as(:event_format),
+          Sequel[:deck_database][:name].as(:deck_database_name),
+          Sequel[:suggestions][:required_count],
+          Sequel[:suggestions][:owned_count],
+        )
+        .where {
+          (owned_count * 100 / required_count) > 60
+        }
+    end
+
+    private
+
+    def deck_suggestions
+      in_decks = DeckCard
+        .in_deck
+        .group_and_count(:deck_id, :card_id)
+
+      collection = UserPrinting
+        .not_in_decks
+        .association_join(:printing)
+        .group_and_count(:user_id, :card_id)
+
+      cards =
+        DB[
+          Sequel.as(in_decks, :in_decks)
+        ].left_join(
+          Sequel.as(collection, :collection), card_id: :card_id
+        ).select(
           Sequel[:collection][:user_id],
           Sequel[:in_decks][:card_id],
+          Sequel[:in_decks][:deck_id],
           Sequel[:in_decks][:count].as(:required),
-          Sequel[:deck_database][:name].as(:deck_database_name),
-          Sequel[:deck_metadata][:event_format],
           Sequel.case(
             {
               (Sequel[:collection][:count] > Sequel[:in_decks][:count]) =>
@@ -115,26 +131,13 @@ module Queries
             Sequel[:collection][:count]
           ).as(:owned),
         )
-        .join(Sequel.as(in_decks, :in_decks), deck_id: :id)
-        .left_join(Sequel.as(collection, :collection), card_id: :card_id)
 
-      DB[
-        Sequel.as(cards, :deck),
-      ].select(
-        Sequel[:deck][:deck_id],
-        Sequel[:deck][:deck_name],
-        Sequel[:deck][:event_format],
-        Sequel[:deck][:deck_database_name],
-        Sequel.function(:sum, :required).as(:required_count),
-        Sequel.function(:sum, :owned).as(:owned_count),
-        Sequel[:deck][:deck_database_name],
-        Sequel[:deck][:event_format],
-      ).group(
-        Sequel[:deck][:deck_id],
-        Sequel[:deck][:deck_name],
-        Sequel[:deck][:deck_database_name],
-        Sequel[:deck][:event_format],
-      )
+      DB[cards]
+        .select_group(:deck_id)
+        .select_append(
+          Sequel.function(:sum, :required).as(:required_count),
+          Sequel.function(:sum, :owned).as(:owned_count),
+        )
     end
   end
 end

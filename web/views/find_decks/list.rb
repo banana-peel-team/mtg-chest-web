@@ -1,10 +1,6 @@
-require_relative '../components/box'
-require_relative '../components/box_title'
-require_relative '../components/navigation'
-require_relative '../components/table'
-require_relative '../components/table_column'
-
+require_relative '../cards/forms/identity_filter'
 require_relative 'columns/name'
+require_relative 'columns/owned_deck_count'
 require_relative 'navigation/list'
 
 module Web
@@ -17,11 +13,7 @@ module Web
         Components::Box.new([
           Components::Table.new([
             Columns::Name.new(sort: true, count: :required_count),
-            Components::TableColumn.new(
-              title: 'Owned cards',
-              source: :owned_count,
-              format: '%d',
-              sort_column: 'count',
+            Columns::OwnedDeckCount.new(
               sort: true,
             ),
             Components::TableColumn.new(

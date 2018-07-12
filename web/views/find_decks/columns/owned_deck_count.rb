@@ -4,26 +4,26 @@ module Web
   module Views
     module FindDecks
       module Columns
-        class OwnedCount < Components::TableColumn
+        class OwnedDeckCount < Components::TableColumn
           title 'Owned'
-          sort_column 'owned'
+          sort_column 'count'
 
           def render(html, context)
             card = context[:_current_row]
-            count = card[:in_collection] || 0
-            required = card[:count] || 0
+            owned = card[:owned_count].to_i
+            required = card[:required_count].to_i
+            percent = (owned * 100) / required
 
             html.tag('td') do
               cls = 'ml-1 badge'
 
-              if count >= required
+              if owned >= required
                 cls << ' badge-success'
-              elsif count > 0
+              elsif owned
                 cls << ' badge-warning'
-              else
-                cls << ' badge-danger'
               end
-              html.tag('span', count.to_s, class: cls)
+              html.tag('span', owned.to_s, class: 'ml-1 badge')
+              html.tag('span', "#{percent}%", class: cls)
             end
           end
         end
