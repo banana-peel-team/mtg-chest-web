@@ -15,7 +15,7 @@ module Web
               html.link("/find-decks/#{deck[:deck_id]}", deck[:deck_name])
 
               if (count_column = options[:count])
-                html.mtg.count_badge(deck[count_column])
+                html.mtg.count_badge(deck[count_column].to_i)
               end
             end
           end

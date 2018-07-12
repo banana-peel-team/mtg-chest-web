@@ -16,10 +16,11 @@ module Web
         ], breadcrumb: true),
         Components::Box.new([
           Components::Table.new([
-            Columns::Name.new(sort: true, count: :deck_cards),
+            Columns::Name.new(sort: true, count: :required_count),
             Components::TableColumn.new(
               title: 'Owned cards',
-              source: :count,
+              source: :owned_count,
+              format: '%d',
               sort_column: 'count',
               sort: true,
             ),

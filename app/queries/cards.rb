@@ -184,7 +184,7 @@ module Queries
         .where(
           Sequel
             .pg_array(Sequel[:card][:color_identity])
-            .overlaps(Sequel.pg_array(colors, :varchar))
+            .contained_by(Sequel.pg_array(colors, :varchar))
         )
     end
 

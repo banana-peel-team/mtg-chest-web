@@ -41,6 +41,9 @@ module Web
           value = row[options[:source]]
 
           case value
+          when BigDecimal
+            format = options[:format] || '%0f'
+            html.tag('td', format % value)
           when DateTime, Time
             format = options[:format]
             html.tag('td', value.strftime(format || '%F %I:%M%P'))
