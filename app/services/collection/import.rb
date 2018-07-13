@@ -63,7 +63,7 @@ module Services
         printing_id = card_printing_id(data)
 
         # TODO: what to do here?
-        raise data.inspect unless printing_id
+        return unless printing_id
 
         UserPrinting.create_many(
           data[:count],

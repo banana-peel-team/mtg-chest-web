@@ -19,6 +19,10 @@ module Web
               if paginated
                 paginate(ds, params)
               else
+                if (limit = options[:limit])
+                  ds = ds.limit(limit)
+                end
+
                 ds.all
               end
 

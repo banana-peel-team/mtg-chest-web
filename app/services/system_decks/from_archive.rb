@@ -58,6 +58,8 @@ module Services
         cards = list.each_with_object({}) do |(name, count), obj|
           if name =~ %r(\A(.*)\s+//)
             name = $1
+          elsif name =~ %r(\A(.*)/)
+            name = $1
           end
 
           obj[name] = count
@@ -66,7 +68,13 @@ module Services
         cards_ids = Card.where(name: cards.keys).as_hash(:name, :id)
 
         cards.each_with_object([]) do |(name, count), obj|
-          obj.concat([cards_ids[name]] * count)
+          card_id = cards_ids[name]
+
+          unless card_id
+            STDERR.puts "[!] Can't find card for: #{name}."
+          end
+
+          obj.concat([card_id] * count)
           #count.times.each { obj << cards_ids[name] }
         end
       end

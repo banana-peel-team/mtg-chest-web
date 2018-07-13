@@ -11,7 +11,7 @@ module Web
           def render(html, context)
             card = context[:_current_row]
             owned = card[:owned_count].to_i
-            required = card[:required_count].to_i
+            required = card[:card_count].to_i
             percent = (owned * 100) / required
 
             html.tag('td') do

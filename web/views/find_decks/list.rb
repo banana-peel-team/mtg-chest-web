@@ -19,7 +19,7 @@ module Web
             Components::Forms::Submit.new(label: 'Refresh'),
           ], method: 'get'),
           Components::Table.new([
-            Columns::Name.new(sort: true, count: :required_count),
+            Columns::Name.new(sort: true, count: :card_count),
             Columns::OwnedDeckCount.new(
               sort: true,
             ),

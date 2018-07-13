@@ -103,6 +103,7 @@ module Services
 
       def create_cards(deck, cards_ids)
         cards = cards_ids.map do |card_id|
+          next unless card_id
           {
             deck_id: deck[:id],
             card_id: card_id,
@@ -112,7 +113,7 @@ module Services
         end
 
         unless cards.all?
-          STDERR.puts "There are missing cards for deck: #{deck}."
+          STDERR.puts "There are missing cards for deck: #{deck[:name]}."
           STDERR.puts " ...Failing."
         end
 

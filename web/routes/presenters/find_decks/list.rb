@@ -22,7 +22,7 @@ module Web
                   'format',
                   'source',
                 ],
-                paginate: true,
+                limit: 50,
               }).merge({
                 filters: {
                   identity_r: filter?('r') ? '1' : nil,
