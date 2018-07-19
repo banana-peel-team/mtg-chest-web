@@ -9,3 +9,6 @@ require_relative 'queries/cards'
 require_relative 'queries/deck_card_details'
 require_relative 'queries/imports'
 require_relative 'queries/user_printings'
+
+require_relative 'queries/collection'
+require_relative 'queries/edition_cards'

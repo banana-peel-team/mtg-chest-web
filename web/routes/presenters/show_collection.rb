@@ -67,7 +67,7 @@ module Web
         end
 
         def cards
-          ds = Queries::UserPrintings.full_for_user(user)
+          ds = Queries::Collection.for_user(user)
 
           if filter_identity.any?
             ds = Queries::Cards.filter_identity(

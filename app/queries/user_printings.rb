@@ -56,7 +56,6 @@ module Queries
       user.user_printings_dataset
         .association_join(:import, printing: [:edition, :card])
         .association_left_join(deck_cards: :deck)
-        .order(Sequel.asc(Sequel.qualify(:card, :name)))
         .group_and_count(
           Sequel[:card][:id].as(:card_id),
           Sequel[:card][:scores].as(:card_scores),
@@ -94,6 +93,7 @@ module Queries
           .association_join(printing: [:edition, :card])
       )
     end
+
     def for_import(import)
       # TODO: Merge with CollectionCards.full_for_user
       import.user_printings_dataset

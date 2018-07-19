@@ -12,8 +12,8 @@ module Web
             card = context[:_current_row]
 
             html.tag('td', class: 'mtgTags') do
-              html.mtg.mtg_icons(card[:types])
-              html.mtg.tags(card[:subtypes])
+              html.mtg.mtg_icons(card[:card_types])
+              html.mtg.tags(card[:card_subtypes])
             end
           end
         end

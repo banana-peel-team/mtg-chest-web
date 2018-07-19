@@ -12,7 +12,7 @@ module Web
             card = context[:_current_row]
 
             html.tag('td') do
-              html.mtg.icons_list(card[:color_identity])
+              html.mtg.icons_list(card[:card_color_identity])
             end
           end
         end

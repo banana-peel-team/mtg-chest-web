@@ -28,7 +28,7 @@ Value|Meaning
 
 Values:
 
-- Basic Land (Common)
+- Basic Land
 - Common
 - Uncommon
 - Rare
@@ -77,6 +77,16 @@ Values:
 - Tribal
 - Vanguard
 
+### Pagination
+
+Represents the pagination for a list.
+
+Key|Type|Description
+---|----|-----------
+`current_page`|`Integer`|Current page
+`total_pages`|`Integer`|Total pages
+`total_items`|`Integer`|Total items
+
 ### Deck
 
 Represents a deck on a list of decks.
@@ -86,23 +96,35 @@ Key|Type|Description
 `deck_date`|`String<DateTime:UTC>`|The date this deck was created
 `deck_id`|`Integer`|The deck identifier
 `deck_name`|`String`|The deck name
-`card_count`|`Integer`|The amount of cards on this deck
+`deck_cards`|`Integer`|The amount of cards on this deck
 
-### Card
+### DeckWithCards
 
-Represents the common structure of a card that doesn't change through
-editions.
+Represents a deck with a list of cards.
+
+Key|Type|Description
+---|----|-----------
+`deck_date`|`String<DateTime:UTC>`|The date this deck was created
+`deck_id`|`Integer`|The deck identifier
+`deck_name`|`String`|The deck name
+`deck_cards`|`Integer`|The amount of cards on this deck
+`cards`|[`Array<CollectionCard>`](#collectioncard)|The cards on the deck
+
+### DeckCard
+
+Represents a card on a given collection.
 
 Key|Type|Description
 ---|----|-----------
 `card_color_identity`|[`Array<Color>`](#coloridentity) `NULL`|The color identity
 `card_colors`|[`Array<Color>`](#color) `NULL`|The color
 `card_converted_mana_cost`|`Float` `NULL`|The converted mana cost
-`card_id`|`Integer`|The identifier
+`card_count`|`Integer`|The amount copies of this card
+`card_id`|`Integer`|The card identifier
 `card_layout`|`String`|The card layout
 `card_loyalty`|`Integer` `NULL`|The loyalty (if it's a planeswalker)
 `card_mana_cost`|`String` `NULL`|The mana cost
-`card_name`|`String`|The name
+`card_name`|`String`|The name of the card
 `card_power`|`String` `NULL`|The power (if it's a creature)
 `card_subtypes`|`Array<String>`|The subtypes (There are 300+ possible subtypes)
 `card_supertypes`|[`Array<Supertype>`](#supertype)|The supertypes
@@ -110,6 +132,12 @@ Key|Type|Description
 `card_toughness`|`String` `NULL`|The toughness (if it's a creature)
 `card_types`|[`Array<Type>`](#type)|The types
 `card_type`|`String`|The type line
+`edition_code`|`String` `NULL`|The edition code
+`edition_name`|`String` `NULL`|The edition name
+`printing_multiverse_id`|`Integer` `NULL`|The gatherer's multiverse id
+`printing_number`|`String` `NULL`|The printing collector number
+`printing_rarity`|[`String<Rarity>` `NULL`](#rarity)|The rarity of the printing
+`user_printing_is_foil`|`Boolean` `NULL`|If the printing is foil
 
 ### CollectionCard
 
@@ -118,40 +146,30 @@ Represents a card on a given collection.
 Key|Type|Description
 ---|----|-----------
 `card_color_identity`|[`Array<Color>`](#coloridentity) `NULL`|The color identity
+`card_colors`|[`Array<Color>`](#color) `NULL`|The color
 `card_converted_mana_cost`|`Float` `NULL`|The converted mana cost
 `card_count`|`Integer`|The amount copies of this card
 `card_id`|`Integer`|The card identifier
+`card_layout`|`String`|The card layout
 `card_loyalty`|`Integer` `NULL`|The loyalty (if it's a planeswalker)
 `card_mana_cost`|`String` `NULL`|The mana cost
 `card_name`|`String`|The name of the card
 `card_power`|`String` `NULL`|The power (if it's a creature)
+`card_subtypes`|`Array<String>`|The subtypes (There are 300+ possible subtypes)
+`card_supertypes`|[`Array<Supertype>`](#supertype)|The supertypes
+`card_text`|`String` `NULL`|The text
 `card_toughness`|`String` `NULL`|The toughness (if it's a creature)
-
-### CollectionCardDetails
-
-Represents a card details on a given collection.
-
-Key|Type|Description
----|----|-----------
-|`CollectionCard`|Inherits `CollectionCard` values
-|`Card`|Inherits `Card` values
-
-### UserPrinting
-
-Key|Type|Description
----|----|-----------
-`user_printing_id`|`Integer`|The user printing identifier
+`card_types`|[`Array<Type>`](#type)|The types
+`card_type`|`String`|The type line
 `edition_code`|`String`|The edition code
 `edition_name`|`String`|The edition name
-`printing_added_date`|`String<DateTime:UTC>`|The date this printing was added to the collection
-`printing_condition`|[`String<Condition>`](#condition)|The condition of the printing
-`printing_flavor`|`String`|Flavor text for this printing
-`printing_foil`|`Boolean`|Whether the printing is premium foil or not
-`printing_multiverse_id`|`Integer` `NULL`|The gatherer's multiverse id
-`printing_number`|`String` `NULL`|The printing collector number
-`printing_rarity`|[`String<Rarity>`](#rarity)|The rarity of the printing
 `import_id`|`Integer`|The identifier of the import this card comes from
-`import_name`|`Integer`|The name of the import this card comes from
+`import_title`|`Integer`|The title of the import this card comes from
+`printing_multiverse_id`|`Integer` `NULL`|The gatherer's multiverse id
+`printing_number`|`String`|The printing collector number
+`printing_rarity`|[`String<Rarity>`](#rarity)|The rarity of the printing
+`user_printing_condition`|[`String<Condition>`](#condition)|The condition of the printing
+`user_printing_is_foil`|`Boolean`|If the printing is foil
 
 ## Authorization
 
@@ -187,22 +205,6 @@ Key|Type|Description
 ---|----|-----------
 `user`|[User](#user)|The authenticated error
 
-### `GET` `/api/v1/cards/:card_id`
-
-Return the card details.
-
-Success:
-
-```
-Status 200
-Authorization: Bearer <token>
-Content-Type: application/json
-```
-
-Key|Type|Description
----|----|-----------
-`card`|[Card](#card)|The card details
-
 ### `GET` `/api/v1/collection`
 
 Returns the cards on the user collection.
@@ -217,24 +219,8 @@ Content-Type: application/json
 
 Key|Type|Description
 ---|----|-----------
-`cards`|[`Array<CollectionCard>`](#collectioncard)|The collection cards
-
-### `GET` `/api/v1/collection/:card_id`
-
-Returns information about a card on the user collection.
-
-Success:
-
-```
-Status 200
-Authorization: Bearer <token>
-Content-Type: application/json
-```
-
-Key|Type|Description
----|----|-----------
-`card`|[Card](#card)|The card details
-`user_printings`|[`Array<UserPrinting>`](#userprinting)|The owned printings details
+`items`|[`Array<CollectionCard>`](#collectioncard)|The collection cards
+`pagination`|[`Pagination`](#pagination)|Pagination information
 
 ### `GET` `/api/v1/decks`
 
@@ -250,7 +236,7 @@ Content-Type: application/json
 
 Key|Type|Description
 ---|----|-----------
-`decks`|[`Array<Deck>`](#deck)|The decks
+`items`|[`Array<Deck>`](#deck)|The decks
 
 ### `GET` `/api/v1/decks/:deck_id`
 
@@ -264,38 +250,4 @@ Authorization: Bearer <token>
 Content-Type: application/json
 ```
 
-Key|Type|Description
----|----|-----------
-`cards`|[`Array<CollectionCard>`](#collectioncard)|The cards on the deck
-
-### `GET` `/api/decks/:deck_id/cards/:card_id`
-
-Returns the card details.
-
-Success:
-
-```
-Status 200
-Authorization: Bearer <token>
-Content-Type: application/json
-```
-
-Key|Type|Description
----|----|-----------
-`details`|`CollectionCardDetails`|The details
-
-### `GET` `/api/deck/:deck_id/cards/:card_id/alternatives`
-
-Returns possible cards to swap a card for.
-
-Success:
-
-```
-Status 200
-Authorization: Bearer <token>
-Content-Type: application/json
-```
-
-Key|Type|Description
----|----|-----------
-`cards`|[`Array<DeckCard>`](#deckcard)|Card list
+[`DeckWithCards`](#deckwithcards) The deck details

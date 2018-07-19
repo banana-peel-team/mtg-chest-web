@@ -93,7 +93,7 @@ reset-db() {
   migrate
 }
 
-undo-migration() {
+rollback-db() {
   PREVIOUS=$(ls -1t db/migrations | tail -n +2 | head -1 | cut -f1 -d_)
   migrate -M $PREVIOUS
 }
@@ -105,6 +105,10 @@ redo-migration() {
 
 rspec() {
   on-test run bundle exec rspec $@
+}
+
+db-console() {
+  docker-compose exec "db" psql -U user db
 }
 
 console() {

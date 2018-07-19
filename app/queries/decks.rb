@@ -16,6 +16,10 @@ module Queries
       SIMPLE_COLUMNS.where(user_id: user[:id])
     end
 
+    def by_id(id)
+      SIMPLE_COLUMNS.where(id: id).first
+    end
+
     def sort_date(ds, dir)
       if dir == :asc
         ds.order_append(Sequel.asc(:created_at))

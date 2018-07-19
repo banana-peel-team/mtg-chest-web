@@ -1,4 +1,4 @@
-RSpec.shared_examples "a CollectionCard" do |data|
+RSpec.shared_examples "a DeckCard" do |data|
   it 'includes card information' do
     is_expected.to include(
       'card_color_identity' => [String],
@@ -17,15 +17,15 @@ RSpec.shared_examples "a CollectionCard" do |data|
       'card_toughness' => String,
       'card_types' => [String],
       'card_type' => String,
-      'edition_code' => String,
-      'edition_name' => String,
-      'import_id' => Integer,
-      'import_title' => String,
-      'printing_multiverse_id' => Integer,
-      'printing_number' => String,
-      'printing_rarity' => String,
-      'user_printing_condition' => String,
-      'user_printing_is_foil' => boolean,
+    )
+
+    is_expected.to include(
+      'edition_code',
+      'edition_name',
+      'printing_multiverse_id',
+      'printing_number',
+      'printing_rarity',
+      'user_printing_is_foil',
     )
   end
 

@@ -9,6 +9,12 @@ module Web
             values = context[:_current_form_values] || {}
             field_name = options[:name]
             field_value = values[options[:source]]
+            value = options[:value] || field_value
+
+            return unless value
+            value = value.to_s
+
+            return if value.empty?
 
             html.stag('input', {
               id: @id,

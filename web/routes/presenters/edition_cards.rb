@@ -67,7 +67,8 @@ module Web
         end
 
         def printings
-          ds = Queries::Printings.for_edition(edition[:code], user)
+          ds = Queries::EditionCards.for_edition(edition[:code], user)
+
           if filter_identity.any?
             ds = Queries::Cards.filter_identity(
               ds, filter_identity.keys.map(&:upcase)

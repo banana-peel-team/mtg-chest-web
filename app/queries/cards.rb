@@ -6,15 +6,18 @@ module Queries
       Sequel[:card][:id].as(:card_id),
       Sequel[:card][:name].as(:card_name),
       Sequel[:card][:text].as(:card_text),
-      Sequel[:card][:converted_mana_cost].as(:converted_mana_cost),
-      Sequel[:card][:toughness].as(:toughness),
-      Sequel[:card][:power].as(:power),
-      Sequel[:card][:loyalty].as(:loyalty),
-      Sequel[:card][:mana_cost].as(:mana_cost),
-      Sequel[:card][:color_identity].as(:color_identity),
-      Sequel[:card][:types].as(:types),
-      Sequel[:card][:subtypes].as(:subtypes),
-      Sequel[:card][:supertypes].as(:supertypes),
+      Sequel[:card][:converted_mana_cost].as(:card_converted_mana_cost),
+      Sequel[:card][:toughness].as(:card_toughness),
+      Sequel[:card][:power].as(:card_power),
+      Sequel[:card][:loyalty].as(:card_loyalty),
+      Sequel[:card][:layout].as(:card_layout),
+      Sequel[:card][:mana_cost].as(:card_mana_cost),
+      Sequel[:card][:color_identity].as(:card_color_identity),
+      Sequel[:card][:colors].as(:card_colors),
+      Sequel[:card][:types].as(:card_types),
+      Sequel[:card][:type].as(:card_type),
+      Sequel[:card][:subtypes].as(:card_subtypes),
+      Sequel[:card][:supertypes].as(:card_supertypes),
       Sequel[:card][:scores].as(:card_scores),
     ].freeze
 
@@ -23,7 +26,7 @@ module Queries
     ].freeze
 
     COLLECTION_FIELDS = [
-      Sequel[:printing][:rarity].as(:card_rarity),
+      Sequel[:printing][:rarity].as(:printing_rarity),
       Sequel[:edition][:code].as(:edition_code),
       Sequel[:user_printing][:foil].as(:is_foil),
       Sequel[:user_printing][:id].as(:user_printing_id)
@@ -213,14 +216,14 @@ module Queries
     def cards(dataset)
       dataset
         .order(Sequel.asc(Sequel[:card][:name]))
-        .group_and_count(*CARD_FIELDS)
+        .select_group(*CARD_FIELDS)
+        .select_append(Sequel.function(:count).*.as(:card_count))
     end
 
     # TODO: Find a better name.
     # This will add a flag for cards on collection
     def cards_with_collection(dataset)
       dataset
-        .order(Sequel.asc(Sequel[:card][:name]))
         .group_and_count(
           *CARD_FIELDS,
           Sequel[:collection][:count].as(:in_collection)
@@ -233,9 +236,14 @@ module Queries
         .group_and_count(*CARD_FIELDS, *DECK_CARD_FIELDS)
     end
 
+    def same_identity(card, dataset)
+      dataset.where(
+        color_identity: card[:color_identity]
+      )
+    end
+
     def collection_cards(dataset, group = true)
       dataset = dataset
-        .order(Sequel.asc(Sequel[:card][:name]))
 
       if group
         # FIXME:

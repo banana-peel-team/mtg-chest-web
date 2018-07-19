@@ -64,6 +64,7 @@ module Services
 
         # TODO: what to do here?
         return unless printing_id
+        #raise data.inspect unless printing_id
 
         UserPrinting.create_many(
           data[:count],

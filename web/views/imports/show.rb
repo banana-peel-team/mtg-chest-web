@@ -3,12 +3,13 @@ require_relative '../components/navigation'
 require_relative '../components/table'
 require_relative '../components/box_title'
 
+require_relative '../cards/columns/cost'
+require_relative '../cards/columns/creature_stats'
+require_relative '../cards/columns/identity'
 require_relative '../cards/columns/score'
 require_relative '../cards/columns/tags'
-require_relative '../cards/columns/cost'
-require_relative '../cards/columns/identity'
-require_relative '../cards/columns/creature_stats'
 require_relative '../deck_cards/columns/name'
+require_relative '../decks/columns/name'
 
 require_relative 'navigation/list'
 require_relative 'navigation/show'
@@ -41,6 +42,7 @@ module Web
             Cards::Columns::Cost.new('Cost', sort: 'cmc'),
             Cards::Columns::Identity.new('Identity', sort: 'identity'),
             Cards::Columns::CreatureStats.new('P/T', sort: true),
+            Decks::Columns::Name.new(sort: true),
           ], source: :printings),
         ]),
       ])

@@ -14,19 +14,21 @@ RSpec.describe API::V1::Routes::Decks do
     let(:headers) { jwt_header(user) }
 
     context 'having two decks' do
-      before do
-        Fabricate(:deck, user: user)
-        Fabricate(:deck, user: user)
-      end
+      let!(:deck1) { Fabricate(:deck, user: user) }
+      let!(:deck2) { Fabricate(:deck, user: user) }
 
       before { request }
 
-      it 'includes two decks' do
-        expect(json_response['decks'].count).to eq(2)
+      it_behaves_like 'a Deck' do
+        let(:deck) { deck1 }
+
+        subject { json_response['items'][0] }
       end
 
-      it_behaves_like "a Deck" do
-        subject { json_response['decks'].first }
+      it_behaves_like 'a Deck' do
+        let(:deck) { deck2 }
+
+        subject { json_response['items'][1] }
       end
     end
   end

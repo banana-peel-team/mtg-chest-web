@@ -23,7 +23,7 @@ module Web
               html.append_html(card[:card_name])
 
               if @count
-                count = card[:collection_count] || card[:count]
+                count = card[:collection_count] || card[:card_count]
                 if count && count > 0
                   html.mtg.count_badge(count, options[:force_count])
                 end

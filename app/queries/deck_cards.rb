@@ -102,16 +102,84 @@ module Queries
         )
     end
 
-    def for_deck(deck_id)
-      Queries::Cards.cards(
-        DeckCard
-          .in_deck
-          .from_self(alias: :deck_card)
-          .association_join(:deck, :card)
-          .where(
-            deck_id: deck_id,
-          )
+    def fields_singles(dataset)
+      dataset.select_group(
+        Sequel[:card][:color_identity].as(:card_color_identity),
+        Sequel[:card][:colors].as(:card_colors),
+        Sequel[:card][:converted_mana_cost].as(:card_converted_mana_cost),
+        Sequel[:card][:id].as(:card_id),
+        Sequel[:card][:layout].as(:card_layout),
+        Sequel[:card][:loyalty].as(:card_loyalty),
+        Sequel[:card][:mana_cost].as(:card_mana_cost),
+        Sequel[:card][:name].as(:card_name),
+        Sequel[:card][:power].as(:card_power),
+        Sequel[:card][:scores].as(:card_scores),
+        Sequel[:card][:subtypes].as(:card_subtypes),
+        Sequel[:card][:supertypes].as(:card_supertypes),
+        Sequel[:card][:text].as(:card_text),
+        Sequel[:card][:toughness].as(:card_toughness),
+        Sequel[:card][:type].as(:card_type),
+        Sequel[:card][:types].as(:card_types),
+        Sequel[:edition][:code].as(:edition_code),
+        Sequel[:edition][:name].as(:edition_name),
+        Sequel[:printing][:rarity].as(:printing_rarity),
+        Sequel[:printing][:number].as(:printing_number),
+        Sequel[:printing][:multiverse_id].as(:printing_multiverse_id),
+        Sequel[:user_printing][:foil].as(:user_printing_is_foil),
+        Sequel[:user_printing][:id].as(:user_printing_id),
       )
+    end
+
+    def fields(dataset)
+      #dataset = DeckCard
+        #.from_self(alias: :deck_card)
+        #.in_deck
+        #.association_join(:deck, :card)
+        #.left_join(Sequel[:user_printings].as(:user_printing), {
+          #id: :user_printing_id
+        #})
+        #.left_join(Sequel[:printings].as(:printing), id: :printing_id)
+        #.left_join(Sequel[:editions].as(:edition), code: :edition_code)
+
+      dataset = dataset.select_group(
+        Sequel[:card][:color_identity].as(:card_color_identity),
+        Sequel[:card][:colors].as(:card_colors),
+        Sequel[:card][:converted_mana_cost].as(:card_converted_mana_cost),
+        Sequel[:card][:id].as(:card_id),
+        Sequel[:card][:layout].as(:card_layout),
+        Sequel[:card][:loyalty].as(:card_loyalty),
+        Sequel[:card][:mana_cost].as(:card_mana_cost),
+        Sequel[:card][:name].as(:card_name),
+        Sequel[:card][:power].as(:card_power),
+        Sequel[:card][:scores].as(:card_scores),
+        Sequel[:card][:subtypes].as(:card_subtypes),
+        Sequel[:card][:supertypes].as(:card_supertypes),
+        Sequel[:card][:text].as(:card_text),
+        Sequel[:card][:toughness].as(:card_toughness),
+        Sequel[:card][:type].as(:card_type),
+        Sequel[:card][:types].as(:card_types),
+        Sequel[:edition][:code].as(:edition_code),
+        Sequel[:edition][:name].as(:edition_name),
+        Sequel[:printing][:rarity].as(:printing_rarity),
+        Sequel[:printing][:number].as(:printing_number),
+        Sequel[:printing][:multiverse_id].as(:printing_multiverse_id),
+        Sequel[:user_printing][:foil].as(:user_printing_is_foil),
+      )
+      .select_append(Sequel.function(:count).*.as(:card_count))
+    end
+
+    def for_deck(deck_id)
+      dataset = DeckCard
+        .from_self(alias: :deck_card)
+        .in_deck
+        .association_join(:deck, :card)
+        .left_join(Sequel[:user_printings].as(:user_printing), {
+          id: :user_printing_id
+        })
+        .left_join(Sequel[:printings].as(:printing), id: :printing_id)
+        .left_join(Sequel[:editions].as(:edition), code: :edition_code)
+
+      fields(dataset).where(deck_id: deck_id)
     end
 
     #def cards_in_decks(user)
@@ -237,34 +305,27 @@ module Queries
         )
       end
 
-      Queries::Cards.collection_cards(ds)
+      fields(ds)
     end
 
     def synergy(user, deck_id, card)
       cards = Sequel[:card]
 
-      ds = card
+      related = card
         .related_cards_dataset
-        .from_self(alias: :card)
-        .association_join(printings: :edition)
 
-      if user
-        ds = ds
-          .association_left_join(printings: [:user_printings])
-          .where {
-            (Sequel[:user_printing][:user_id] =~ user[:id]) |
-            (Sequel[:user_printing][:user_id] =~ nil)
-          }
-      end
+      ds = user
+        .user_printings_dataset
+        .from_self(alias: :user_printing)
+        .association_join(printing: [:card, :edition])
+        .where(Sequel[:card][:id] => related.select(:id))
 
-      ds = ds.same_identity(card)
+      ds = Queries::Cards.same_identity(card, ds)
+      #ds = ds.same_identity(card)
       ds = not_in_deck(deck_id, cards, ds)
       #ds = not_in_any_deck(user, cards, ds)
 
-
-      ds = Queries::Cards.collection_cards(ds)
-
-      ds
+      fields(ds)
     end
   end
 end

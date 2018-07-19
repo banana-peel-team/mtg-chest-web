@@ -4,9 +4,14 @@ module API
       class Collection < API::Server
         define do
           on(get, root) do
-            printings = Queries::UserPrintings.for_user(current_user).all
+            printings = Queries::Collection.for_user(current_user)
 
-            json(cards: API::V1::Presenters::Collection.list(printings))
+            json(
+              API::V1::Presenters::Collection::List.present(
+                current_user, printings,
+                params: req.params
+              )
+            )
           end
 
           on(':card_id') do |card_id|

@@ -38,7 +38,7 @@ module Web
         end
 
         def printings
-          Queries::UserPrintings.for_import(import)
+          Queries::ImportCards.for_import(import)
         end
       end
     end

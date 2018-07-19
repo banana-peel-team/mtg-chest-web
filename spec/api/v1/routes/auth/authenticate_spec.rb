@@ -50,8 +50,10 @@ RSpec.describe API::V1::Routes::Auth do
       }.to raise_error(JWT::VerificationError)
     end
 
-    it_behaves_like 'a User' do
-      subject { json_response['user'] }
+    it 'returns the user' do
+      expect(json_response).to include(
+        'user' => as_user
+      )
     end
   end
 end

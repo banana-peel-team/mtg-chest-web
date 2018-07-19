@@ -5,6 +5,13 @@ require 'logger'
 require './app/application'
 require_relative 'helpers'
 
+require_relative 'support/matchers/paginated'
+require_relative 'support/matchers/user'
+
+require_relative 'support/definitions/collection_card'
+require_relative 'support/definitions/deck_card'
+require_relative 'support/definitions/deck'
+
 RSpec.configure do |config|
   config.include Support::Helpers
 

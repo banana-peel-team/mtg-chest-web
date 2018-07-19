@@ -17,6 +17,8 @@ RSpec.describe API::V1::Routes::Decks do
     subject(:cards) { json_response['cards'] }
 
     context 'having a deck with two copies of two cards' do
+      let(:deck) { Fabricate(:deck, user: user, card_count: 4) }
+
       before do
         card1 = Fabricate(:card)
         card2 = Fabricate(:card)
@@ -27,12 +29,25 @@ RSpec.describe API::V1::Routes::Decks do
         request
       end
 
-      it 'includes two cards' do
-        expect(cards.count).to eq(2)
+      it_behaves_like 'a Deck' do
+        subject { json_response }
       end
 
-      it_behaves_like "a CollectionCard" do
-        subject { cards.first }
+      it_behaves_like 'a DeckCard' do
+        subject { json_response['cards'][0] }
+      end
+
+      it_behaves_like 'a DeckCard' do
+        subject { json_response['cards'][1] }
+      end
+
+      it 'includes two cards' do
+        expect(json_response).to include(
+          'cards' => a_collection_containing_exactly(
+            hash_including('card_count' => 2),
+            hash_including('card_count' => 2),
+          )
+        )
       end
     end
   end

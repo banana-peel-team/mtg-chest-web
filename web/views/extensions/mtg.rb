@@ -31,7 +31,7 @@ module Web
             title = "#{card[:edition_name]} - #{card[:card_rarity]}"
             cls = 'mr-1 ss ss-fw'
             cls << " ss-#{card[:edition_code].downcase}"
-            cls << " ss-#{card[:card_rarity].downcase}"
+            cls << " ss-#{card[:printing_rarity].downcase}"
             if card[:is_foil]
               cls << " ss-grad ss-foil"
               title << ' (Foil)'
@@ -79,7 +79,7 @@ module Web
           end
 
           def card_cost(card)
-            html.append_html(transform_icons(card[:mana_cost]))
+            html.append_html(transform_icons(card[:card_mana_cost]))
           end
 
           def icons_list(list)

@@ -8,8 +8,8 @@ module Web
           def render(html, _context)
             card = _context[:_current_row]
 
-            if card[:power]
-              html.tag('td', "#{card[:power]}/#{card[:toughness]}")
+            if card[:card_power]
+              html.tag('td', "#{card[:card_power]}/#{card[:card_toughness]}")
             else
               html.tag('td')
             end
