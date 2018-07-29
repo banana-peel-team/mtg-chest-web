@@ -9,7 +9,8 @@ module API
             params = options[:params]
 
             API::V1::Presenters::Extensions::Table.table(decks, params, {
-              paginate: true
+
+              paginate: true,
             })
           end
         end
