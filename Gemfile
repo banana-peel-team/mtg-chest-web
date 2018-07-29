@@ -13,9 +13,13 @@ gem 'rack-console', '~> 1.3'
 gem 'rack-cors', '~> 1.0'
 gem 'yajl-ruby', '~> 1.3'
 gem 'rack-jwt', '~> 0.3'
-gem 'shotgun', '~> 0.9'
+
+group :production do
+  gem 'puma', '~> 3.12'
+end
 
 group :development, :test do
+  gem 'shotgun', '~> 0.9'
   gem 'byebug', '~> 9.0'
   gem 'timecop', '~> 0.9'
 end
