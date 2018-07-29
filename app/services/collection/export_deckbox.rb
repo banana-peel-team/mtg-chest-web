@@ -24,12 +24,15 @@ module Services
       def perform(printings)
         printings.map do |printing|
           {
-            'Condition' => CONDITIONS.fetch(printing[:condition], 'Near Mint'),
+            'Condition' => CONDITIONS.fetch(
+              printing[:user_printing_condition],
+              'Mint'
+            ),
             'Language' => 'English',
-            'Count' => 1,
+            'Count' => printing[:card_count],
             'Name' => name(printing),
             'Edition' => edition(printing),
-            'Foil' => printing[:foil] ? 'foil' : nil
+            'Foil' => printing[:user_printing_is_foil] ? 'foil' : nil
           }
         end
       end
@@ -41,8 +44,8 @@ module Services
       end
 
       def name(printing)
-        if printing[:layout] == 'aftermath'
-          return printing[:names].join(' // ')
+        if printing[:card_layout] == 'aftermath'
+          return printing[:card_names].join(' // ')
         end
 
         printing[:card_name]

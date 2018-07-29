@@ -9,6 +9,7 @@ module Queries
       dataset = dataset.select_group(
         Sequel[:card][:id].as(:card_id),
         Sequel[:card][:name].as(:card_name),
+        Sequel[:card][:names].as(:card_names),
         Sequel[:card][:text].as(:card_text),
         Sequel[:card][:converted_mana_cost].as(:card_converted_mana_cost),
         Sequel[:card][:toughness].as(:card_toughness),
@@ -25,7 +26,9 @@ module Queries
         Sequel[:card][:scores].as(:card_scores),
         Sequel[:printing][:rarity].as(:printing_rarity),
         Sequel[:edition][:code].as(:edition_code),
+        Sequel[:edition][:name].as(:edition_name),
         Sequel[:user_printing][:foil].as(:user_printing_is_foil),
+        Sequel[:user_printing][:condition].as(:user_printing_condition),
         Sequel[:deck][:id].as(:deck_id),
         Sequel[:deck][:name].as(:deck_name),
         Sequel[:import][:id].as(:import_id),

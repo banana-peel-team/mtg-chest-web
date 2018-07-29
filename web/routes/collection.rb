@@ -51,7 +51,7 @@ module Web
             end
 
             on('deckbox') do
-              printings = Queries::UserPrintings.for_import(import).all
+              printings = Queries::ImportCards.for_import(import).all
 
               export = Services::Collection::ExportDeckbox.perform(printings)
               csv = Services::CSV::Export.perform(export)
