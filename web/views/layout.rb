@@ -1,10 +1,19 @@
-require_relative 'component'
+require './lib/html'
+
 require_relative 'shared/nav_signout'
+
+require_relative 'editions/navigation/list'
+require_relative 'cards/navigation/database'
+require_relative 'collection/navigation/show'
+require_relative 'imports/navigation/list'
+require_relative 'decks/navigation/list'
+require_relative 'find_decks/navigation/list'
 
 module Web
   module Views
     # TODO: Clean up this mess
-    class Layout < Component
+    class Layout < ::Html::Component
+      # Cached tags
       DEFAULT_HEAD_TAGS = Html.render do |html|
         html.meta(charset: 'utf-8')
         html.meta(
@@ -41,33 +50,8 @@ module Web
         end
       end.freeze
 
-      def render(html, context)
-        current_user = context[:current_user]
-
-        html.html5 do
-          html.tag('head') do
-            html.append_html(DEFAULT_HEAD_TAGS)
-
-            unless current_user
-              html.append_html(stylesheet('/css/login.css'))
-            end
-          end
-
-          html.tag('body', class: 'bg-light', lang: 'en') do
-            if current_user
-              navigation(html, context)
-
-              html.tag('main', class: 'container', role: 'main') do
-                super(html, context)
-              end
-            else
-              super(html, context)
-            end
-          end
-        end
-      end
-
-      def navigation(html, context)
+      # Cached navigation
+      NAVIGATION = Html.render do |html|
         cls = 'navbar navbar-expand-md navbar-dark bg-dark fixed-top'
 
         html.tag('nav', class: cls) do
@@ -77,29 +61,46 @@ module Web
 
           html.tag('div', class: 'collapse navbar-collapse') do
             html.tag('ul', class: 'navbar-nav bd-navbar-nav flex-row') do
-              nav_item(html, '/editions', 'Editions')
-              nav_item(html, '/collection', 'Collection')
-              nav_item(html, '/collection/imports', 'Imports')
-              nav_item(html, '/decks', 'Decks')
-              nav_item(html, '/find-decks', 'Find Decks')
+              ctx = {}
+              Editions::Navigation::List.static.render(html, ctx)
+              Cards::Navigation::Database.static.render(html, ctx)
+              Collection::Navigation::Show.static.render(html, ctx)
+              Imports::Navigation::List.static.render(html, ctx)
+              Decks::Navigation::List.static.render(html, ctx)
+              FindDecks::Navigation::List.static.render(html, ctx)
             end
           end
 
-          # TODO:
-          Shared::NavSignout.new.render(html, context)
+          Shared::NavSignout.static.render(html, {})
         end
-      end
+      end.freeze
 
-      def nav_item(html, link, content)
-        html.tag('li', class: 'nav-item') do
-          html.tag('a', class: 'nav-link', href: link) do
-            html.append_html(content)
+      def render(html, context)
+        current_user = context[:current_user]
+
+        html.html5 do
+          html.tag('head'.freeze) do
+            html.append_html(DEFAULT_HEAD_TAGS)
+
+            unless current_user
+              html.append_html(stylesheet('/css/login.css'.freeze))
+            end
+          end
+
+          html.tag('body'.freeze, class: 'bg-light'.freeze,
+                                  lang: 'en'.freeze) do
+            if current_user
+              html.append_html(NAVIGATION)
+
+              html.tag('main'.freeze, class: 'container'.freeze,
+                                      role: 'main'.freeze) do
+                render_children(html, context)
+              end
+            else
+              render_children(html, context)
+            end
           end
         end
-      end
-
-      def stylesheet(src)
-        %Q(<link type="text/css" rel="stylesheet" href="#{src}" />)
       end
     end
   end

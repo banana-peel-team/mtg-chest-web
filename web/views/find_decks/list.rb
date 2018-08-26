@@ -6,38 +6,44 @@ require_relative 'navigation/list'
 module Web
   module Views
     module FindDecks
-      List = Layout.new([
-        Components::Navigation.new([
-          Navigation::List.new(breadcrumb: true, current: true),
-        ], breadcrumb: true),
-        Components::Box.new([
-          Components::Form.new([
-            Cards::Forms::IdentityFilter.new(
-              name: 'filter',
-              source: :decks,
+      class List < ::Html::Component
+        def draw
+          Layout.new(
+            ::Html::Navigation.new(
+              Navigation::List.new(breadcrumb: true, current: true),
+              breadcrumb: true
             ),
-            Components::Forms::Submit.new(label: 'Refresh'),
-          ], method: 'get'),
-          Components::Table.new([
-            Columns::Name.new(sort: true, count: :card_count),
-            Columns::OwnedDeckCount.new(
-              sort: true,
+            ::Html::Box.new(
+              ::Html::FilterForm.new(
+                Cards::Forms::IdentityFilter.new(
+                  namespace: 'filter',
+                  source: :filters,
+                ),
+                ::Html::Form::Submit.new(label: 'Refresh'),
+                source: :decks
+              ),
+              ::Html::Table.new(
+                Columns::Name.new(sort: true, count: :card_count),
+                Columns::OwnedDeckCount.new(sort: true),
+                ::Html::Table::Column.new(
+                  title: 'Format',
+                  source: :event_format,
+                  sort_column: 'format',
+                  sort: true,
+                ),
+                ::Html::Table::Column.new(
+                  title: 'Source',
+                  source: :deck_database_name,
+                  sort_column: 'source',
+                  sort: true,
+                ),
+                source: :decks
+              ),
+              title: 'Find decks'
             ),
-            Components::TableColumn.new(
-              title: 'Format',
-              source: :event_format,
-              sort_column: 'format',
-              sort: true,
-            ),
-            Components::TableColumn.new(
-              title: 'Source',
-              source: :deck_database_name,
-              sort_column: 'source',
-              sort: true,
-            ),
-          ], source: :decks),
-        ], title: 'Find decks'),
-      ])
+          )
+        end
+      end
     end
   end
 end

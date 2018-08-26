@@ -1,12 +1,10 @@
-require_relative '../../components/table_column'
-
 module Web
   module Views
     module Imports
       module Columns
-        class Title < Components::TableColumn
-          title 'Import'
-          sort_column 'import_name'
+        class Title < ::Html::Table::Column
+          option :title, 'Import'
+          option :sort_column, 'import_name'
 
           def render(html, context)
             import = context[:_current_row]

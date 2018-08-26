@@ -30,7 +30,7 @@ module Web
               params: req.params,
             })
 
-            render_view(Web::Views::Decks::List, presenter.context)
+            render_view(Web::Views::Decks::List.static, presenter.context)
           end
         end
 
@@ -45,7 +45,7 @@ module Web
 
         on('new') do
           on(get, root) do
-            render_view(Web::Views::Decks::New, {})
+            render_view(Web::Views::Decks::New.static, {})
           end
         end
 
@@ -55,7 +55,7 @@ module Web
               params: req.params,
             })
 
-            render_view(Web::Views::Decks::Find, presenter.context)
+            render_view(Web::Views::Decks::Find.static, presenter.context)
           end
         end
 
@@ -74,7 +74,7 @@ module Web
               { params: req.params },
             )
 
-            render_view(Web::Views::Decks::EditCards, presenter.context)
+            render_view(Web::Views::Decks::EditCards.static, presenter.context)
           end
 
           on(get, root) do
@@ -82,13 +82,15 @@ module Web
               params: req.params,
             })
 
-            render_view(Web::Views::Decks::Show, presenter.context)
+            render_view(Web::Views::Decks::Show.static, presenter.context)
           end
 
           on(get, 'add-cards') do
-            presenter = Routes::Presenters::DeckCards.new(current_user, deck)
+            presenter = Routes::Presenters::DeckCards.new(current_user, deck, {
+              params: req.params,
+            })
 
-            render_view(Web::Views::Decks::AddCards, presenter.context)
+            render_view(Web::Views::Decks::AddCards.static, presenter.context)
           end
 
           on(post, 'add-cards', param('deck')) do |params|
@@ -107,7 +109,7 @@ module Web
               params: req.params
             )
 
-            render_view(Web::Views::Decks::FindCards, presenter.context)
+            render_view(Web::Views::Decks::FindCards.static, presenter.context)
           end
 
           on(get, 'link') do
@@ -117,12 +119,12 @@ module Web
               params: req.params
             )
 
-            render_view(Web::Views::Decks::LinkCards, presenter.context)
+            render_view(Web::Views::Decks::LinkCards.static, presenter.context)
           end
 
           on(get, 'list') do
             presenter = Presenters::DeckCardList.new(deck)
-            render_view(Views::Decks::CardList, presenter.context)
+            render_view(Views::Decks::CardList.static, presenter.context)
           end
 
           on('cards') do
@@ -152,7 +154,7 @@ module Web
                 )
 
                 render_view(
-                  Web::Views::Decks::Alternatives, presenter.context
+                  Web::Views::Decks::Alternatives.static, presenter.context
                 )
               end
 
@@ -162,7 +164,10 @@ module Web
                   { params: req.params }
                 )
 
-                render_view(Web::Views::Decks::Synergy, presenter.context)
+                render_view(
+                  Web::Views::Decks::Synergy.static,
+                  presenter.context
+                )
               end
             end
           end

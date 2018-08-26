@@ -1,6 +1,3 @@
-require_relative '../components/table'
-require_relative '../components/navigation'
-
 require_relative 'forms/link_card'
 require_relative 'navigation/list'
 require_relative 'navigation/show'
@@ -14,24 +11,32 @@ require_relative '../cards/columns/creature_stats'
 module Web
   module Views
     module Decks
-      class LinkCardsTable < Component
-        Table = Components::Box.new([
-          Components::Table.new([
-            DeckCards::Columns::Name.new(sort: true),
-            Cards::Columns::Cost.new(sort: true),
-            Cards::Columns::CreatureStats.new(sort: true),
-            Imports::Columns::Title.new(sort: true),
-            Components::TableColumn.new([
-              Forms::LinkCard.new({
-                icon: true, inline: true, source: :_current_row
-              }),
-            ], title: 'Actions'),
-          ], source: :cards),
-        ], title: 'Link to owned cards')
+      class LinkCardsTable < ::Html::Component
+        def draw
+          ::Html::Box.new(
+            ::Html::Table.new(
+              DeckCards::Columns::Name.new(sort: true),
+              Cards::Columns::Cost.new(sort: true),
+              Cards::Columns::CreatureStats.new(sort: true),
+              Imports::Columns::Title.new(sort: true),
+              ::Html::Table::Column.new(
+                Forms::LinkCard.new(
+                  icon: true,
+                  inline: true,
+                  source: :_current_row,
+                  inline_values: true,
+                ),
+                title: 'Actions'
+              ),
+              source: :cards
+            ),
+            title: 'Link to cards you own'
+          )
+        end
 
         def render(html, context)
           if context[:count] > 0
-            Table.render(html, context)
+            render_root(html, context)
           else
             if context[:total_missing] > 0
               html.simple_card('Missing cards', type: :warning) do

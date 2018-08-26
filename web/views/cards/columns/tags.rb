@@ -1,12 +1,10 @@
-require_relative '../../components/table_column'
-
 module Web
   module Views
     module Cards
       module Columns
-        class Tags < Components::TableColumn
-          title 'Tags'
-          sort_column 'tags'
+        class Tags < ::Html::Table::Column
+          option :title, 'Tags'
+          option :sort_column, 'tags'
 
           def render(html, context)
             card = context[:_current_row]

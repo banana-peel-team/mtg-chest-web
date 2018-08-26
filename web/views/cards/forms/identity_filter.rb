@@ -1,49 +1,43 @@
-require_relative '../../component'
-require_relative '../../components/forms/checkbox'
-
 require_relative 'color_filter'
 
 module Web
   module Views
     module Cards
       module Forms
-        class IdentityFilter < Component
-          def build_elements
-            [
+        class IdentityFilter < ::Html::Component
+          option :namespace, 'filter'
+          option :source, :filters
+
+          def draw
+            namespace = nest_into(options[:namespace], :i)
+
+            ::Html::Component.new(
               Forms::ColorFilter.new(
                 color: 'r',
                 source: :identity_r,
-                name: child_name('i[r]'),
+                name: nest_into(namespace, 'r'),
               ),
               Forms::ColorFilter.new(
                 color: 'g',
                 source: :identity_g,
-                name: child_name('i[g]'),
+                name: nest_into(namespace, 'g'),
               ),
               Forms::ColorFilter.new(
                 color: 'b',
                 source: :identity_b,
-                name: child_name('i[b]'),
+                name: nest_into(namespace, 'b'),
               ),
               Forms::ColorFilter.new(
                 color: 'u',
                 source: :identity_u,
-                name: child_name('i[u]'),
+                name: nest_into(namespace, 'u'),
               ),
               Forms::ColorFilter.new(
                 color: 'w',
                 source: :identity_w,
-                name: child_name('i[w]'),
+                name: nest_into(namespace, 'w'),
               ),
-            ]
-          end
-
-          private
-
-          def children_context(context)
-            context.merge({
-              _current_form_values: context[options[:source]][:filters],
-            })
+            )
           end
         end
       end

@@ -55,7 +55,7 @@ module Web
         end
 
         res.write(out)
-        res.status = 200
+        res.status ||= 200
         halt(res.finish)
       end
 

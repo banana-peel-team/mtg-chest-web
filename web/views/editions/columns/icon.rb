@@ -1,11 +1,9 @@
-require_relative '../../components/table_column'
-
 module Web
   module Views
     module Editions
       module Columns
-        class Icon < Components::TableColumn
-          title 'Set Icon'
+        class Icon < ::Html::Table::Column
+          option :title, 'Set Icon'
 
           def render(html, context)
             edition = context[:_current_row]

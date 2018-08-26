@@ -19,14 +19,14 @@ module Web
             params: req.params
           )
 
-          render_view(Views::Collection::Show, presenter.context)
+          render_view(Views::Collection::Show.static, presenter.context)
         end
 
         on('imports') do
           on(get, root) do
             presenter = Presenters::ImportsList.new(current_user)
 
-            render_view(Views::Imports::List, presenter.context)
+            render_view(Views::Imports::List.static, presenter.context)
           end
 
           on(':id') do |id|
@@ -42,12 +42,12 @@ module Web
             on(get, root) do |id|
               presenter = Presenters::ImportCards.new(import, req.params)
 
-              render_view(Views::Imports::Show, presenter.context)
+              render_view(Views::Imports::Show.static, presenter.context)
             end
 
             on('list') do
               presenter = Presenters::ImportCardList.new(import)
-              render_view(Views::Imports::CardList, presenter.context)
+              render_view(Views::Imports::CardList.static, presenter.context)
             end
 
             on('deckbox') do
@@ -76,7 +76,7 @@ module Web
 
         on('import') do
           on(get, root) do
-            render_view(Views::Imports::New, {})
+            render_view(Views::Imports::New.static, {})
           end
 
           on(post, param('import')) do |params|

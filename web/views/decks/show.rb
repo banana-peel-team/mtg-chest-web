@@ -1,15 +1,3 @@
-require_relative '../cards/columns/cost'
-require_relative '../components/table_column'
-require_relative '../cards/columns/creature_stats'
-require_relative '../cards/columns/identity'
-require_relative '../cards/columns/score'
-require_relative '../cards/columns/tags'
-require_relative '../components/box'
-require_relative '../components/box_title'
-require_relative '../components/navigation'
-require_relative '../deck_cards/columns/name'
-require_relative '../components/row'
-
 require_relative 'navigation/find_cards'
 require_relative 'navigation/list'
 require_relative 'navigation/show'
@@ -20,32 +8,38 @@ require_relative 'columns/deck_card_actions'
 module Web
   module Views
     module Decks
-      Show = Layout.new([
-        Components::Navigation.new([
-          Decks::Navigation::List.new(breadcrumb: true),
-          Decks::Navigation::Show.new(
-            breadcrumb: true, deck: :deck, current: true
-          ),
-        ], breadcrumb: true),
-        Components::Box.new([
-          Components::BoxTitle.new(
-            source: :deck, title: :name, count: :card_count
-          ),
-          Components::Navigation.new([
-            Decks::Navigation::CardList.new(deck: :deck),
-            Decks::Navigation::Edit.new(deck: :deck),
-          ]),
-          Components::Table.new([
-            Cards::Columns::Score.new(sort: true),
-            DeckCards::Columns::Name.new(sort: true),
-            Cards::Columns::Tags.new,
-            Cards::Columns::Cost.new(sort: true),
-            Cards::Columns::Identity.new(sort: true),
-            Cards::Columns::CreatureStats.new(sort: true),
-            Decks::Columns::DeckCardActions.new,
-          ], source: :cards),
-        ]),
-      ])
+      class Show < ::Html::Component
+        def draw
+          Layout.new(
+            ::Html::Navigation.new(
+              Navigation::List.new(breadcrumb: true),
+              Navigation::Show.new(
+                breadcrumb: true, deck: :deck, current: true
+              ),
+              breadcrumb: true
+            ),
+            ::Html::Box.new(
+              ::Html::Box::Title.new(
+                source: :deck, title: :name, count: :card_count
+              ),
+              ::Html::Navigation.new(
+                Navigation::CardList.new(deck: :deck),
+                Navigation::Edit.new(deck: :deck),
+              ),
+              ::Html::Table.new(
+                Cards::Columns::Score.new(sort: true),
+                DeckCards::Columns::Name.new(sort: true),
+                Cards::Columns::Tags.new,
+                Cards::Columns::Cost.new(sort: true),
+                Cards::Columns::Identity.new(sort: true),
+                Cards::Columns::CreatureStats.new(sort: true),
+                Columns::DeckCardActions.new,
+                source: :cards
+              ),
+            ),
+          )
+        end
+      end
     end
   end
 end

@@ -1,12 +1,10 @@
-require_relative '../../components/table_column'
-
 module Web
   module Views
     module Editions
       module Columns
-        class Name < Components::TableColumn
-          title 'Edition'
-          sort_column 'edition_name'
+        class Name < ::Html::Table::Column
+          option :title, 'Edition'
+          option :sort_column, 'edition_name'
 
           def render(html, context)
             edition = context[:_current_row]

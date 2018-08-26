@@ -1,12 +1,10 @@
-require_relative '../../components'
-
 module Web
   module Views
     module FindDecks
       module Columns
-        class OwnedCount < Components::TableColumn
-          title 'Owned'
-          sort_column 'owned'
+        class OwnedCount < ::Html::Table::Column
+          option :title, 'Owned'
+          option :sort_column, 'owned'
 
           def render(html, context)
             card = context[:_current_row]

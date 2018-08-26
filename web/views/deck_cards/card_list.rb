@@ -1,7 +1,7 @@
 module Web
   module Views
     module DeckCards
-      class CardList < Component
+      class CardList < ::Html::Component
         def render(html, context)
           cards = context[options[:source]]
           html.tag('ul') do

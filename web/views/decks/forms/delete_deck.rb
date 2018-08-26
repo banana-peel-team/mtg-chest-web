@@ -1,25 +1,18 @@
-require_relative '../../components/form'
-require_relative '../../components/forms/button'
-
 module Web
   module Views
     module Decks
       module Forms
-        class DeleteDeck < Components::Form
-          def build_elements
+        class DeleteDeck < ::Html::Form
+          option :method, 'delete'
+
+          def draw
             if options[:icon]
-              [
-                Components::Forms::Button.new(
-                  icon: 'trash-alt', label: 'delete', style: 'danger'
-                )
-              ]
+              ::Html::Form::Button.new(
+                icon: 'trash-alt', label: 'delete', style: 'danger'
+              )
             else
               raise 'Not implemented.'
             end
-          end
-
-          def method(_context)
-            'delete'
           end
 
           def action(context)

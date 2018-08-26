@@ -1,10 +1,8 @@
-require_relative '../../components/navigation_item'
-
 module Web
   module Views
     module Collection
       module Navigation
-        class Show < Components::NavigationItem
+        class Show < ::Html::Navigation::Item
           def item_values(context)
             deck = context[options[:deck]]
 

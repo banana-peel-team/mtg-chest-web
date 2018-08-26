@@ -13,7 +13,7 @@ module Web
         on(get, root) do
           context = Presenters::EditionsList.context(req.params)
 
-          render_view(Web::Views::Editions::List, context)
+          render_view(Web::Views::Editions::List.static, context)
         end
 
         on(':code') do |code|
@@ -24,7 +24,7 @@ module Web
               params: req.params,
             })
 
-            render_view(Views::Editions::Show, presenter.context)
+            render_view(Views::Editions::Show.static, presenter.context)
           end
         end
       end

@@ -1,10 +1,8 @@
-require_relative '../../components/navigation_item'
-
 module Web
   module Views
     module Decks
       module Navigation
-        class Edit < Components::NavigationItem
+        class Edit < ::Html::Navigation::Item
           private
 
           def item_values(context)

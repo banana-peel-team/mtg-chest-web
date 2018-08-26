@@ -1,18 +1,10 @@
-require_relative '../../components/table_column'
-
 module Web
   module Views
     module DeckCards
       module Columns
-        class Name < Components::TableColumn
-          title 'Name'
-          sort_column 'card_name'
-
-          def initialize(elements = nil, options = {})
-            super(elements, options)
-
-            @count = options.fetch(:count) { true }
-          end
+        class Name < ::Html::Table::Column
+          option :title, 'Name'
+          option :sort_column, 'card_name'
 
           def render(html, context)
             card = context[:_current_row]
@@ -36,6 +28,14 @@ module Web
 
               html.mtg.card_text(card)
             end
+          end
+
+          private
+
+          def setup
+            super
+
+            @count = options.fetch(:count) { true }
           end
         end
       end

@@ -9,7 +9,7 @@ module Web
         on(get, 'new') do
           presenter = Presenters::Signin.new(errors: {})
 
-          render_view(Views::Sessions::New, presenter.context)
+          render_view(Views::Sessions::New.static, presenter.context)
         end
 
         on(post, root, param('signin')) do |attributes|
@@ -30,11 +30,11 @@ module Web
 
             res.status = 422
 
-            render_view(Views::Sessions::New, presenter.context)
+            render_view(Views::Sessions::New.static, presenter.context)
           end
         end
 
-        on(post, 'delete') do
+        on(delete, root) do
           session.delete(:user_id)
           redirect_to('/sessions/new')
         end

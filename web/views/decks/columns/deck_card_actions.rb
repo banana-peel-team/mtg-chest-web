@@ -1,11 +1,9 @@
-require_relative '../../components/table_column'
-
 module Web
   module Views
     module Decks
       module Columns
-        class DeckCardActions < Components::TableColumn
-          title 'Actions'
+        class DeckCardActions < ::Html::Table::Column
+          option :title, 'Actions'
 
           def render(html, context)
             card = context[:_current_row]
