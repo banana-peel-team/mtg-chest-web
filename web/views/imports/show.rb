@@ -1,8 +1,3 @@
-require_relative '../components/box'
-require_relative '../components/navigation'
-require_relative '../components/table'
-require_relative '../components/box_title'
-
 require_relative '../cards/columns/cost'
 require_relative '../cards/columns/creature_stats'
 require_relative '../cards/columns/identity'
@@ -19,33 +14,39 @@ require_relative 'navigation/export_deckbox'
 module Web
   module Views
     module Imports
-      Show = Layout.new([
-        Components::Navigation.new([
-          Navigation::List.new(breadcrumb: true),
-          Navigation::Show.new(
-            import: :import, breadcrumb: true, current: true
-          ),
-        ], breadcrumb: true),
+      class Show < ::Html::Component
+        def draw
+          Layout.new(
+            ::Html::Navigation.new(
+              Navigation::List.new(breadcrumb: true),
+              Navigation::Show.new(
+                import: :import, breadcrumb: true, current: true
+              ),
+              breadcrumb: true
+            ),
 
-        Components::Box.new([
-          Components::BoxTitle.new(
-            source: :import, title: :title, count: :user_printing_count
-          ),
-          Components::Navigation.new([
-            Navigation::CardList.new(import: :import),
-            Navigation::ExportDeckbox.new(import: :import),
-          ]),
-          Components::Table.new([
-            Cards::Columns::Score.new('Score', sort: 'score'),
-            DeckCards::Columns::Name.new('Name', sort: 'name'),
-            Cards::Columns::Tags.new('Tags'),
-            Cards::Columns::Cost.new('Cost', sort: 'cmc'),
-            Cards::Columns::Identity.new('Identity', sort: 'identity'),
-            Cards::Columns::CreatureStats.new('P/T', sort: true),
-            Decks::Columns::Name.new(sort: true),
-          ], source: :printings),
-        ]),
-      ])
+            ::Html::Box.new(
+              ::Html::Box::Title.new(
+                source: :import, title: :title, count: :user_printing_count
+              ),
+              ::Html::Navigation.new(
+                Navigation::CardList.new(import: :import),
+                Navigation::ExportDeckbox.new(import: :import),
+              ),
+              ::Html::Table.new(
+                Cards::Columns::Score.new(sort: 'score'),
+                DeckCards::Columns::Name.new(sort: 'name'),
+                Cards::Columns::Tags.new,
+                Cards::Columns::Cost.new(sort: 'cmc'),
+                Cards::Columns::Identity.new(sort: 'identity'),
+                Cards::Columns::CreatureStats.new(sort: true),
+                Decks::Columns::Name.new(sort: true),
+                source: :printings
+              ),
+            ),
+          )
+        end
+      end
     end
   end
 end

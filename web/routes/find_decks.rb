@@ -17,7 +17,7 @@ module Web
               params: req.params,
             })
 
-            render_view(Web::Views::FindDecks::List, presenter.context)
+            render_view(Web::Views::FindDecks::List.static, presenter.context)
           end
         end
 
@@ -30,7 +30,7 @@ module Web
               params: req.params,
             })
 
-            render_view(Web::Views::FindDecks::Show, presenter.context)
+            render_view(Web::Views::FindDecks::Show.static, presenter.context)
           end
         end
       end

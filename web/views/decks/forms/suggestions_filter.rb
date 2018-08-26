@@ -1,30 +1,20 @@
-require_relative '../../component'
-require_relative '../../components/forms/checkbox'
-require_relative '../../cards/forms/identity_filter'
-
 module Web
   module Views
     module Decks
       module Forms
-        class SuggestionsFilter < Component
-          def build_elements
-            [
-              Components::Forms::Checkbox.new(
+        class SuggestionsFilter < ::Html::Component
+          def draw
+            namespace = nest_into(options[:namespace], :i)
+
+            ::Html::Component.new(
+              ::Html::Form::Checkbox.new(
                 label: 'Show un-owned',
                 inline: true,
                 source: :all,
-                name: child_name('a'),
+                name: nest_into(options[:namespace], 'a'),
               ),
               Cards::Forms::IdentityFilter.new(options),
-            ]
-          end
-
-          private
-
-          def children_context(context)
-            context.merge({
-              _current_form_values: context[options[:source]][:filters],
-            })
+            )
           end
         end
       end

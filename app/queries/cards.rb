@@ -253,5 +253,16 @@ module Queries
         dataset = dataset.select(*CARD_FIELDS, *COLLECTION_FIELDS)
       end
     end
+
+    def database
+      dataset = Printing
+        .from_self(alias: :printing)
+        .association_join(:card, :edition)
+        .exclude(
+          'Land' => Sequel.pg_array(Sequel[:card][:types]).any
+        )
+
+      cards(dataset)
+    end
   end
 end

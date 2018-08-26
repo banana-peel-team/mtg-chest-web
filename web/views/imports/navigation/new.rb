@@ -1,11 +1,10 @@
-require_relative '../../components/navigation_item'
-
 module Web
   module Views
     module Imports
       module Navigation
-        class New < Components::NavigationItem
+        class New < ::Html::Navigation::Item
           private
+
           def item_values(context)
             ['New', '/collection/import']
           end

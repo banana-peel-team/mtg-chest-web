@@ -22,6 +22,7 @@ end
 require_relative 'views/html'
 require_relative 'views/layout'
 
+require_relative 'routes/cards'
 require_relative 'routes/collection'
 require_relative 'routes/deck_cards'
 require_relative 'routes/decks'
@@ -50,13 +51,14 @@ Web::Server.define do
     end
   end
 
-  on('sessions') { run(Web::Routes::Sessions) }
-  on('editions') { run(Web::Routes::Editions) }
+  on('cards') { run(Web::Routes::Cards) }
   on('collection') { run(Web::Routes::Collection) }
-  on('decks') { run(Web::Routes::Decks) }
-  on('find-decks') { run(Web::Routes::FindDecks) }
   on('deck-cards') { run(Web::Routes::DeckCards) }
+  on('decks') { run(Web::Routes::Decks) }
+  on('editions') { run(Web::Routes::Editions) }
+  on('find-decks') { run(Web::Routes::FindDecks) }
   on('home') { run(Web::Routes::Home) }
+  on('sessions') { run(Web::Routes::Sessions) }
 
   run(Rack::File.new('./public'))
 end

@@ -1,10 +1,10 @@
-require_relative '../../components/navigation_item'
-
 module Web
   module Views
     module Imports
       module Navigation
-        class ExportDeckbox < Components::NavigationItem
+        class ExportDeckbox < ::Html::Navigation::Item
+          private
+
           def item_values(context)
             import = context[options[:import]]
 

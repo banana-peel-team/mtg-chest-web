@@ -1,6 +1,5 @@
 class Deck < Sequel::Model
   one_to_many :deck_cards
-  #many_to_many :cards, join_table: :deck_cards
   many_to_one :user
   one_to_one :deck_metadata
 

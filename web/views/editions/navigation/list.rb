@@ -1,10 +1,8 @@
-require_relative '../../components/navigation_item'
-
 module Web
   module Views
     module Editions
       module Navigation
-        class List < Components::NavigationItem
+        class List < ::Html::Navigation::Item
           private
           def item_values(context)
             ['Editions', '/editions']

@@ -1,12 +1,10 @@
-require_relative '../../components/table_column'
-
 module Web
   module Views
     module Decks
       module Columns
-        class Name < Components::TableColumn
-          title 'Deck'
-          sort_column 'deck_name'
+        class Name < ::Html::Table::Column
+          option :title, 'Deck'
+          option :sort_column, 'deck_name'
 
           def render(html, context)
             deck = context[:_current_row]

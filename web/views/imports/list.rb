@@ -1,7 +1,3 @@
-require_relative '../components/table'
-require_relative '../components/table_column'
-require_relative '../components/navigation'
-
 require_relative 'navigation/list'
 require_relative 'navigation/new'
 require_relative 'columns/title'
@@ -10,25 +6,35 @@ require_relative 'forms/delete'
 module Web
   module Views
     module Imports
-      List = Layout.new([
-        Components::Navigation.new([
-          Navigation::List.new(breadcrumb: true, current: true),
-        ], breadcrumb: true),
+      class List < ::Html::Component
+        def draw
+          Layout.new(
+            ::Html::Navigation.new(
+              Navigation::List.new(breadcrumb: true, current: true),
+              breadcrumb: true
+            ),
 
-        Components::Box.new([
-          Components::Navigation.new([
-            Navigation::New.new(deck: :deck),
-          ]),
+            ::Html::Box.new(
+              ::Html::Navigation.new(
+                Navigation::New.new(deck: :deck),
+              ),
 
-          Components::Table.new([
-            Columns::Title.new,
-            Components::TableColumn.new(title: 'Created', source: :created_at),
-            Components::TableColumn.new([
-              Forms::Delete.new(icon: true, inline: true)
-            ], title: 'Actions')
-          ], source: :imports),
-        ], title: 'Imports'),
-      ])
+              ::Html::Table.new(
+                Columns::Title.new,
+                ::Html::Table::Column.new(
+                  title: 'Created', source: :created_at
+                ),
+                ::Html::Table::Column.new(
+                  Forms::Delete.new(icon: true, inline: true),
+                  title: 'Actions'
+                ),
+                source: :imports
+              ),
+              title: 'Imports'
+            ),
+          )
+        end
+      end
     end
   end
 end

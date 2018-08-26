@@ -1,12 +1,10 @@
-require_relative '../../components/table_column'
-
 module Web
   module Views
     module Cards
       module Columns
-        class Cost < Components::TableColumn
-          title 'Cost'
-          sort_column 'cmc'
+        class Cost < ::Html::Table::Column
+          option :title, 'Cost'
+          option :sort_column, 'cmc'
 
           def render(html, context)
             card = context[:_current_row]

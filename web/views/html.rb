@@ -6,11 +6,10 @@ require_relative 'extensions/icons'
 require_relative 'extensions/pagination'
 require_relative 'extensions/mtg'
 
-require_relative 'components.rb'
-
 module Web
   module Views
     class Html
+      # FIXME: This is bullshit
       include Web::Views::Extensions::Form
       include Web::Views::Extensions::Components
       include Web::Views::Extensions::Icons
@@ -63,9 +62,9 @@ module Web
       end
 
       def html5
-        append_html('<!DOCTYPE html><html>')
+        append_html('<!DOCTYPE html><html>'.freeze)
         yield
-        append_html('<html>')
+        append_html('<html>'.freeze)
       end
 
       def tag(name, content = nil, attrs = nil)

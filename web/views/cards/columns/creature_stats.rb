@@ -1,10 +1,8 @@
-require_relative '../../components/table_column'
-
 module Web
   module Views
     module Cards
       module Columns
-        class CreatureStats < Components::TableColumn
+        class CreatureStats < ::Html::Table::Column
           def render(html, _context)
             card = _context[:_current_row]
 

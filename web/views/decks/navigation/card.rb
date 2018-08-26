@@ -1,10 +1,8 @@
-require_relative '../../components/navigation_item'
-
 module Web
   module Views
     module Decks
       module Navigation
-        class Card < Components::NavigationItem
+        class Card < ::Html::Navigation::Item
           private
 
           def item_values(context)
